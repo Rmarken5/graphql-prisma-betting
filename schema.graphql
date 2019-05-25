@@ -1,0 +1,35 @@
+type Query{
+    info: String!
+}
+
+type Mutation {
+    createUser(userName: String!): User!
+}
+
+type User {
+    id: ID!
+    firstName: String!
+    lastName: String!
+    userName: String!
+    email: String!
+    phoneNumber: String
+    balance: Float!
+    userVerified: Boolean!
+    ledgerEntries: [Ledger]
+}
+
+type Ledger {
+    id: ID!
+    amountWagered: Float!
+    collected: Float
+    payout: Float
+    entryTime: Int!
+    user: User!
+    """ wagerType: WagerType """
+    """ outcome: OutcomeType """
+}
+
+type Game {
+    id: ID!
+    
+}

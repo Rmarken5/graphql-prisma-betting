@@ -1,0 +1,83 @@
+Use Cases
+1. User can register
+2. User can login.
+3. User can place wager.
+4. User's balance will be updated if they win.
+5. User's balance will be updated if they lose.
+6. User's balanace will be updated if they place wager.
+7. The system will record all wagers to a ledger.
+8. The system will update the ledger for games that have ended.
+
+
+
+Objects
+1. User
+	- ID
+	- User Name
+	- Password
+	- Email
+	- Phone Number
+	- Balance
+	- Confirmed
+
+2. Ledger
+	- ID
+	- Amount_Wagered
+	- payout
+	- collected
+	- Wager_type
+	- Time_Wagered
+	- User
+	- Outcome_ID
+
+3. Game
+	- ID
+	- Home_Team_ID
+	- Away_Team_ID
+	- Start_Time
+	- Sport_ID
+
+4. Odds (Needs to be updated with other sport bet types.)
+	- ID
+	- Game_ID
+	- Money_Line
+	- Run_Line
+	- Run_Line_Runs
+	- Over_Under_Odds
+	- Over_Under_Runs
+	- Timestamp
+
+4. Wager 
+	- Ledger_ID(ONE)
+	- Odds_ID(MANY)
+	- Odds_type
+
+5. Outcome
+	- ID
+	- Outcome(player_wins, player_loses, push, In_progress)
+
+6. Odds_Type
+	- ID
+	- Odds_type(Money_line, Run_line, Over_Under) 
+
+7. Sport
+	- ID
+	- Sport_Name(MLB, NBA, NFL, NCAAMB, NCAAMFB, ...)
+
+8. Wager_type
+	- ID
+	- Wager_type(Straight_up, parley,...)
+
+9 Team
+	- ID
+	- Team_Name
+	- City
+
+
+
+	User makes bet on money line.
+		-An entry is made into the ledger table with time of wager, and amount wagered.
+			- Entries are made in the wager table using the ledger ID to tie all aspects of the bet(parley, etc...) into one transaction.
+
+
+
