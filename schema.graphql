@@ -15,9 +15,9 @@ type Mutation {
     createSport(sportName: String!): Sport!
     createOddsType(oddsType: String!): OddsType!
     createOutcome(outcome: String!): Outcome!
-    createGame(homeTeamID: ID!, awayTeamID: ID!, gameTime: Int!, sportID: ID!): Game!
-    createOdd(gameID:ID!, moneyLine: Int, runLineOdds: Int, runLineRuns: Float, overUnderOdds: String, overUnderRuns: Float ): Odd!
-    createWager(ledgerId: ID!, oodsId: ID!, oddsTypeId: ID!, pickedOverUnderId: ID!, pickedTeamId: ID!): Wager!
+    createGame(homeTeamName: String!, awayTeamName: String!, gameTime: String!, sportName: String!): Game!
+    createOdd(homeTeamName: String!, awayTeamName: String!, gameTime: String!, moneyLine: Int, runLineOdds: Int, runLineRuns: Float, overUnderOdds: String, overUnderRuns: Float ): Odd!
+    createWager(ledgerId: ID!, oddsId: ID!, oddsTypeId: ID!, pickedOverUnderId: ID!, pickedTeamId: ID!): Wager!
     createLedger(amountWagered: Float!, wagerTypeID: ID!): Ledger!
     updateLedgers(beginDate: Int!, endDate: Int!, collected: Float, payout:Float, outcomeId: ID! ):[Ledger]!
 
