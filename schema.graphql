@@ -1,9 +1,26 @@
 type Query{
-    info: String!
+    users: [User!]!
+    user(id: ID!): User
+    ledgers:[Ledger]!
+    ledgersAfterTime(timeInMilliSecs: Int!): [Ledger]
+    ledgersBeforeTime(timeInMilliSecs: Int!): [Ledger]
+    ledgersBetweenTimes(beginTime: Int!, endTime: Int! ): [Ledger]
 }
 
 type Mutation {
-    createUser(userName: String!): User!
+    createUser(userName: String!, firstName: String!, lastName: String!, email: String!, phoneNumber: String, password: String!): User!
+    createOverUnder(value: Boolean!, overUnder: String!): OverUnder!
+    createTeam(teamName:String!, city: String!): Team!
+    createWagerType(wagerType: String!): WagerType!
+    createSport(sportName: String!): Sport!
+    createOddsType(oddsType: String!): OddsType!
+    createOutcome(outcome: String!): Outcome!
+    createGame(homeTeamID: ID!, awayTeamID: ID!, gameTime: Int!, sportID: ID!): Game!
+    createOdd(gameID:ID!, moneyLine: Int, runLineOdds: Int, runLineRuns: Float, overUnderOdds: String, overUnderRuns: Float ): Odd!
+    createWager(ledgerId: ID!, oodsId: ID!, oddsTypeId: ID!, pickedOverUnderId: ID!, pickedTeamId: ID!): Wager!
+    createLedger(amountWagered: Float!, wagerTypeID: ID!): Ledger!
+    updateLedgers(beginDate: Int!, endDate: Int!, collected: Float, payout:Float, outcomeId: ID! ):[Ledger]!
+
 }
 
 type User {
@@ -11,6 +28,7 @@ type User {
     firstName: String!
     lastName: String!
     userName: String!
+    password: String!
     email: String!
     phoneNumber: String
     balance: Float!
@@ -25,11 +43,65 @@ type Ledger {
     payout: Float
     entryTime: Int!
     user: User!
-    """ wagerType: WagerType """
-    """ outcome: OutcomeType """
+    wagerType: WagerType!
+    outcome: Outcome!
 }
 
 type Game {
     id: ID!
-    
+    homeTeam: Team!
+    awayTeam: Team!
+    gameTime: Int!
+    sport: Sport!
+}
+
+type Odd {
+    id: ID!
+    game: Game!
+    moneyLine: Int
+    runLineOdds: Int
+    runLineRuns: Float
+    overUnderOdds: Int
+    overUnderRuns: Float
+    timeOfOdds: Int!
+}
+
+type Wager {
+    id: ID!
+    ledger: Ledger!
+    odds: Odd!
+    oddsType: OddsType!
+    pickedOverUnder: OverUnder
+    pickedTeam: Team
+}
+
+type Outcome {
+    id: ID!
+    outcome: String!
+}
+
+type OddsType{
+    id: ID!
+    oddsType: String!
+}
+
+type Sport{
+    id: ID!
+    sportName: String!
+}
+
+type WagerType {
+    id: ID!
+    wagerType: String!
+}
+
+type Team {
+    id: ID!
+    teamName: String!
+    city: String!
+}
+
+type OverUnder{
+    value: Boolean!
+    overUnder: String!
 }

@@ -73,6 +73,9 @@ Objects
 	- Team_Name
 	- City
 
+10. OverUnder
+	- value: booolean
+	- description
 
 
 	User makes bet on money line.
@@ -81,3 +84,4 @@ Objects
 
 
 
+Admin: https://eu1.prisma.sh/ryan-marken-bde714/betting-graph-server/dev/_admin

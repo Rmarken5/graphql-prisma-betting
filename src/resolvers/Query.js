@@ -3,5 +3,5 @@ function info (){
 }
 
 module.exports = {
-    info,
+   
 }

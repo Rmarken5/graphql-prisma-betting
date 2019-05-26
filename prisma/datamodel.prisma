@@ -1,0 +1,83 @@
+type User {
+    id: ID! @id
+    firstName: String!
+    lastName: String!
+    userName: String!
+    password: String!
+    email: String!
+    phoneNumber: String
+    balance: Float!
+    userVerified: Boolean!
+    ledgerEntries: [Ledger]
+}
+
+type Ledger {
+    id: ID! @id
+    amountWagered: Float!
+    collected: Float
+    payout: Float
+    entryTime: Int!
+    user: User!
+    wagerType: WagerType!
+    outcome: Outcome!
+}
+
+type Game {
+    id: ID! @id
+    homeTeam: Team! @relation(name: "HomeTeam")
+    awayTeam: Team! @relation(name: "AwayTeam")
+    gameTime: Int!
+    sport: Sport!
+}
+
+type Odd {
+    id: ID! @id
+    game: Game!
+    moneyLine: Int
+    runLineOdds: Int
+    runLineRuns: Float
+    overUnderOdds: Int
+    overUnderRuns: Float
+    timeOfOdds: Int!
+}
+
+type Wager {
+    id: ID! @id
+    ledger: Ledger! 
+    odds: Odd!
+    oddsType: OddsType!
+    pickedOverUnder: OverUnder
+    pickedTeam: Team
+}
+
+type Outcome {
+    id: ID! @id
+    outcome: String!
+}
+
+type OddsType{
+    id: ID! @id
+    oddsType: String!
+}
+
+type Sport{
+    id: ID! @id
+    sportName: String!
+}
+
+type WagerType {
+    id: ID! @id
+    wagerType: String!
+}
+
+type Team {
+    id: ID! @id
+    teamName: String!
+    city: String!
+}
+
+type OverUnder{
+    id: ID! @id
+    value: Boolean! 
+    overUnder: String!
+}
