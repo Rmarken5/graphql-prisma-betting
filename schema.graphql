@@ -16,10 +16,10 @@ type Mutation {
     createOddsType(oddsType: String!): OddsType!
     createOutcome(outcome: String!): Outcome!
     createGame(homeTeamName: String!, awayTeamName: String!, gameTime: String!, sportName: String!): Game!
-    createOdd(homeTeamName: String!, awayTeamName: String!, gameTime: String!, moneyLine: Int, runLineOdds: Int, runLineRuns: Float, overUnderOdds: String, overUnderRuns: Float ): Odd!
-    createWager(ledgerId: ID!, oddsId: ID!, oddsTypeId: ID!, pickedOverUnderId: ID!, pickedTeamId: ID!): Wager!
-    createLedger(amountWagered: Float!, wagerTypeID: ID!): Ledger!
-    updateLedgers(beginDate: Int!, endDate: Int!, collected: Float, payout:Float, outcomeId: ID! ):[Ledger]!
+    createOdd(homeTeamName: String!, awayTeamName: String!, gameTime: String!, moneyLine: Int, runLineOdds: Int, runLineRuns: Float, overUnderOdds: Int, overUnderRuns: Float ): Odd!
+    createWager(ledgerId: ID!, oddsId: ID!, oddsType: String!, pickedOverUnder: String!, pickedTeam: String!): Wager!
+    createLedger(amountWagered: Float!, wagerType: String!, userName: String!): Ledger!
+    updateLedger(id: ID! collected: Float, payout:Float, outcome: String! ):[Ledger]!
 
 }
 
@@ -53,6 +53,7 @@ type Game {
     awayTeam: Team!
     gameTime: Int!
     sport: Sport!
+    odds: [Odd]!
 }
 
 type Odd {
@@ -64,6 +65,7 @@ type Odd {
     overUnderOdds: Int
     overUnderRuns: Float
     timeOfOdds: Int!
+    
 }
 
 type Wager {
@@ -88,20 +90,26 @@ type OddsType{
 type Sport{
     id: ID!
     sportName: String!
+    games: [Game]!
 }
 
 type WagerType {
     id: ID!
     wagerType: String!
+    ledgers: [Ledger]!
 }
 
+
 type Team {
-    id: ID!
+    id: ID! 
     teamName: String!
     city: String!
+    homeGames: [Game]!
+    awayGames: [Game]!
 }
 
 type OverUnder{
+    id: ID!
     value: Boolean!
     overUnder: String!
 }

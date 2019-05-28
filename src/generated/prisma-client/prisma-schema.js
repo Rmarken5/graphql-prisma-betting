@@ -57,6 +57,7 @@ type Game {
   awayTeam: Team!
   gameTime: Int!
   sport: Sport!
+  odds(where: OddWhereInput, orderBy: OddOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Odd!]
 }
 
 type GameConnection {
@@ -67,15 +68,63 @@ type GameConnection {
 
 input GameCreateInput {
   id: ID
-  homeTeam: TeamCreateOneInput!
-  awayTeam: TeamCreateOneInput!
+  homeTeam: TeamCreateOneWithoutHomeGamesInput!
+  awayTeam: TeamCreateOneWithoutAwayGamesInput!
   gameTime: Int!
-  sport: SportCreateOneInput!
+  sport: SportCreateOneWithoutGameInput!
+  odds: OddCreateManyWithoutGameInput
 }
 
-input GameCreateOneInput {
-  create: GameCreateInput
+input GameCreateManyWithoutAwayTeamInput {
+  create: [GameCreateWithoutAwayTeamInput!]
+  connect: [GameWhereUniqueInput!]
+}
+
+input GameCreateManyWithoutHomeTeamInput {
+  create: [GameCreateWithoutHomeTeamInput!]
+  connect: [GameWhereUniqueInput!]
+}
+
+input GameCreateManyWithoutSportInput {
+  create: [GameCreateWithoutSportInput!]
+  connect: [GameWhereUniqueInput!]
+}
+
+input GameCreateOneWithoutOddsInput {
+  create: GameCreateWithoutOddsInput
   connect: GameWhereUniqueInput
+}
+
+input GameCreateWithoutAwayTeamInput {
+  id: ID
+  homeTeam: TeamCreateOneWithoutHomeGamesInput!
+  gameTime: Int!
+  sport: SportCreateOneWithoutGameInput!
+  odds: OddCreateManyWithoutGameInput
+}
+
+input GameCreateWithoutHomeTeamInput {
+  id: ID
+  awayTeam: TeamCreateOneWithoutAwayGamesInput!
+  gameTime: Int!
+  sport: SportCreateOneWithoutGameInput!
+  odds: OddCreateManyWithoutGameInput
+}
+
+input GameCreateWithoutOddsInput {
+  id: ID
+  homeTeam: TeamCreateOneWithoutHomeGamesInput!
+  awayTeam: TeamCreateOneWithoutAwayGamesInput!
+  gameTime: Int!
+  sport: SportCreateOneWithoutGameInput!
+}
+
+input GameCreateWithoutSportInput {
+  id: ID
+  homeTeam: TeamCreateOneWithoutHomeGamesInput!
+  awayTeam: TeamCreateOneWithoutAwayGamesInput!
+  gameTime: Int!
+  odds: OddCreateManyWithoutGameInput
 }
 
 type GameEdge {
@@ -93,6 +142,34 @@ enum GameOrderByInput {
 type GamePreviousValues {
   id: ID!
   gameTime: Int!
+}
+
+input GameScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  gameTime: Int
+  gameTime_not: Int
+  gameTime_in: [Int!]
+  gameTime_not_in: [Int!]
+  gameTime_lt: Int
+  gameTime_lte: Int
+  gameTime_gt: Int
+  gameTime_gte: Int
+  AND: [GameScalarWhereInput!]
+  OR: [GameScalarWhereInput!]
+  NOT: [GameScalarWhereInput!]
 }
 
 type GameSubscriptionPayload {
@@ -113,34 +190,134 @@ input GameSubscriptionWhereInput {
   NOT: [GameSubscriptionWhereInput!]
 }
 
-input GameUpdateDataInput {
-  homeTeam: TeamUpdateOneRequiredInput
-  awayTeam: TeamUpdateOneRequiredInput
+input GameUpdateInput {
+  homeTeam: TeamUpdateOneRequiredWithoutHomeGamesInput
+  awayTeam: TeamUpdateOneRequiredWithoutAwayGamesInput
   gameTime: Int
-  sport: SportUpdateOneRequiredInput
+  sport: SportUpdateOneRequiredWithoutGameInput
+  odds: OddUpdateManyWithoutGameInput
 }
 
-input GameUpdateInput {
-  homeTeam: TeamUpdateOneRequiredInput
-  awayTeam: TeamUpdateOneRequiredInput
+input GameUpdateManyDataInput {
   gameTime: Int
-  sport: SportUpdateOneRequiredInput
 }
 
 input GameUpdateManyMutationInput {
   gameTime: Int
 }
 
-input GameUpdateOneRequiredInput {
-  create: GameCreateInput
-  update: GameUpdateDataInput
-  upsert: GameUpsertNestedInput
+input GameUpdateManyWithoutAwayTeamInput {
+  create: [GameCreateWithoutAwayTeamInput!]
+  delete: [GameWhereUniqueInput!]
+  connect: [GameWhereUniqueInput!]
+  set: [GameWhereUniqueInput!]
+  disconnect: [GameWhereUniqueInput!]
+  update: [GameUpdateWithWhereUniqueWithoutAwayTeamInput!]
+  upsert: [GameUpsertWithWhereUniqueWithoutAwayTeamInput!]
+  deleteMany: [GameScalarWhereInput!]
+  updateMany: [GameUpdateManyWithWhereNestedInput!]
+}
+
+input GameUpdateManyWithoutHomeTeamInput {
+  create: [GameCreateWithoutHomeTeamInput!]
+  delete: [GameWhereUniqueInput!]
+  connect: [GameWhereUniqueInput!]
+  set: [GameWhereUniqueInput!]
+  disconnect: [GameWhereUniqueInput!]
+  update: [GameUpdateWithWhereUniqueWithoutHomeTeamInput!]
+  upsert: [GameUpsertWithWhereUniqueWithoutHomeTeamInput!]
+  deleteMany: [GameScalarWhereInput!]
+  updateMany: [GameUpdateManyWithWhereNestedInput!]
+}
+
+input GameUpdateManyWithoutSportInput {
+  create: [GameCreateWithoutSportInput!]
+  delete: [GameWhereUniqueInput!]
+  connect: [GameWhereUniqueInput!]
+  set: [GameWhereUniqueInput!]
+  disconnect: [GameWhereUniqueInput!]
+  update: [GameUpdateWithWhereUniqueWithoutSportInput!]
+  upsert: [GameUpsertWithWhereUniqueWithoutSportInput!]
+  deleteMany: [GameScalarWhereInput!]
+  updateMany: [GameUpdateManyWithWhereNestedInput!]
+}
+
+input GameUpdateManyWithWhereNestedInput {
+  where: GameScalarWhereInput!
+  data: GameUpdateManyDataInput!
+}
+
+input GameUpdateOneRequiredWithoutOddsInput {
+  create: GameCreateWithoutOddsInput
+  update: GameUpdateWithoutOddsDataInput
+  upsert: GameUpsertWithoutOddsInput
   connect: GameWhereUniqueInput
 }
 
-input GameUpsertNestedInput {
-  update: GameUpdateDataInput!
-  create: GameCreateInput!
+input GameUpdateWithoutAwayTeamDataInput {
+  homeTeam: TeamUpdateOneRequiredWithoutHomeGamesInput
+  gameTime: Int
+  sport: SportUpdateOneRequiredWithoutGameInput
+  odds: OddUpdateManyWithoutGameInput
+}
+
+input GameUpdateWithoutHomeTeamDataInput {
+  awayTeam: TeamUpdateOneRequiredWithoutAwayGamesInput
+  gameTime: Int
+  sport: SportUpdateOneRequiredWithoutGameInput
+  odds: OddUpdateManyWithoutGameInput
+}
+
+input GameUpdateWithoutOddsDataInput {
+  homeTeam: TeamUpdateOneRequiredWithoutHomeGamesInput
+  awayTeam: TeamUpdateOneRequiredWithoutAwayGamesInput
+  gameTime: Int
+  sport: SportUpdateOneRequiredWithoutGameInput
+}
+
+input GameUpdateWithoutSportDataInput {
+  homeTeam: TeamUpdateOneRequiredWithoutHomeGamesInput
+  awayTeam: TeamUpdateOneRequiredWithoutAwayGamesInput
+  gameTime: Int
+  odds: OddUpdateManyWithoutGameInput
+}
+
+input GameUpdateWithWhereUniqueWithoutAwayTeamInput {
+  where: GameWhereUniqueInput!
+  data: GameUpdateWithoutAwayTeamDataInput!
+}
+
+input GameUpdateWithWhereUniqueWithoutHomeTeamInput {
+  where: GameWhereUniqueInput!
+  data: GameUpdateWithoutHomeTeamDataInput!
+}
+
+input GameUpdateWithWhereUniqueWithoutSportInput {
+  where: GameWhereUniqueInput!
+  data: GameUpdateWithoutSportDataInput!
+}
+
+input GameUpsertWithoutOddsInput {
+  update: GameUpdateWithoutOddsDataInput!
+  create: GameCreateWithoutOddsInput!
+}
+
+input GameUpsertWithWhereUniqueWithoutAwayTeamInput {
+  where: GameWhereUniqueInput!
+  update: GameUpdateWithoutAwayTeamDataInput!
+  create: GameCreateWithoutAwayTeamInput!
+}
+
+input GameUpsertWithWhereUniqueWithoutHomeTeamInput {
+  where: GameWhereUniqueInput!
+  update: GameUpdateWithoutHomeTeamDataInput!
+  create: GameCreateWithoutHomeTeamInput!
+}
+
+input GameUpsertWithWhereUniqueWithoutSportInput {
+  where: GameWhereUniqueInput!
+  update: GameUpdateWithoutSportDataInput!
+  create: GameCreateWithoutSportInput!
 }
 
 input GameWhereInput {
@@ -169,6 +346,9 @@ input GameWhereInput {
   gameTime_gt: Int
   gameTime_gte: Int
   sport: SportWhereInput
+  odds_every: OddWhereInput
+  odds_some: OddWhereInput
+  odds_none: OddWhereInput
   AND: [GameWhereInput!]
   OR: [GameWhereInput!]
   NOT: [GameWhereInput!]
@@ -202,12 +382,22 @@ input LedgerCreateInput {
   payout: Float
   entryTime: Int!
   user: UserCreateOneWithoutLedgerEntriesInput!
-  wagerType: WagerTypeCreateOneInput!
-  outcome: OutcomeCreateOneInput!
+  wagerType: WagerTypeCreateOneWithoutLedgersInput!
+  outcome: OutcomeCreateOneWithoutLedgersInput!
+}
+
+input LedgerCreateManyWithoutOutcomeInput {
+  create: [LedgerCreateWithoutOutcomeInput!]
+  connect: [LedgerWhereUniqueInput!]
 }
 
 input LedgerCreateManyWithoutUserInput {
   create: [LedgerCreateWithoutUserInput!]
+  connect: [LedgerWhereUniqueInput!]
+}
+
+input LedgerCreateManyWithoutWagerTypeInput {
+  create: [LedgerCreateWithoutWagerTypeInput!]
   connect: [LedgerWhereUniqueInput!]
 }
 
@@ -216,14 +406,34 @@ input LedgerCreateOneInput {
   connect: LedgerWhereUniqueInput
 }
 
+input LedgerCreateWithoutOutcomeInput {
+  id: ID
+  amountWagered: Float!
+  collected: Float
+  payout: Float
+  entryTime: Int!
+  user: UserCreateOneWithoutLedgerEntriesInput!
+  wagerType: WagerTypeCreateOneWithoutLedgersInput!
+}
+
 input LedgerCreateWithoutUserInput {
   id: ID
   amountWagered: Float!
   collected: Float
   payout: Float
   entryTime: Int!
-  wagerType: WagerTypeCreateOneInput!
-  outcome: OutcomeCreateOneInput!
+  wagerType: WagerTypeCreateOneWithoutLedgersInput!
+  outcome: OutcomeCreateOneWithoutLedgersInput!
+}
+
+input LedgerCreateWithoutWagerTypeInput {
+  id: ID
+  amountWagered: Float!
+  collected: Float
+  payout: Float
+  entryTime: Int!
+  user: UserCreateOneWithoutLedgerEntriesInput!
+  outcome: OutcomeCreateOneWithoutLedgersInput!
 }
 
 type LedgerEdge {
@@ -328,8 +538,8 @@ input LedgerUpdateDataInput {
   payout: Float
   entryTime: Int
   user: UserUpdateOneRequiredWithoutLedgerEntriesInput
-  wagerType: WagerTypeUpdateOneRequiredInput
-  outcome: OutcomeUpdateOneRequiredInput
+  wagerType: WagerTypeUpdateOneRequiredWithoutLedgersInput
+  outcome: OutcomeUpdateOneRequiredWithoutLedgersInput
 }
 
 input LedgerUpdateInput {
@@ -338,8 +548,8 @@ input LedgerUpdateInput {
   payout: Float
   entryTime: Int
   user: UserUpdateOneRequiredWithoutLedgerEntriesInput
-  wagerType: WagerTypeUpdateOneRequiredInput
-  outcome: OutcomeUpdateOneRequiredInput
+  wagerType: WagerTypeUpdateOneRequiredWithoutLedgersInput
+  outcome: OutcomeUpdateOneRequiredWithoutLedgersInput
 }
 
 input LedgerUpdateManyDataInput {
@@ -356,6 +566,18 @@ input LedgerUpdateManyMutationInput {
   entryTime: Int
 }
 
+input LedgerUpdateManyWithoutOutcomeInput {
+  create: [LedgerCreateWithoutOutcomeInput!]
+  delete: [LedgerWhereUniqueInput!]
+  connect: [LedgerWhereUniqueInput!]
+  set: [LedgerWhereUniqueInput!]
+  disconnect: [LedgerWhereUniqueInput!]
+  update: [LedgerUpdateWithWhereUniqueWithoutOutcomeInput!]
+  upsert: [LedgerUpsertWithWhereUniqueWithoutOutcomeInput!]
+  deleteMany: [LedgerScalarWhereInput!]
+  updateMany: [LedgerUpdateManyWithWhereNestedInput!]
+}
+
 input LedgerUpdateManyWithoutUserInput {
   create: [LedgerCreateWithoutUserInput!]
   delete: [LedgerWhereUniqueInput!]
@@ -364,6 +586,18 @@ input LedgerUpdateManyWithoutUserInput {
   disconnect: [LedgerWhereUniqueInput!]
   update: [LedgerUpdateWithWhereUniqueWithoutUserInput!]
   upsert: [LedgerUpsertWithWhereUniqueWithoutUserInput!]
+  deleteMany: [LedgerScalarWhereInput!]
+  updateMany: [LedgerUpdateManyWithWhereNestedInput!]
+}
+
+input LedgerUpdateManyWithoutWagerTypeInput {
+  create: [LedgerCreateWithoutWagerTypeInput!]
+  delete: [LedgerWhereUniqueInput!]
+  connect: [LedgerWhereUniqueInput!]
+  set: [LedgerWhereUniqueInput!]
+  disconnect: [LedgerWhereUniqueInput!]
+  update: [LedgerUpdateWithWhereUniqueWithoutWagerTypeInput!]
+  upsert: [LedgerUpsertWithWhereUniqueWithoutWagerTypeInput!]
   deleteMany: [LedgerScalarWhereInput!]
   updateMany: [LedgerUpdateManyWithWhereNestedInput!]
 }
@@ -380,13 +614,36 @@ input LedgerUpdateOneRequiredInput {
   connect: LedgerWhereUniqueInput
 }
 
+input LedgerUpdateWithoutOutcomeDataInput {
+  amountWagered: Float
+  collected: Float
+  payout: Float
+  entryTime: Int
+  user: UserUpdateOneRequiredWithoutLedgerEntriesInput
+  wagerType: WagerTypeUpdateOneRequiredWithoutLedgersInput
+}
+
 input LedgerUpdateWithoutUserDataInput {
   amountWagered: Float
   collected: Float
   payout: Float
   entryTime: Int
-  wagerType: WagerTypeUpdateOneRequiredInput
-  outcome: OutcomeUpdateOneRequiredInput
+  wagerType: WagerTypeUpdateOneRequiredWithoutLedgersInput
+  outcome: OutcomeUpdateOneRequiredWithoutLedgersInput
+}
+
+input LedgerUpdateWithoutWagerTypeDataInput {
+  amountWagered: Float
+  collected: Float
+  payout: Float
+  entryTime: Int
+  user: UserUpdateOneRequiredWithoutLedgerEntriesInput
+  outcome: OutcomeUpdateOneRequiredWithoutLedgersInput
+}
+
+input LedgerUpdateWithWhereUniqueWithoutOutcomeInput {
+  where: LedgerWhereUniqueInput!
+  data: LedgerUpdateWithoutOutcomeDataInput!
 }
 
 input LedgerUpdateWithWhereUniqueWithoutUserInput {
@@ -394,15 +651,32 @@ input LedgerUpdateWithWhereUniqueWithoutUserInput {
   data: LedgerUpdateWithoutUserDataInput!
 }
 
+input LedgerUpdateWithWhereUniqueWithoutWagerTypeInput {
+  where: LedgerWhereUniqueInput!
+  data: LedgerUpdateWithoutWagerTypeDataInput!
+}
+
 input LedgerUpsertNestedInput {
   update: LedgerUpdateDataInput!
   create: LedgerCreateInput!
+}
+
+input LedgerUpsertWithWhereUniqueWithoutOutcomeInput {
+  where: LedgerWhereUniqueInput!
+  update: LedgerUpdateWithoutOutcomeDataInput!
+  create: LedgerCreateWithoutOutcomeInput!
 }
 
 input LedgerUpsertWithWhereUniqueWithoutUserInput {
   where: LedgerWhereUniqueInput!
   update: LedgerUpdateWithoutUserDataInput!
   create: LedgerCreateWithoutUserInput!
+}
+
+input LedgerUpsertWithWhereUniqueWithoutWagerTypeInput {
+  where: LedgerWhereUniqueInput!
+  update: LedgerUpdateWithoutWagerTypeDataInput!
+  create: LedgerCreateWithoutWagerTypeInput!
 }
 
 input LedgerWhereInput {
@@ -563,7 +837,7 @@ type OddConnection {
 
 input OddCreateInput {
   id: ID
-  game: GameCreateOneInput!
+  game: GameCreateOneWithoutOddsInput!
   moneyLine: Int
   runLineOdds: Int
   runLineRuns: Float
@@ -572,9 +846,24 @@ input OddCreateInput {
   timeOfOdds: Int!
 }
 
+input OddCreateManyWithoutGameInput {
+  create: [OddCreateWithoutGameInput!]
+  connect: [OddWhereUniqueInput!]
+}
+
 input OddCreateOneInput {
   create: OddCreateInput
   connect: OddWhereUniqueInput
+}
+
+input OddCreateWithoutGameInput {
+  id: ID
+  moneyLine: Int
+  runLineOdds: Int
+  runLineRuns: Float
+  overUnderOdds: Int
+  overUnderRuns: Float
+  timeOfOdds: Int!
 }
 
 type OddEdge {
@@ -607,6 +896,74 @@ type OddPreviousValues {
   overUnderOdds: Int
   overUnderRuns: Float
   timeOfOdds: Int!
+}
+
+input OddScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  moneyLine: Int
+  moneyLine_not: Int
+  moneyLine_in: [Int!]
+  moneyLine_not_in: [Int!]
+  moneyLine_lt: Int
+  moneyLine_lte: Int
+  moneyLine_gt: Int
+  moneyLine_gte: Int
+  runLineOdds: Int
+  runLineOdds_not: Int
+  runLineOdds_in: [Int!]
+  runLineOdds_not_in: [Int!]
+  runLineOdds_lt: Int
+  runLineOdds_lte: Int
+  runLineOdds_gt: Int
+  runLineOdds_gte: Int
+  runLineRuns: Float
+  runLineRuns_not: Float
+  runLineRuns_in: [Float!]
+  runLineRuns_not_in: [Float!]
+  runLineRuns_lt: Float
+  runLineRuns_lte: Float
+  runLineRuns_gt: Float
+  runLineRuns_gte: Float
+  overUnderOdds: Int
+  overUnderOdds_not: Int
+  overUnderOdds_in: [Int!]
+  overUnderOdds_not_in: [Int!]
+  overUnderOdds_lt: Int
+  overUnderOdds_lte: Int
+  overUnderOdds_gt: Int
+  overUnderOdds_gte: Int
+  overUnderRuns: Float
+  overUnderRuns_not: Float
+  overUnderRuns_in: [Float!]
+  overUnderRuns_not_in: [Float!]
+  overUnderRuns_lt: Float
+  overUnderRuns_lte: Float
+  overUnderRuns_gt: Float
+  overUnderRuns_gte: Float
+  timeOfOdds: Int
+  timeOfOdds_not: Int
+  timeOfOdds_in: [Int!]
+  timeOfOdds_not_in: [Int!]
+  timeOfOdds_lt: Int
+  timeOfOdds_lte: Int
+  timeOfOdds_gt: Int
+  timeOfOdds_gte: Int
+  AND: [OddScalarWhereInput!]
+  OR: [OddScalarWhereInput!]
+  NOT: [OddScalarWhereInput!]
 }
 
 type OddsType {
@@ -746,7 +1103,7 @@ input OddSubscriptionWhereInput {
 }
 
 input OddUpdateDataInput {
-  game: GameUpdateOneRequiredInput
+  game: GameUpdateOneRequiredWithoutOddsInput
   moneyLine: Int
   runLineOdds: Int
   runLineRuns: Float
@@ -756,7 +1113,16 @@ input OddUpdateDataInput {
 }
 
 input OddUpdateInput {
-  game: GameUpdateOneRequiredInput
+  game: GameUpdateOneRequiredWithoutOddsInput
+  moneyLine: Int
+  runLineOdds: Int
+  runLineRuns: Float
+  overUnderOdds: Int
+  overUnderRuns: Float
+  timeOfOdds: Int
+}
+
+input OddUpdateManyDataInput {
   moneyLine: Int
   runLineOdds: Int
   runLineRuns: Float
@@ -774,6 +1140,23 @@ input OddUpdateManyMutationInput {
   timeOfOdds: Int
 }
 
+input OddUpdateManyWithoutGameInput {
+  create: [OddCreateWithoutGameInput!]
+  delete: [OddWhereUniqueInput!]
+  connect: [OddWhereUniqueInput!]
+  set: [OddWhereUniqueInput!]
+  disconnect: [OddWhereUniqueInput!]
+  update: [OddUpdateWithWhereUniqueWithoutGameInput!]
+  upsert: [OddUpsertWithWhereUniqueWithoutGameInput!]
+  deleteMany: [OddScalarWhereInput!]
+  updateMany: [OddUpdateManyWithWhereNestedInput!]
+}
+
+input OddUpdateManyWithWhereNestedInput {
+  where: OddScalarWhereInput!
+  data: OddUpdateManyDataInput!
+}
+
 input OddUpdateOneRequiredInput {
   create: OddCreateInput
   update: OddUpdateDataInput
@@ -781,9 +1164,29 @@ input OddUpdateOneRequiredInput {
   connect: OddWhereUniqueInput
 }
 
+input OddUpdateWithoutGameDataInput {
+  moneyLine: Int
+  runLineOdds: Int
+  runLineRuns: Float
+  overUnderOdds: Int
+  overUnderRuns: Float
+  timeOfOdds: Int
+}
+
+input OddUpdateWithWhereUniqueWithoutGameInput {
+  where: OddWhereUniqueInput!
+  data: OddUpdateWithoutGameDataInput!
+}
+
 input OddUpsertNestedInput {
   update: OddUpdateDataInput!
   create: OddCreateInput!
+}
+
+input OddUpsertWithWhereUniqueWithoutGameInput {
+  where: OddWhereUniqueInput!
+  update: OddUpdateWithoutGameDataInput!
+  create: OddCreateWithoutGameInput!
 }
 
 input OddWhereInput {
@@ -862,6 +1265,7 @@ input OddWhereUniqueInput {
 type Outcome {
   id: ID!
   outcome: String!
+  ledgers(where: LedgerWhereInput, orderBy: LedgerOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Ledger!]
 }
 
 type OutcomeConnection {
@@ -873,11 +1277,17 @@ type OutcomeConnection {
 input OutcomeCreateInput {
   id: ID
   outcome: String!
+  ledgers: LedgerCreateManyWithoutOutcomeInput
 }
 
-input OutcomeCreateOneInput {
-  create: OutcomeCreateInput
+input OutcomeCreateOneWithoutLedgersInput {
+  create: OutcomeCreateWithoutLedgersInput
   connect: OutcomeWhereUniqueInput
+}
+
+input OutcomeCreateWithoutLedgersInput {
+  id: ID
+  outcome: String!
 }
 
 type OutcomeEdge {
@@ -915,28 +1325,29 @@ input OutcomeSubscriptionWhereInput {
   NOT: [OutcomeSubscriptionWhereInput!]
 }
 
-input OutcomeUpdateDataInput {
-  outcome: String
-}
-
 input OutcomeUpdateInput {
   outcome: String
+  ledgers: LedgerUpdateManyWithoutOutcomeInput
 }
 
 input OutcomeUpdateManyMutationInput {
   outcome: String
 }
 
-input OutcomeUpdateOneRequiredInput {
-  create: OutcomeCreateInput
-  update: OutcomeUpdateDataInput
-  upsert: OutcomeUpsertNestedInput
+input OutcomeUpdateOneRequiredWithoutLedgersInput {
+  create: OutcomeCreateWithoutLedgersInput
+  update: OutcomeUpdateWithoutLedgersDataInput
+  upsert: OutcomeUpsertWithoutLedgersInput
   connect: OutcomeWhereUniqueInput
 }
 
-input OutcomeUpsertNestedInput {
-  update: OutcomeUpdateDataInput!
-  create: OutcomeCreateInput!
+input OutcomeUpdateWithoutLedgersDataInput {
+  outcome: String
+}
+
+input OutcomeUpsertWithoutLedgersInput {
+  update: OutcomeUpdateWithoutLedgersDataInput!
+  create: OutcomeCreateWithoutLedgersInput!
 }
 
 input OutcomeWhereInput {
@@ -968,6 +1379,9 @@ input OutcomeWhereInput {
   outcome_not_starts_with: String
   outcome_ends_with: String
   outcome_not_ends_with: String
+  ledgers_every: LedgerWhereInput
+  ledgers_some: LedgerWhereInput
+  ledgers_none: LedgerWhereInput
   AND: [OutcomeWhereInput!]
   OR: [OutcomeWhereInput!]
   NOT: [OutcomeWhereInput!]
@@ -1154,6 +1568,7 @@ type Query {
 type Sport {
   id: ID!
   sportName: String!
+  game(where: GameWhereInput, orderBy: GameOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Game!]
 }
 
 type SportConnection {
@@ -1165,11 +1580,17 @@ type SportConnection {
 input SportCreateInput {
   id: ID
   sportName: String!
+  game: GameCreateManyWithoutSportInput
 }
 
-input SportCreateOneInput {
-  create: SportCreateInput
+input SportCreateOneWithoutGameInput {
+  create: SportCreateWithoutGameInput
   connect: SportWhereUniqueInput
+}
+
+input SportCreateWithoutGameInput {
+  id: ID
+  sportName: String!
 }
 
 type SportEdge {
@@ -1207,28 +1628,29 @@ input SportSubscriptionWhereInput {
   NOT: [SportSubscriptionWhereInput!]
 }
 
-input SportUpdateDataInput {
-  sportName: String
-}
-
 input SportUpdateInput {
   sportName: String
+  game: GameUpdateManyWithoutSportInput
 }
 
 input SportUpdateManyMutationInput {
   sportName: String
 }
 
-input SportUpdateOneRequiredInput {
-  create: SportCreateInput
-  update: SportUpdateDataInput
-  upsert: SportUpsertNestedInput
+input SportUpdateOneRequiredWithoutGameInput {
+  create: SportCreateWithoutGameInput
+  update: SportUpdateWithoutGameDataInput
+  upsert: SportUpsertWithoutGameInput
   connect: SportWhereUniqueInput
 }
 
-input SportUpsertNestedInput {
-  update: SportUpdateDataInput!
-  create: SportCreateInput!
+input SportUpdateWithoutGameDataInput {
+  sportName: String
+}
+
+input SportUpsertWithoutGameInput {
+  update: SportUpdateWithoutGameDataInput!
+  create: SportCreateWithoutGameInput!
 }
 
 input SportWhereInput {
@@ -1260,6 +1682,9 @@ input SportWhereInput {
   sportName_not_starts_with: String
   sportName_ends_with: String
   sportName_not_ends_with: String
+  game_every: GameWhereInput
+  game_some: GameWhereInput
+  game_none: GameWhereInput
   AND: [SportWhereInput!]
   OR: [SportWhereInput!]
   NOT: [SportWhereInput!]
@@ -1287,6 +1712,8 @@ type Team {
   id: ID!
   teamName: String!
   city: String!
+  homeGames(where: GameWhereInput, orderBy: GameOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Game!]
+  awayGames(where: GameWhereInput, orderBy: GameOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Game!]
 }
 
 type TeamConnection {
@@ -1299,11 +1726,37 @@ input TeamCreateInput {
   id: ID
   teamName: String!
   city: String!
+  homeGames: GameCreateManyWithoutHomeTeamInput
+  awayGames: GameCreateManyWithoutAwayTeamInput
 }
 
 input TeamCreateOneInput {
   create: TeamCreateInput
   connect: TeamWhereUniqueInput
+}
+
+input TeamCreateOneWithoutAwayGamesInput {
+  create: TeamCreateWithoutAwayGamesInput
+  connect: TeamWhereUniqueInput
+}
+
+input TeamCreateOneWithoutHomeGamesInput {
+  create: TeamCreateWithoutHomeGamesInput
+  connect: TeamWhereUniqueInput
+}
+
+input TeamCreateWithoutAwayGamesInput {
+  id: ID
+  teamName: String!
+  city: String!
+  homeGames: GameCreateManyWithoutHomeTeamInput
+}
+
+input TeamCreateWithoutHomeGamesInput {
+  id: ID
+  teamName: String!
+  city: String!
+  awayGames: GameCreateManyWithoutAwayTeamInput
 }
 
 type TeamEdge {
@@ -1347,11 +1800,15 @@ input TeamSubscriptionWhereInput {
 input TeamUpdateDataInput {
   teamName: String
   city: String
+  homeGames: GameUpdateManyWithoutHomeTeamInput
+  awayGames: GameUpdateManyWithoutAwayTeamInput
 }
 
 input TeamUpdateInput {
   teamName: String
   city: String
+  homeGames: GameUpdateManyWithoutHomeTeamInput
+  awayGames: GameUpdateManyWithoutAwayTeamInput
 }
 
 input TeamUpdateManyMutationInput {
@@ -1368,16 +1825,45 @@ input TeamUpdateOneInput {
   connect: TeamWhereUniqueInput
 }
 
-input TeamUpdateOneRequiredInput {
-  create: TeamCreateInput
-  update: TeamUpdateDataInput
-  upsert: TeamUpsertNestedInput
+input TeamUpdateOneRequiredWithoutAwayGamesInput {
+  create: TeamCreateWithoutAwayGamesInput
+  update: TeamUpdateWithoutAwayGamesDataInput
+  upsert: TeamUpsertWithoutAwayGamesInput
   connect: TeamWhereUniqueInput
+}
+
+input TeamUpdateOneRequiredWithoutHomeGamesInput {
+  create: TeamCreateWithoutHomeGamesInput
+  update: TeamUpdateWithoutHomeGamesDataInput
+  upsert: TeamUpsertWithoutHomeGamesInput
+  connect: TeamWhereUniqueInput
+}
+
+input TeamUpdateWithoutAwayGamesDataInput {
+  teamName: String
+  city: String
+  homeGames: GameUpdateManyWithoutHomeTeamInput
+}
+
+input TeamUpdateWithoutHomeGamesDataInput {
+  teamName: String
+  city: String
+  awayGames: GameUpdateManyWithoutAwayTeamInput
 }
 
 input TeamUpsertNestedInput {
   update: TeamUpdateDataInput!
   create: TeamCreateInput!
+}
+
+input TeamUpsertWithoutAwayGamesInput {
+  update: TeamUpdateWithoutAwayGamesDataInput!
+  create: TeamCreateWithoutAwayGamesInput!
+}
+
+input TeamUpsertWithoutHomeGamesInput {
+  update: TeamUpdateWithoutHomeGamesDataInput!
+  create: TeamCreateWithoutHomeGamesInput!
 }
 
 input TeamWhereInput {
@@ -1423,6 +1909,12 @@ input TeamWhereInput {
   city_not_starts_with: String
   city_ends_with: String
   city_not_ends_with: String
+  homeGames_every: GameWhereInput
+  homeGames_some: GameWhereInput
+  homeGames_none: GameWhereInput
+  awayGames_every: GameWhereInput
+  awayGames_some: GameWhereInput
+  awayGames_none: GameWhereInput
   AND: [TeamWhereInput!]
   OR: [TeamWhereInput!]
   NOT: [TeamWhereInput!]
@@ -1763,6 +2255,7 @@ input WagerSubscriptionWhereInput {
 type WagerType {
   id: ID!
   wagerType: String!
+  ledgers(where: LedgerWhereInput, orderBy: LedgerOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Ledger!]
 }
 
 type WagerTypeConnection {
@@ -1774,11 +2267,17 @@ type WagerTypeConnection {
 input WagerTypeCreateInput {
   id: ID
   wagerType: String!
+  ledgers: LedgerCreateManyWithoutWagerTypeInput
 }
 
-input WagerTypeCreateOneInput {
-  create: WagerTypeCreateInput
+input WagerTypeCreateOneWithoutLedgersInput {
+  create: WagerTypeCreateWithoutLedgersInput
   connect: WagerTypeWhereUniqueInput
+}
+
+input WagerTypeCreateWithoutLedgersInput {
+  id: ID
+  wagerType: String!
 }
 
 type WagerTypeEdge {
@@ -1816,28 +2315,29 @@ input WagerTypeSubscriptionWhereInput {
   NOT: [WagerTypeSubscriptionWhereInput!]
 }
 
-input WagerTypeUpdateDataInput {
-  wagerType: String
-}
-
 input WagerTypeUpdateInput {
   wagerType: String
+  ledgers: LedgerUpdateManyWithoutWagerTypeInput
 }
 
 input WagerTypeUpdateManyMutationInput {
   wagerType: String
 }
 
-input WagerTypeUpdateOneRequiredInput {
-  create: WagerTypeCreateInput
-  update: WagerTypeUpdateDataInput
-  upsert: WagerTypeUpsertNestedInput
+input WagerTypeUpdateOneRequiredWithoutLedgersInput {
+  create: WagerTypeCreateWithoutLedgersInput
+  update: WagerTypeUpdateWithoutLedgersDataInput
+  upsert: WagerTypeUpsertWithoutLedgersInput
   connect: WagerTypeWhereUniqueInput
 }
 
-input WagerTypeUpsertNestedInput {
-  update: WagerTypeUpdateDataInput!
-  create: WagerTypeCreateInput!
+input WagerTypeUpdateWithoutLedgersDataInput {
+  wagerType: String
+}
+
+input WagerTypeUpsertWithoutLedgersInput {
+  update: WagerTypeUpdateWithoutLedgersDataInput!
+  create: WagerTypeCreateWithoutLedgersInput!
 }
 
 input WagerTypeWhereInput {
@@ -1869,6 +2369,9 @@ input WagerTypeWhereInput {
   wagerType_not_starts_with: String
   wagerType_ends_with: String
   wagerType_not_ends_with: String
+  ledgers_every: LedgerWhereInput
+  ledgers_some: LedgerWhereInput
+  ledgers_none: LedgerWhereInput
   AND: [WagerTypeWhereInput!]
   OR: [WagerTypeWhereInput!]
   NOT: [WagerTypeWhereInput!]

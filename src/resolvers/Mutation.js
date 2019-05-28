@@ -59,76 +59,136 @@ function createOutcome(root, args, context) {
 
 function createGame(root, args, context) {
 
-    return context.prisma.createGame({
-        homeTeam: {
-            connect: context.prisma.teams({
-                where: {
-                    teamName: args.homeTeamName
+    Promise.all([getTeamId(args.homeTeamName, context), getTeamId(args.awayTeamName, context), getSportIdByValue(args.sportName, context)]).then(values => {
+
+        let [homeTeam, awayTeam, sport] = values;
+
+        console.log(sport[0].id);
+        return context.prisma.createGame({
+            homeTeam: {
+                connect: {
+                    id: homeTeam[0].id
                 }
-            })[0].id
-        },
-        awayTeam: {
-            connect: context.prisma.teams({
-                where: {
-                    teamName: args.awayTeamName
+            },
+            awayTeam: {
+                connect: {
+                    id: awayTeam[0].id
                 }
-            })[0].id
-        },
-        gameTime: new Date(args.gameTime).getTime(),
-        sport: {
-            connect: args.sportName
-        },
+            },
+            gameTime: 15590883,
+            sport: {
+                connect: {
+                    id: sport[0].id
+                }
+            },
+
+        });
 
     });
+
+
 }
 
-function createOdd(root, args, context) {
-    return context.prisma.createOdd({
-        game: getGameId(args.homeTeamName, args.awayTeamName, args.gameTime, context),
-        moneyLine: args.moneyLine,
-        runLineOdds: args.runLineOdds,
-        runLineRuns: args.runLineRuns,
-        overUnderOdds: args.overUnderOdds,
-        overUnderRuns: args.overUnderRuns,
-        timeOfOdds: new Date().getTime(),
-    })
+async function createOdd(root, args, context) {
+    try {
+        const gameID = await getGameId(args.homeTeamName, args.awayTeamName, args.gameTime, context);
+        console.log('gameID: ', gameID[0].id);
+        return context.prisma.createOdd({
+            game: {
+                connect: {
+                    id: gameID[0].id
+                }
+            },
+            moneyLine: args.moneyLine,
+            runLineOdds: args.runLineOdds,
+            runLineRuns: args.runLineRuns,
+            overUnderOdds: args.overUnderOdds,
+            overUnderRuns: args.overUnderRuns,
+            timeOfOdds: 15590883,
+        })
+    } catch (Err) {
+        console.log('err: ', Err);
+    }
 }
 
 function getTeamId(teamName, context) {
 
-    return context.prisma.teams({
+    let team = context.prisma.teams({
         where: {
             teamName: teamName
         }
-    })[0].id;
+    });
+
+    return team;
 
 }
 
-function getGameId(homeTeamName, awayTeamName, gameTime, context) {
+async function getGameId(homeTeamName, awayTeamName, gameTime, context) {
+    console.log('Im called');
+
+    let [homeTeam, awayTeam] = await Promise.all([getTeamId(homeTeamName, context), getTeamId(awayTeamName, context)])
+    console.log("homeTeam: ", homeTeam);
+    console.log('AwayTeam: ', awayTeam);
     return context.prisma.games({ //Refactor this to use query.
         where: {
             homeTeam: {
-                connect: getTeamId(homeTeamName)
+                id: "cjw5sddkqgh7y0b61ygjetbuz"
             },
             awayTeam: {
-                connect: getTeamId(awayTeamName)
+                id: "cjw5sf555ravg0b05vjq5kt6p"
             },
-            gameTime: new Date(gameTime).getTime(),
+            gameTime: 15590883
         }
-    }).id;
+    });
+
 }
 
 function createWager(root, args, context) {
 
     return context.prisma.createWager({
-        ledger: args.ledgerId,
-        odds: getOddsId(getGameId(args.homeTeamName, args.awayTeamName, args.gameTime), args.timeOfOdds, context);
+        ledger: {
+            connect: args.ledgerId
+        },
+        odds: {
+            connect: getOddsId(getGameId(args.homeTeamName, args.awayTeamName, args.gameTime), args.timeOfOdds, context)
+        },
         oddsType: {
             connect: getOddsTypeId(args.oddsType)
         },
-        //TODO: Finish This....
-    })
+        pickedOverUnder: {
+            connect: getOverUnderIdByValue(args.overUnder)
+        },
+        pickedTeamId: {
+            connect: args.pickedTeamId
+        },
+    });
+}
 
+async function createLedger(root, args, context) {
+
+    return context.prisma.createLedger({
+        amountWagered: args.amountWagered,
+        entryTime: 15590883,
+        wagerType: { connect: { id: await getWagerTypeIdByValue(args.wagerType, context) }} ,
+        user: { connect: { id: await getUserIdByUserName(args.userId, context)}},
+        outcome: {connect : { id : await getOutcomeIdByOutcome('pending', context)}},
+    });
+
+}
+
+function updateLedger(root, args, context) {
+    return context.prisma.updateLedger({
+        data: {
+            collected: args.collected,
+            payout: args.payout,
+            outcome: {
+                connect: getOutcomeTypeIdByValue(args.outcome)
+            },
+        },
+        where: {
+            id: args.id
+        },
+    });
 }
 
 function getOddsId(gameId, timeOfOdds, context) {
@@ -143,12 +203,75 @@ function getOddsId(gameId, timeOfOdds, context) {
 function getOddsTypeId(oddsType, context) {
     return context.prisma.oddsType({
         where: {
-            oddsType
+            oddsType: oddsType
+        }
+    })[0].id;
+}
+
+function getOverUnderIdByValue(value, context) {
+    return context.prisma.overUnders({
+        where: {
+            overUnder: value
+        }
+    })[0].id;
+}
+
+async function getWagerTypeIdByValue(value, context) {
+    let wagerType = await context.prisma.wagerTypes({
+        where: {
+            wagerType: value,
+        }
+    });
+    return wagerType[0].id;
+}
+
+async function getUserIdByUserName(userName, context){
+    let userId = await context.prisma.users({
+        where: {
+            userName: userName
+        }
+    });
+    return userId[0].id;
+}
+
+async function getOutcomeIdByOutcome(outcome, context){
+    let outcomeId = await context.prisma.outcomes({
+        where: {
+            outcome: outcome
+        }
+    });
+    return outcomeId[0].id;
+}
+
+function getOutcomeTypeIdByValue(value, context) {
+    return context.prisma.outcomeTypes({
+        where: {
+            outcome: value,
+        }
+    })
+}
+
+function getSportIdByValue(value, context) {
+    return context.prisma.sports({
+        where: {
+            sportName: value,
         }
     });
 }
 
+
+
 module.exports = {
     createUser,
     createOverUnder,
+    createGame,
+    createLedger,
+    createOdd,
+    createOddsType,
+    createOutcome,
+    createSport,
+    createTeam,
+    createWager,
+    createWagerType,
+    updateLedger,
 }

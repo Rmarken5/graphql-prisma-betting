@@ -24,10 +24,11 @@ type Ledger {
 
 type Game {
     id: ID! @id
-    homeTeam: Team! @relation(name: "HomeTeam")
-    awayTeam: Team! @relation(name: "AwayTeam")
+    homeTeam: Team! @relation(name: "HomeGame")
+    awayTeam: Team! @relation(name: "AwayGame")
     gameTime: Int!
     sport: Sport!
+    odds:[Odd]!
 }
 
 type Odd {
@@ -53,6 +54,7 @@ type Wager {
 type Outcome {
     id: ID! @id
     outcome: String!
+    ledgers: [Ledger]!
 }
 
 type OddsType{
@@ -63,17 +65,21 @@ type OddsType{
 type Sport{
     id: ID! @id
     sportName: String!
+    game: [Game]!
 }
 
 type WagerType {
     id: ID! @id
     wagerType: String!
+    ledgers: [Ledger]!
 }
 
 type Team {
     id: ID! @id
     teamName: String!
     city: String!
+    homeGames: [Game]! @relation(name: "HomeGame")
+    awayGames: [Game]! @relation(name: "AwayGame")
 }
 
 type OverUnder{
