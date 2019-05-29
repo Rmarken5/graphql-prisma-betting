@@ -19,8 +19,15 @@ function odds(root, args, context) {
     }).odds();
 }
 
+function sport(root, args, context){
+    return context.prisma.game({
+        id: root.id
+    }).sport();
+}
+
 module.exports = {
     awayTeam,
     homeTeam,
     odds,
+    sport,
 }

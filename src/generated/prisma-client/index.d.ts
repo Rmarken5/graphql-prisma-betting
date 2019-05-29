@@ -523,6 +523,12 @@ export type WagerTypeOrderByInput =
   | "wagerType_ASC"
   | "wagerType_DESC";
 
+export type GameOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "gameTime_ASC"
+  | "gameTime_DESC";
+
 export type LedgerOrderByInput =
   | "id_ASC"
   | "id_DESC"
@@ -534,12 +540,6 @@ export type LedgerOrderByInput =
   | "payout_DESC"
   | "entryTime_ASC"
   | "entryTime_DESC";
-
-export type GameOrderByInput =
-  | "id_ASC"
-  | "id_DESC"
-  | "gameTime_ASC"
-  | "gameTime_DESC";
 
 export type OddsTypeOrderByInput =
   | "id_ASC"
@@ -585,14 +585,30 @@ export type UserOrderByInput =
   | "userVerified_ASC"
   | "userVerified_DESC";
 
-export interface UserCreateOneWithoutLedgerEntriesInput {
-  create?: Maybe<UserCreateWithoutLedgerEntriesInput>;
-  connect?: Maybe<UserWhereUniqueInput>;
+export interface LedgerCreateInput {
+  id?: Maybe<ID_Input>;
+  amountWagered: Float;
+  collected?: Maybe<Float>;
+  payout?: Maybe<Float>;
+  user: UserCreateOneWithoutLedgerEntriesInput;
+  wagerType: WagerTypeCreateOneWithoutLedgersInput;
+  outcome: OutcomeCreateOneWithoutLedgersInput;
 }
 
 export type GameWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
 }>;
+
+export interface TeamUpdateWithoutHomeGamesDataInput {
+  teamName?: Maybe<String>;
+  city?: Maybe<String>;
+  awayGames?: Maybe<GameUpdateManyWithoutAwayTeamInput>;
+}
+
+export interface TeamUpdateManyMutationInput {
+  teamName?: Maybe<String>;
+  city?: Maybe<String>;
+}
 
 export interface GameUpdateManyWithoutAwayTeamInput {
   create?: Maybe<
@@ -616,36 +632,18 @@ export interface GameUpdateManyWithoutAwayTeamInput {
   >;
 }
 
-export interface UserCreateInput {
-  id?: Maybe<ID_Input>;
-  firstName: String;
-  lastName: String;
-  userName: String;
-  password: String;
-  email: String;
-  phoneNumber?: Maybe<String>;
-  balance: Float;
-  userVerified: Boolean;
-  ledgerEntries?: Maybe<LedgerCreateManyWithoutUserInput>;
+export interface LedgerUpdateInput {
+  amountWagered?: Maybe<Float>;
+  collected?: Maybe<Float>;
+  payout?: Maybe<Float>;
+  user?: Maybe<UserUpdateOneRequiredWithoutLedgerEntriesInput>;
+  wagerType?: Maybe<WagerTypeUpdateOneRequiredWithoutLedgersInput>;
+  outcome?: Maybe<OutcomeUpdateOneRequiredWithoutLedgersInput>;
 }
 
 export interface GameUpdateWithWhereUniqueWithoutAwayTeamInput {
   where: GameWhereUniqueInput;
   data: GameUpdateWithoutAwayTeamDataInput;
-}
-
-export interface UserUpdateOneRequiredWithoutLedgerEntriesInput {
-  create?: Maybe<UserCreateWithoutLedgerEntriesInput>;
-  update?: Maybe<UserUpdateWithoutLedgerEntriesDataInput>;
-  upsert?: Maybe<UserUpsertWithoutLedgerEntriesInput>;
-  connect?: Maybe<UserWhereUniqueInput>;
-}
-
-export interface GameUpdateWithoutAwayTeamDataInput {
-  homeTeam?: Maybe<TeamUpdateOneRequiredWithoutHomeGamesInput>;
-  gameTime?: Maybe<Int>;
-  sport?: Maybe<SportUpdateOneRequiredWithoutGameInput>;
-  odds?: Maybe<OddUpdateManyWithoutGameInput>;
 }
 
 export interface WagerSubscriptionWhereInput {
@@ -659,11 +657,11 @@ export interface WagerSubscriptionWhereInput {
   NOT?: Maybe<WagerSubscriptionWhereInput[] | WagerSubscriptionWhereInput>;
 }
 
-export interface SportUpdateOneRequiredWithoutGameInput {
-  create?: Maybe<SportCreateWithoutGameInput>;
-  update?: Maybe<SportUpdateWithoutGameDataInput>;
-  upsert?: Maybe<SportUpsertWithoutGameInput>;
-  connect?: Maybe<SportWhereUniqueInput>;
+export interface GameUpdateWithoutAwayTeamDataInput {
+  homeTeam?: Maybe<TeamUpdateOneRequiredWithoutHomeGamesInput>;
+  gameTime?: Maybe<DateTimeInput>;
+  sport?: Maybe<SportUpdateOneRequiredWithoutGameInput>;
+  odds?: Maybe<OddUpdateManyWithoutGameInput>;
 }
 
 export interface TeamSubscriptionWhereInput {
@@ -677,141 +675,19 @@ export interface TeamSubscriptionWhereInput {
   NOT?: Maybe<TeamSubscriptionWhereInput[] | TeamSubscriptionWhereInput>;
 }
 
+export interface SportUpdateOneRequiredWithoutGameInput {
+  create?: Maybe<SportCreateWithoutGameInput>;
+  update?: Maybe<SportUpdateWithoutGameDataInput>;
+  upsert?: Maybe<SportUpsertWithoutGameInput>;
+  connect?: Maybe<SportWhereUniqueInput>;
+}
+
+export type LedgerWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
 export interface SportUpdateWithoutGameDataInput {
   sportName?: Maybe<String>;
-}
-
-export interface SportSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<SportWhereInput>;
-  AND?: Maybe<SportSubscriptionWhereInput[] | SportSubscriptionWhereInput>;
-  OR?: Maybe<SportSubscriptionWhereInput[] | SportSubscriptionWhereInput>;
-  NOT?: Maybe<SportSubscriptionWhereInput[] | SportSubscriptionWhereInput>;
-}
-
-export interface SportUpsertWithoutGameInput {
-  update: SportUpdateWithoutGameDataInput;
-  create: SportCreateWithoutGameInput;
-}
-
-export interface LedgerWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  amountWagered?: Maybe<Float>;
-  amountWagered_not?: Maybe<Float>;
-  amountWagered_in?: Maybe<Float[] | Float>;
-  amountWagered_not_in?: Maybe<Float[] | Float>;
-  amountWagered_lt?: Maybe<Float>;
-  amountWagered_lte?: Maybe<Float>;
-  amountWagered_gt?: Maybe<Float>;
-  amountWagered_gte?: Maybe<Float>;
-  collected?: Maybe<Float>;
-  collected_not?: Maybe<Float>;
-  collected_in?: Maybe<Float[] | Float>;
-  collected_not_in?: Maybe<Float[] | Float>;
-  collected_lt?: Maybe<Float>;
-  collected_lte?: Maybe<Float>;
-  collected_gt?: Maybe<Float>;
-  collected_gte?: Maybe<Float>;
-  payout?: Maybe<Float>;
-  payout_not?: Maybe<Float>;
-  payout_in?: Maybe<Float[] | Float>;
-  payout_not_in?: Maybe<Float[] | Float>;
-  payout_lt?: Maybe<Float>;
-  payout_lte?: Maybe<Float>;
-  payout_gt?: Maybe<Float>;
-  payout_gte?: Maybe<Float>;
-  entryTime?: Maybe<Int>;
-  entryTime_not?: Maybe<Int>;
-  entryTime_in?: Maybe<Int[] | Int>;
-  entryTime_not_in?: Maybe<Int[] | Int>;
-  entryTime_lt?: Maybe<Int>;
-  entryTime_lte?: Maybe<Int>;
-  entryTime_gt?: Maybe<Int>;
-  entryTime_gte?: Maybe<Int>;
-  user?: Maybe<UserWhereInput>;
-  wagerType?: Maybe<WagerTypeWhereInput>;
-  outcome?: Maybe<OutcomeWhereInput>;
-  AND?: Maybe<LedgerWhereInput[] | LedgerWhereInput>;
-  OR?: Maybe<LedgerWhereInput[] | LedgerWhereInput>;
-  NOT?: Maybe<LedgerWhereInput[] | LedgerWhereInput>;
-}
-
-export interface OddUpdateManyWithoutGameInput {
-  create?: Maybe<OddCreateWithoutGameInput[] | OddCreateWithoutGameInput>;
-  delete?: Maybe<OddWhereUniqueInput[] | OddWhereUniqueInput>;
-  connect?: Maybe<OddWhereUniqueInput[] | OddWhereUniqueInput>;
-  set?: Maybe<OddWhereUniqueInput[] | OddWhereUniqueInput>;
-  disconnect?: Maybe<OddWhereUniqueInput[] | OddWhereUniqueInput>;
-  update?: Maybe<
-    | OddUpdateWithWhereUniqueWithoutGameInput[]
-    | OddUpdateWithWhereUniqueWithoutGameInput
-  >;
-  upsert?: Maybe<
-    | OddUpsertWithWhereUniqueWithoutGameInput[]
-    | OddUpsertWithWhereUniqueWithoutGameInput
-  >;
-  deleteMany?: Maybe<OddScalarWhereInput[] | OddScalarWhereInput>;
-  updateMany?: Maybe<
-    OddUpdateManyWithWhereNestedInput[] | OddUpdateManyWithWhereNestedInput
-  >;
-}
-
-export interface WagerTypeWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  wagerType?: Maybe<String>;
-  wagerType_not?: Maybe<String>;
-  wagerType_in?: Maybe<String[] | String>;
-  wagerType_not_in?: Maybe<String[] | String>;
-  wagerType_lt?: Maybe<String>;
-  wagerType_lte?: Maybe<String>;
-  wagerType_gt?: Maybe<String>;
-  wagerType_gte?: Maybe<String>;
-  wagerType_contains?: Maybe<String>;
-  wagerType_not_contains?: Maybe<String>;
-  wagerType_starts_with?: Maybe<String>;
-  wagerType_not_starts_with?: Maybe<String>;
-  wagerType_ends_with?: Maybe<String>;
-  wagerType_not_ends_with?: Maybe<String>;
-  ledgers_every?: Maybe<LedgerWhereInput>;
-  ledgers_some?: Maybe<LedgerWhereInput>;
-  ledgers_none?: Maybe<LedgerWhereInput>;
-  AND?: Maybe<WagerTypeWhereInput[] | WagerTypeWhereInput>;
-  OR?: Maybe<WagerTypeWhereInput[] | WagerTypeWhereInput>;
-  NOT?: Maybe<WagerTypeWhereInput[] | WagerTypeWhereInput>;
-}
-
-export interface OddUpdateWithWhereUniqueWithoutGameInput {
-  where: OddWhereUniqueInput;
-  data: OddUpdateWithoutGameDataInput;
 }
 
 export interface OutcomeSubscriptionWhereInput {
@@ -825,1477 +701,9 @@ export interface OutcomeSubscriptionWhereInput {
   NOT?: Maybe<OutcomeSubscriptionWhereInput[] | OutcomeSubscriptionWhereInput>;
 }
 
-export interface OddUpdateWithoutGameDataInput {
-  moneyLine?: Maybe<Int>;
-  runLineOdds?: Maybe<Int>;
-  runLineRuns?: Maybe<Float>;
-  overUnderOdds?: Maybe<Int>;
-  overUnderRuns?: Maybe<Float>;
-  timeOfOdds?: Maybe<Int>;
-}
-
-export interface OddSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<OddWhereInput>;
-  AND?: Maybe<OddSubscriptionWhereInput[] | OddSubscriptionWhereInput>;
-  OR?: Maybe<OddSubscriptionWhereInput[] | OddSubscriptionWhereInput>;
-  NOT?: Maybe<OddSubscriptionWhereInput[] | OddSubscriptionWhereInput>;
-}
-
-export interface OddUpsertWithWhereUniqueWithoutGameInput {
-  where: OddWhereUniqueInput;
-  update: OddUpdateWithoutGameDataInput;
-  create: OddCreateWithoutGameInput;
-}
-
-export interface GameSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<GameWhereInput>;
-  AND?: Maybe<GameSubscriptionWhereInput[] | GameSubscriptionWhereInput>;
-  OR?: Maybe<GameSubscriptionWhereInput[] | GameSubscriptionWhereInput>;
-  NOT?: Maybe<GameSubscriptionWhereInput[] | GameSubscriptionWhereInput>;
-}
-
-export interface OddScalarWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  moneyLine?: Maybe<Int>;
-  moneyLine_not?: Maybe<Int>;
-  moneyLine_in?: Maybe<Int[] | Int>;
-  moneyLine_not_in?: Maybe<Int[] | Int>;
-  moneyLine_lt?: Maybe<Int>;
-  moneyLine_lte?: Maybe<Int>;
-  moneyLine_gt?: Maybe<Int>;
-  moneyLine_gte?: Maybe<Int>;
-  runLineOdds?: Maybe<Int>;
-  runLineOdds_not?: Maybe<Int>;
-  runLineOdds_in?: Maybe<Int[] | Int>;
-  runLineOdds_not_in?: Maybe<Int[] | Int>;
-  runLineOdds_lt?: Maybe<Int>;
-  runLineOdds_lte?: Maybe<Int>;
-  runLineOdds_gt?: Maybe<Int>;
-  runLineOdds_gte?: Maybe<Int>;
-  runLineRuns?: Maybe<Float>;
-  runLineRuns_not?: Maybe<Float>;
-  runLineRuns_in?: Maybe<Float[] | Float>;
-  runLineRuns_not_in?: Maybe<Float[] | Float>;
-  runLineRuns_lt?: Maybe<Float>;
-  runLineRuns_lte?: Maybe<Float>;
-  runLineRuns_gt?: Maybe<Float>;
-  runLineRuns_gte?: Maybe<Float>;
-  overUnderOdds?: Maybe<Int>;
-  overUnderOdds_not?: Maybe<Int>;
-  overUnderOdds_in?: Maybe<Int[] | Int>;
-  overUnderOdds_not_in?: Maybe<Int[] | Int>;
-  overUnderOdds_lt?: Maybe<Int>;
-  overUnderOdds_lte?: Maybe<Int>;
-  overUnderOdds_gt?: Maybe<Int>;
-  overUnderOdds_gte?: Maybe<Int>;
-  overUnderRuns?: Maybe<Float>;
-  overUnderRuns_not?: Maybe<Float>;
-  overUnderRuns_in?: Maybe<Float[] | Float>;
-  overUnderRuns_not_in?: Maybe<Float[] | Float>;
-  overUnderRuns_lt?: Maybe<Float>;
-  overUnderRuns_lte?: Maybe<Float>;
-  overUnderRuns_gt?: Maybe<Float>;
-  overUnderRuns_gte?: Maybe<Float>;
-  timeOfOdds?: Maybe<Int>;
-  timeOfOdds_not?: Maybe<Int>;
-  timeOfOdds_in?: Maybe<Int[] | Int>;
-  timeOfOdds_not_in?: Maybe<Int[] | Int>;
-  timeOfOdds_lt?: Maybe<Int>;
-  timeOfOdds_lte?: Maybe<Int>;
-  timeOfOdds_gt?: Maybe<Int>;
-  timeOfOdds_gte?: Maybe<Int>;
-  AND?: Maybe<OddScalarWhereInput[] | OddScalarWhereInput>;
-  OR?: Maybe<OddScalarWhereInput[] | OddScalarWhereInput>;
-  NOT?: Maybe<OddScalarWhereInput[] | OddScalarWhereInput>;
-}
-
-export type OddWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-}>;
-
-export interface OddUpdateManyWithWhereNestedInput {
-  where: OddScalarWhereInput;
-  data: OddUpdateManyDataInput;
-}
-
-export interface LedgerUpdateWithoutWagerTypeDataInput {
-  amountWagered?: Maybe<Float>;
-  collected?: Maybe<Float>;
-  payout?: Maybe<Float>;
-  entryTime?: Maybe<Int>;
-  user?: Maybe<UserUpdateOneRequiredWithoutLedgerEntriesInput>;
-  outcome?: Maybe<OutcomeUpdateOneRequiredWithoutLedgersInput>;
-}
-
-export interface OddUpdateManyDataInput {
-  moneyLine?: Maybe<Int>;
-  runLineOdds?: Maybe<Int>;
-  runLineRuns?: Maybe<Float>;
-  overUnderOdds?: Maybe<Int>;
-  overUnderRuns?: Maybe<Float>;
-  timeOfOdds?: Maybe<Int>;
-}
-
-export type OddsTypeWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-}>;
-
-export interface GameUpsertWithWhereUniqueWithoutAwayTeamInput {
-  where: GameWhereUniqueInput;
-  update: GameUpdateWithoutAwayTeamDataInput;
-  create: GameCreateWithoutAwayTeamInput;
-}
-
-export interface OddsTypeWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  oddsType?: Maybe<String>;
-  oddsType_not?: Maybe<String>;
-  oddsType_in?: Maybe<String[] | String>;
-  oddsType_not_in?: Maybe<String[] | String>;
-  oddsType_lt?: Maybe<String>;
-  oddsType_lte?: Maybe<String>;
-  oddsType_gt?: Maybe<String>;
-  oddsType_gte?: Maybe<String>;
-  oddsType_contains?: Maybe<String>;
-  oddsType_not_contains?: Maybe<String>;
-  oddsType_starts_with?: Maybe<String>;
-  oddsType_not_starts_with?: Maybe<String>;
-  oddsType_ends_with?: Maybe<String>;
-  oddsType_not_ends_with?: Maybe<String>;
-  AND?: Maybe<OddsTypeWhereInput[] | OddsTypeWhereInput>;
-  OR?: Maybe<OddsTypeWhereInput[] | OddsTypeWhereInput>;
-  NOT?: Maybe<OddsTypeWhereInput[] | OddsTypeWhereInput>;
-}
-
-export interface GameScalarWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  gameTime?: Maybe<Int>;
-  gameTime_not?: Maybe<Int>;
-  gameTime_in?: Maybe<Int[] | Int>;
-  gameTime_not_in?: Maybe<Int[] | Int>;
-  gameTime_lt?: Maybe<Int>;
-  gameTime_lte?: Maybe<Int>;
-  gameTime_gt?: Maybe<Int>;
-  gameTime_gte?: Maybe<Int>;
-  AND?: Maybe<GameScalarWhereInput[] | GameScalarWhereInput>;
-  OR?: Maybe<GameScalarWhereInput[] | GameScalarWhereInput>;
-  NOT?: Maybe<GameScalarWhereInput[] | GameScalarWhereInput>;
-}
-
-export interface LedgerCreateWithoutWagerTypeInput {
-  id?: Maybe<ID_Input>;
-  amountWagered: Float;
-  collected?: Maybe<Float>;
-  payout?: Maybe<Float>;
-  entryTime: Int;
-  user: UserCreateOneWithoutLedgerEntriesInput;
-  outcome: OutcomeCreateOneWithoutLedgersInput;
-}
-
-export interface GameUpdateManyWithWhereNestedInput {
-  where: GameScalarWhereInput;
-  data: GameUpdateManyDataInput;
-}
-
-export interface WagerTypeCreateInput {
-  id?: Maybe<ID_Input>;
-  wagerType: String;
-  ledgers?: Maybe<LedgerCreateManyWithoutWagerTypeInput>;
-}
-
-export interface GameUpdateManyDataInput {
-  gameTime?: Maybe<Int>;
-}
-
-export interface OddWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  game?: Maybe<GameWhereInput>;
-  moneyLine?: Maybe<Int>;
-  moneyLine_not?: Maybe<Int>;
-  moneyLine_in?: Maybe<Int[] | Int>;
-  moneyLine_not_in?: Maybe<Int[] | Int>;
-  moneyLine_lt?: Maybe<Int>;
-  moneyLine_lte?: Maybe<Int>;
-  moneyLine_gt?: Maybe<Int>;
-  moneyLine_gte?: Maybe<Int>;
-  runLineOdds?: Maybe<Int>;
-  runLineOdds_not?: Maybe<Int>;
-  runLineOdds_in?: Maybe<Int[] | Int>;
-  runLineOdds_not_in?: Maybe<Int[] | Int>;
-  runLineOdds_lt?: Maybe<Int>;
-  runLineOdds_lte?: Maybe<Int>;
-  runLineOdds_gt?: Maybe<Int>;
-  runLineOdds_gte?: Maybe<Int>;
-  runLineRuns?: Maybe<Float>;
-  runLineRuns_not?: Maybe<Float>;
-  runLineRuns_in?: Maybe<Float[] | Float>;
-  runLineRuns_not_in?: Maybe<Float[] | Float>;
-  runLineRuns_lt?: Maybe<Float>;
-  runLineRuns_lte?: Maybe<Float>;
-  runLineRuns_gt?: Maybe<Float>;
-  runLineRuns_gte?: Maybe<Float>;
-  overUnderOdds?: Maybe<Int>;
-  overUnderOdds_not?: Maybe<Int>;
-  overUnderOdds_in?: Maybe<Int[] | Int>;
-  overUnderOdds_not_in?: Maybe<Int[] | Int>;
-  overUnderOdds_lt?: Maybe<Int>;
-  overUnderOdds_lte?: Maybe<Int>;
-  overUnderOdds_gt?: Maybe<Int>;
-  overUnderOdds_gte?: Maybe<Int>;
-  overUnderRuns?: Maybe<Float>;
-  overUnderRuns_not?: Maybe<Float>;
-  overUnderRuns_in?: Maybe<Float[] | Float>;
-  overUnderRuns_not_in?: Maybe<Float[] | Float>;
-  overUnderRuns_lt?: Maybe<Float>;
-  overUnderRuns_lte?: Maybe<Float>;
-  overUnderRuns_gt?: Maybe<Float>;
-  overUnderRuns_gte?: Maybe<Float>;
-  timeOfOdds?: Maybe<Int>;
-  timeOfOdds_not?: Maybe<Int>;
-  timeOfOdds_in?: Maybe<Int[] | Int>;
-  timeOfOdds_not_in?: Maybe<Int[] | Int>;
-  timeOfOdds_lt?: Maybe<Int>;
-  timeOfOdds_lte?: Maybe<Int>;
-  timeOfOdds_gt?: Maybe<Int>;
-  timeOfOdds_gte?: Maybe<Int>;
-  AND?: Maybe<OddWhereInput[] | OddWhereInput>;
-  OR?: Maybe<OddWhereInput[] | OddWhereInput>;
-  NOT?: Maybe<OddWhereInput[] | OddWhereInput>;
-}
-
-export interface TeamUpsertWithoutHomeGamesInput {
-  update: TeamUpdateWithoutHomeGamesDataInput;
-  create: TeamCreateWithoutHomeGamesInput;
-}
-
-export interface TeamUpdateDataInput {
-  teamName?: Maybe<String>;
-  city?: Maybe<String>;
-  homeGames?: Maybe<GameUpdateManyWithoutHomeTeamInput>;
-  awayGames?: Maybe<GameUpdateManyWithoutAwayTeamInput>;
-}
-
-export interface TeamUpdateOneRequiredWithoutAwayGamesInput {
-  create?: Maybe<TeamCreateWithoutAwayGamesInput>;
-  update?: Maybe<TeamUpdateWithoutAwayGamesDataInput>;
-  upsert?: Maybe<TeamUpsertWithoutAwayGamesInput>;
-  connect?: Maybe<TeamWhereUniqueInput>;
-}
-
-export type OverUnderWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-}>;
-
-export interface TeamUpdateWithoutAwayGamesDataInput {
-  teamName?: Maybe<String>;
-  city?: Maybe<String>;
-  homeGames?: Maybe<GameUpdateManyWithoutHomeTeamInput>;
-}
-
-export interface OverUnderWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  value?: Maybe<Boolean>;
-  value_not?: Maybe<Boolean>;
-  overUnder?: Maybe<String>;
-  overUnder_not?: Maybe<String>;
-  overUnder_in?: Maybe<String[] | String>;
-  overUnder_not_in?: Maybe<String[] | String>;
-  overUnder_lt?: Maybe<String>;
-  overUnder_lte?: Maybe<String>;
-  overUnder_gt?: Maybe<String>;
-  overUnder_gte?: Maybe<String>;
-  overUnder_contains?: Maybe<String>;
-  overUnder_not_contains?: Maybe<String>;
-  overUnder_starts_with?: Maybe<String>;
-  overUnder_not_starts_with?: Maybe<String>;
-  overUnder_ends_with?: Maybe<String>;
-  overUnder_not_ends_with?: Maybe<String>;
-  AND?: Maybe<OverUnderWhereInput[] | OverUnderWhereInput>;
-  OR?: Maybe<OverUnderWhereInput[] | OverUnderWhereInput>;
-  NOT?: Maybe<OverUnderWhereInput[] | OverUnderWhereInput>;
-}
-
-export interface GameUpdateManyWithoutHomeTeamInput {
-  create?: Maybe<
-    GameCreateWithoutHomeTeamInput[] | GameCreateWithoutHomeTeamInput
-  >;
-  delete?: Maybe<GameWhereUniqueInput[] | GameWhereUniqueInput>;
-  connect?: Maybe<GameWhereUniqueInput[] | GameWhereUniqueInput>;
-  set?: Maybe<GameWhereUniqueInput[] | GameWhereUniqueInput>;
-  disconnect?: Maybe<GameWhereUniqueInput[] | GameWhereUniqueInput>;
-  update?: Maybe<
-    | GameUpdateWithWhereUniqueWithoutHomeTeamInput[]
-    | GameUpdateWithWhereUniqueWithoutHomeTeamInput
-  >;
-  upsert?: Maybe<
-    | GameUpsertWithWhereUniqueWithoutHomeTeamInput[]
-    | GameUpsertWithWhereUniqueWithoutHomeTeamInput
-  >;
-  deleteMany?: Maybe<GameScalarWhereInput[] | GameScalarWhereInput>;
-  updateMany?: Maybe<
-    GameUpdateManyWithWhereNestedInput[] | GameUpdateManyWithWhereNestedInput
-  >;
-}
-
-export interface OverUnderUpdateDataInput {
-  value?: Maybe<Boolean>;
-  overUnder?: Maybe<String>;
-}
-
-export interface GameUpdateWithWhereUniqueWithoutHomeTeamInput {
-  where: GameWhereUniqueInput;
-  data: GameUpdateWithoutHomeTeamDataInput;
-}
-
-export interface OddsTypeUpsertNestedInput {
-  update: OddsTypeUpdateDataInput;
-  create: OddsTypeCreateInput;
-}
-
-export interface GameUpdateWithoutHomeTeamDataInput {
-  awayTeam?: Maybe<TeamUpdateOneRequiredWithoutAwayGamesInput>;
-  gameTime?: Maybe<Int>;
-  sport?: Maybe<SportUpdateOneRequiredWithoutGameInput>;
-  odds?: Maybe<OddUpdateManyWithoutGameInput>;
-}
-
-export interface OddsTypeUpdateDataInput {
-  oddsType?: Maybe<String>;
-}
-
-export interface GameUpsertWithWhereUniqueWithoutHomeTeamInput {
-  where: GameWhereUniqueInput;
-  update: GameUpdateWithoutHomeTeamDataInput;
-  create: GameCreateWithoutHomeTeamInput;
-}
-
-export interface OddUpsertNestedInput {
-  update: OddUpdateDataInput;
-  create: OddCreateInput;
-}
-
-export interface TeamUpsertWithoutAwayGamesInput {
-  update: TeamUpdateWithoutAwayGamesDataInput;
-  create: TeamCreateWithoutAwayGamesInput;
-}
-
-export type TeamWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-}>;
-
-export interface GameUpdateManyMutationInput {
-  gameTime?: Maybe<Int>;
-}
-
-export interface OddUpdateOneRequiredInput {
-  create?: Maybe<OddCreateInput>;
-  update?: Maybe<OddUpdateDataInput>;
-  upsert?: Maybe<OddUpsertNestedInput>;
-  connect?: Maybe<OddWhereUniqueInput>;
-}
-
-export interface LedgerUpdateManyWithoutUserInput {
-  create?: Maybe<LedgerCreateWithoutUserInput[] | LedgerCreateWithoutUserInput>;
-  delete?: Maybe<LedgerWhereUniqueInput[] | LedgerWhereUniqueInput>;
-  connect?: Maybe<LedgerWhereUniqueInput[] | LedgerWhereUniqueInput>;
-  set?: Maybe<LedgerWhereUniqueInput[] | LedgerWhereUniqueInput>;
-  disconnect?: Maybe<LedgerWhereUniqueInput[] | LedgerWhereUniqueInput>;
-  update?: Maybe<
-    | LedgerUpdateWithWhereUniqueWithoutUserInput[]
-    | LedgerUpdateWithWhereUniqueWithoutUserInput
-  >;
-  upsert?: Maybe<
-    | LedgerUpsertWithWhereUniqueWithoutUserInput[]
-    | LedgerUpsertWithWhereUniqueWithoutUserInput
-  >;
-  deleteMany?: Maybe<LedgerScalarWhereInput[] | LedgerScalarWhereInput>;
-  updateMany?: Maybe<
-    | LedgerUpdateManyWithWhereNestedInput[]
-    | LedgerUpdateManyWithWhereNestedInput
-  >;
-}
-
-export interface LedgerUpdateDataInput {
-  amountWagered?: Maybe<Float>;
-  collected?: Maybe<Float>;
-  payout?: Maybe<Float>;
-  entryTime?: Maybe<Int>;
-  user?: Maybe<UserUpdateOneRequiredWithoutLedgerEntriesInput>;
-  wagerType?: Maybe<WagerTypeUpdateOneRequiredWithoutLedgersInput>;
-  outcome?: Maybe<OutcomeUpdateOneRequiredWithoutLedgersInput>;
-}
-
-export interface UserUpdateInput {
-  firstName?: Maybe<String>;
-  lastName?: Maybe<String>;
-  userName?: Maybe<String>;
-  password?: Maybe<String>;
-  email?: Maybe<String>;
-  phoneNumber?: Maybe<String>;
-  balance?: Maybe<Float>;
-  userVerified?: Maybe<Boolean>;
-  ledgerEntries?: Maybe<LedgerUpdateManyWithoutUserInput>;
-}
-
-export interface GameWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  homeTeam?: Maybe<TeamWhereInput>;
-  awayTeam?: Maybe<TeamWhereInput>;
-  gameTime?: Maybe<Int>;
-  gameTime_not?: Maybe<Int>;
-  gameTime_in?: Maybe<Int[] | Int>;
-  gameTime_not_in?: Maybe<Int[] | Int>;
-  gameTime_lt?: Maybe<Int>;
-  gameTime_lte?: Maybe<Int>;
-  gameTime_gt?: Maybe<Int>;
-  gameTime_gte?: Maybe<Int>;
-  sport?: Maybe<SportWhereInput>;
-  odds_every?: Maybe<OddWhereInput>;
-  odds_some?: Maybe<OddWhereInput>;
-  odds_none?: Maybe<OddWhereInput>;
-  AND?: Maybe<GameWhereInput[] | GameWhereInput>;
-  OR?: Maybe<GameWhereInput[] | GameWhereInput>;
-  NOT?: Maybe<GameWhereInput[] | GameWhereInput>;
-}
-
-export interface LedgerCreateInput {
-  id?: Maybe<ID_Input>;
-  amountWagered: Float;
-  collected?: Maybe<Float>;
-  payout?: Maybe<Float>;
-  entryTime: Int;
-  user: UserCreateOneWithoutLedgerEntriesInput;
-  wagerType: WagerTypeCreateOneWithoutLedgersInput;
-  outcome: OutcomeCreateOneWithoutLedgersInput;
-}
-
-export interface WagerUpdateInput {
-  ledger?: Maybe<LedgerUpdateOneRequiredInput>;
-  odds?: Maybe<OddUpdateOneRequiredInput>;
-  oddsType?: Maybe<OddsTypeUpdateOneRequiredInput>;
-  pickedOverUnder?: Maybe<OverUnderUpdateOneInput>;
-  pickedTeam?: Maybe<TeamUpdateOneInput>;
-}
-
-export interface LedgerCreateWithoutUserInput {
-  id?: Maybe<ID_Input>;
-  amountWagered: Float;
-  collected?: Maybe<Float>;
-  payout?: Maybe<Float>;
-  entryTime: Int;
-  wagerType: WagerTypeCreateOneWithoutLedgersInput;
-  outcome: OutcomeCreateOneWithoutLedgersInput;
-}
-
-export type WagerWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-}>;
-
-export interface UserCreateWithoutLedgerEntriesInput {
-  id?: Maybe<ID_Input>;
-  firstName: String;
-  lastName: String;
-  userName: String;
-  password: String;
-  email: String;
-  phoneNumber?: Maybe<String>;
-  balance: Float;
-  userVerified: Boolean;
-}
-
-export interface WagerWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  ledger?: Maybe<LedgerWhereInput>;
-  odds?: Maybe<OddWhereInput>;
-  oddsType?: Maybe<OddsTypeWhereInput>;
-  pickedOverUnder?: Maybe<OverUnderWhereInput>;
-  pickedTeam?: Maybe<TeamWhereInput>;
-  AND?: Maybe<WagerWhereInput[] | WagerWhereInput>;
-  OR?: Maybe<WagerWhereInput[] | WagerWhereInput>;
-  NOT?: Maybe<WagerWhereInput[] | WagerWhereInput>;
-}
-
-export interface WagerTypeCreateOneWithoutLedgersInput {
-  create?: Maybe<WagerTypeCreateWithoutLedgersInput>;
-  connect?: Maybe<WagerTypeWhereUniqueInput>;
-}
-
-export interface OddCreateOneInput {
-  create?: Maybe<OddCreateInput>;
-  connect?: Maybe<OddWhereUniqueInput>;
-}
-
-export interface WagerTypeCreateWithoutLedgersInput {
-  id?: Maybe<ID_Input>;
-  wagerType: String;
-}
-
-export interface WagerCreateInput {
-  id?: Maybe<ID_Input>;
-  ledger: LedgerCreateOneInput;
-  odds: OddCreateOneInput;
-  oddsType: OddsTypeCreateOneInput;
-  pickedOverUnder?: Maybe<OverUnderCreateOneInput>;
-  pickedTeam?: Maybe<TeamCreateOneInput>;
-}
-
-export interface OutcomeCreateOneWithoutLedgersInput {
-  create?: Maybe<OutcomeCreateWithoutLedgersInput>;
-  connect?: Maybe<OutcomeWhereUniqueInput>;
-}
-
-export interface UserUpdateManyMutationInput {
-  firstName?: Maybe<String>;
-  lastName?: Maybe<String>;
-  userName?: Maybe<String>;
-  password?: Maybe<String>;
-  email?: Maybe<String>;
-  phoneNumber?: Maybe<String>;
-  balance?: Maybe<Float>;
-  userVerified?: Maybe<Boolean>;
-}
-
-export interface OutcomeCreateWithoutLedgersInput {
-  id?: Maybe<ID_Input>;
-  outcome: String;
-}
-
-export interface LedgerUpdateWithoutUserDataInput {
-  amountWagered?: Maybe<Float>;
-  collected?: Maybe<Float>;
-  payout?: Maybe<Float>;
-  entryTime?: Maybe<Int>;
-  wagerType?: Maybe<WagerTypeUpdateOneRequiredWithoutLedgersInput>;
-  outcome?: Maybe<OutcomeUpdateOneRequiredWithoutLedgersInput>;
-}
-
-export interface LedgerUpdateInput {
-  amountWagered?: Maybe<Float>;
-  collected?: Maybe<Float>;
-  payout?: Maybe<Float>;
-  entryTime?: Maybe<Int>;
-  user?: Maybe<UserUpdateOneRequiredWithoutLedgerEntriesInput>;
-  wagerType?: Maybe<WagerTypeUpdateOneRequiredWithoutLedgersInput>;
-  outcome?: Maybe<OutcomeUpdateOneRequiredWithoutLedgersInput>;
-}
-
-export interface TeamCreateOneWithoutHomeGamesInput {
-  create?: Maybe<TeamCreateWithoutHomeGamesInput>;
-  connect?: Maybe<TeamWhereUniqueInput>;
-}
-
-export interface LedgerCreateManyWithoutUserInput {
-  create?: Maybe<LedgerCreateWithoutUserInput[] | LedgerCreateWithoutUserInput>;
-  connect?: Maybe<LedgerWhereUniqueInput[] | LedgerWhereUniqueInput>;
-}
-
-export interface GameCreateManyWithoutAwayTeamInput {
-  create?: Maybe<
-    GameCreateWithoutAwayTeamInput[] | GameCreateWithoutAwayTeamInput
-  >;
-  connect?: Maybe<GameWhereUniqueInput[] | GameWhereUniqueInput>;
-}
-
-export interface UserUpdateWithoutLedgerEntriesDataInput {
-  firstName?: Maybe<String>;
-  lastName?: Maybe<String>;
-  userName?: Maybe<String>;
-  password?: Maybe<String>;
-  email?: Maybe<String>;
-  phoneNumber?: Maybe<String>;
-  balance?: Maybe<Float>;
-  userVerified?: Maybe<Boolean>;
-}
-
-export interface SportCreateOneWithoutGameInput {
-  create?: Maybe<SportCreateWithoutGameInput>;
-  connect?: Maybe<SportWhereUniqueInput>;
-}
-
-export interface UserUpsertWithoutLedgerEntriesInput {
-  update: UserUpdateWithoutLedgerEntriesDataInput;
-  create: UserCreateWithoutLedgerEntriesInput;
-}
-
-export interface OddCreateManyWithoutGameInput {
-  create?: Maybe<OddCreateWithoutGameInput[] | OddCreateWithoutGameInput>;
-  connect?: Maybe<OddWhereUniqueInput[] | OddWhereUniqueInput>;
-}
-
-export interface WagerTypeUpdateOneRequiredWithoutLedgersInput {
-  create?: Maybe<WagerTypeCreateWithoutLedgersInput>;
-  update?: Maybe<WagerTypeUpdateWithoutLedgersDataInput>;
-  upsert?: Maybe<WagerTypeUpsertWithoutLedgersInput>;
-  connect?: Maybe<WagerTypeWhereUniqueInput>;
-}
-
-export interface TeamCreateOneWithoutAwayGamesInput {
-  create?: Maybe<TeamCreateWithoutAwayGamesInput>;
-  connect?: Maybe<TeamWhereUniqueInput>;
-}
-
-export interface WagerTypeUpdateWithoutLedgersDataInput {
-  wagerType?: Maybe<String>;
-}
-
-export interface GameCreateManyWithoutHomeTeamInput {
-  create?: Maybe<
-    GameCreateWithoutHomeTeamInput[] | GameCreateWithoutHomeTeamInput
-  >;
-  connect?: Maybe<GameWhereUniqueInput[] | GameWhereUniqueInput>;
-}
-
-export interface WagerTypeUpsertWithoutLedgersInput {
-  update: WagerTypeUpdateWithoutLedgersDataInput;
-  create: WagerTypeCreateWithoutLedgersInput;
-}
-
-export interface GameUpdateInput {
-  homeTeam?: Maybe<TeamUpdateOneRequiredWithoutHomeGamesInput>;
-  awayTeam?: Maybe<TeamUpdateOneRequiredWithoutAwayGamesInput>;
-  gameTime?: Maybe<Int>;
-  sport?: Maybe<SportUpdateOneRequiredWithoutGameInput>;
-  odds?: Maybe<OddUpdateManyWithoutGameInput>;
-}
-
-export interface OutcomeUpdateOneRequiredWithoutLedgersInput {
-  create?: Maybe<OutcomeCreateWithoutLedgersInput>;
-  update?: Maybe<OutcomeUpdateWithoutLedgersDataInput>;
-  upsert?: Maybe<OutcomeUpsertWithoutLedgersInput>;
-  connect?: Maybe<OutcomeWhereUniqueInput>;
-}
-
-export interface TeamUpdateWithoutHomeGamesDataInput {
-  teamName?: Maybe<String>;
-  city?: Maybe<String>;
-  awayGames?: Maybe<GameUpdateManyWithoutAwayTeamInput>;
-}
-
-export interface OutcomeUpdateWithoutLedgersDataInput {
-  outcome?: Maybe<String>;
-}
-
-export interface UserSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<UserWhereInput>;
-  AND?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
-  OR?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
-  NOT?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
-}
-
-export interface OutcomeUpsertWithoutLedgersInput {
-  update: OutcomeUpdateWithoutLedgersDataInput;
-  create: OutcomeCreateWithoutLedgersInput;
-}
-
-export interface OverUnderSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<OverUnderWhereInput>;
-  AND?: Maybe<
-    OverUnderSubscriptionWhereInput[] | OverUnderSubscriptionWhereInput
-  >;
-  OR?: Maybe<
-    OverUnderSubscriptionWhereInput[] | OverUnderSubscriptionWhereInput
-  >;
-  NOT?: Maybe<
-    OverUnderSubscriptionWhereInput[] | OverUnderSubscriptionWhereInput
-  >;
-}
-
-export interface LedgerUpdateManyMutationInput {
-  amountWagered?: Maybe<Float>;
-  collected?: Maybe<Float>;
-  payout?: Maybe<Float>;
-  entryTime?: Maybe<Int>;
-}
-
-export interface OutcomeWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  outcome?: Maybe<String>;
-  outcome_not?: Maybe<String>;
-  outcome_in?: Maybe<String[] | String>;
-  outcome_not_in?: Maybe<String[] | String>;
-  outcome_lt?: Maybe<String>;
-  outcome_lte?: Maybe<String>;
-  outcome_gt?: Maybe<String>;
-  outcome_gte?: Maybe<String>;
-  outcome_contains?: Maybe<String>;
-  outcome_not_contains?: Maybe<String>;
-  outcome_starts_with?: Maybe<String>;
-  outcome_not_starts_with?: Maybe<String>;
-  outcome_ends_with?: Maybe<String>;
-  outcome_not_ends_with?: Maybe<String>;
-  ledgers_every?: Maybe<LedgerWhereInput>;
-  ledgers_some?: Maybe<LedgerWhereInput>;
-  ledgers_none?: Maybe<LedgerWhereInput>;
-  AND?: Maybe<OutcomeWhereInput[] | OutcomeWhereInput>;
-  OR?: Maybe<OutcomeWhereInput[] | OutcomeWhereInput>;
-  NOT?: Maybe<OutcomeWhereInput[] | OutcomeWhereInput>;
-}
-
-export interface OddCreateInput {
-  id?: Maybe<ID_Input>;
-  game: GameCreateOneWithoutOddsInput;
-  moneyLine?: Maybe<Int>;
-  runLineOdds?: Maybe<Int>;
-  runLineRuns?: Maybe<Float>;
-  overUnderOdds?: Maybe<Int>;
-  overUnderRuns?: Maybe<Float>;
-  timeOfOdds: Int;
-}
-
-export interface LedgerSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<LedgerWhereInput>;
-  AND?: Maybe<LedgerSubscriptionWhereInput[] | LedgerSubscriptionWhereInput>;
-  OR?: Maybe<LedgerSubscriptionWhereInput[] | LedgerSubscriptionWhereInput>;
-  NOT?: Maybe<LedgerSubscriptionWhereInput[] | LedgerSubscriptionWhereInput>;
-}
-
-export interface GameCreateOneWithoutOddsInput {
-  create?: Maybe<GameCreateWithoutOddsInput>;
-  connect?: Maybe<GameWhereUniqueInput>;
-}
-
-export interface LedgerUpsertWithWhereUniqueWithoutWagerTypeInput {
-  where: LedgerWhereUniqueInput;
-  update: LedgerUpdateWithoutWagerTypeDataInput;
-  create: LedgerCreateWithoutWagerTypeInput;
-}
-
-export interface GameCreateWithoutOddsInput {
-  id?: Maybe<ID_Input>;
-  homeTeam: TeamCreateOneWithoutHomeGamesInput;
-  awayTeam: TeamCreateOneWithoutAwayGamesInput;
-  gameTime: Int;
-  sport: SportCreateOneWithoutGameInput;
-}
-
-export interface LedgerUpdateManyWithoutWagerTypeInput {
-  create?: Maybe<
-    LedgerCreateWithoutWagerTypeInput[] | LedgerCreateWithoutWagerTypeInput
-  >;
-  delete?: Maybe<LedgerWhereUniqueInput[] | LedgerWhereUniqueInput>;
-  connect?: Maybe<LedgerWhereUniqueInput[] | LedgerWhereUniqueInput>;
-  set?: Maybe<LedgerWhereUniqueInput[] | LedgerWhereUniqueInput>;
-  disconnect?: Maybe<LedgerWhereUniqueInput[] | LedgerWhereUniqueInput>;
-  update?: Maybe<
-    | LedgerUpdateWithWhereUniqueWithoutWagerTypeInput[]
-    | LedgerUpdateWithWhereUniqueWithoutWagerTypeInput
-  >;
-  upsert?: Maybe<
-    | LedgerUpsertWithWhereUniqueWithoutWagerTypeInput[]
-    | LedgerUpsertWithWhereUniqueWithoutWagerTypeInput
-  >;
-  deleteMany?: Maybe<LedgerScalarWhereInput[] | LedgerScalarWhereInput>;
-  updateMany?: Maybe<
-    | LedgerUpdateManyWithWhereNestedInput[]
-    | LedgerUpdateManyWithWhereNestedInput
-  >;
-}
-
-export interface OddUpdateInput {
-  game?: Maybe<GameUpdateOneRequiredWithoutOddsInput>;
-  moneyLine?: Maybe<Int>;
-  runLineOdds?: Maybe<Int>;
-  runLineRuns?: Maybe<Float>;
-  overUnderOdds?: Maybe<Int>;
-  overUnderRuns?: Maybe<Float>;
-  timeOfOdds?: Maybe<Int>;
-}
-
-export interface LedgerCreateManyWithoutWagerTypeInput {
-  create?: Maybe<
-    LedgerCreateWithoutWagerTypeInput[] | LedgerCreateWithoutWagerTypeInput
-  >;
-  connect?: Maybe<LedgerWhereUniqueInput[] | LedgerWhereUniqueInput>;
-}
-
-export interface GameUpdateOneRequiredWithoutOddsInput {
-  create?: Maybe<GameCreateWithoutOddsInput>;
-  update?: Maybe<GameUpdateWithoutOddsDataInput>;
-  upsert?: Maybe<GameUpsertWithoutOddsInput>;
-  connect?: Maybe<GameWhereUniqueInput>;
-}
-
-export interface TeamUpsertNestedInput {
-  update: TeamUpdateDataInput;
-  create: TeamCreateInput;
-}
-
-export interface GameUpdateWithoutOddsDataInput {
-  homeTeam?: Maybe<TeamUpdateOneRequiredWithoutHomeGamesInput>;
-  awayTeam?: Maybe<TeamUpdateOneRequiredWithoutAwayGamesInput>;
-  gameTime?: Maybe<Int>;
-  sport?: Maybe<SportUpdateOneRequiredWithoutGameInput>;
-}
-
-export interface OverUnderUpsertNestedInput {
-  update: OverUnderUpdateDataInput;
-  create: OverUnderCreateInput;
-}
-
-export interface GameUpsertWithoutOddsInput {
-  update: GameUpdateWithoutOddsDataInput;
-  create: GameCreateWithoutOddsInput;
-}
-
-export interface OverUnderUpdateOneInput {
-  create?: Maybe<OverUnderCreateInput>;
-  update?: Maybe<OverUnderUpdateDataInput>;
-  upsert?: Maybe<OverUnderUpsertNestedInput>;
-  delete?: Maybe<Boolean>;
-  disconnect?: Maybe<Boolean>;
-  connect?: Maybe<OverUnderWhereUniqueInput>;
-}
-
-export interface OddUpdateManyMutationInput {
-  moneyLine?: Maybe<Int>;
-  runLineOdds?: Maybe<Int>;
-  runLineRuns?: Maybe<Float>;
-  overUnderOdds?: Maybe<Int>;
-  overUnderRuns?: Maybe<Float>;
-  timeOfOdds?: Maybe<Int>;
-}
-
-export interface OddsTypeUpdateOneRequiredInput {
-  create?: Maybe<OddsTypeCreateInput>;
-  update?: Maybe<OddsTypeUpdateDataInput>;
-  upsert?: Maybe<OddsTypeUpsertNestedInput>;
-  connect?: Maybe<OddsTypeWhereUniqueInput>;
-}
-
-export interface OddsTypeCreateInput {
-  id?: Maybe<ID_Input>;
-  oddsType: String;
-}
-
-export interface TeamWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  teamName?: Maybe<String>;
-  teamName_not?: Maybe<String>;
-  teamName_in?: Maybe<String[] | String>;
-  teamName_not_in?: Maybe<String[] | String>;
-  teamName_lt?: Maybe<String>;
-  teamName_lte?: Maybe<String>;
-  teamName_gt?: Maybe<String>;
-  teamName_gte?: Maybe<String>;
-  teamName_contains?: Maybe<String>;
-  teamName_not_contains?: Maybe<String>;
-  teamName_starts_with?: Maybe<String>;
-  teamName_not_starts_with?: Maybe<String>;
-  teamName_ends_with?: Maybe<String>;
-  teamName_not_ends_with?: Maybe<String>;
-  city?: Maybe<String>;
-  city_not?: Maybe<String>;
-  city_in?: Maybe<String[] | String>;
-  city_not_in?: Maybe<String[] | String>;
-  city_lt?: Maybe<String>;
-  city_lte?: Maybe<String>;
-  city_gt?: Maybe<String>;
-  city_gte?: Maybe<String>;
-  city_contains?: Maybe<String>;
-  city_not_contains?: Maybe<String>;
-  city_starts_with?: Maybe<String>;
-  city_not_starts_with?: Maybe<String>;
-  city_ends_with?: Maybe<String>;
-  city_not_ends_with?: Maybe<String>;
-  homeGames_every?: Maybe<GameWhereInput>;
-  homeGames_some?: Maybe<GameWhereInput>;
-  homeGames_none?: Maybe<GameWhereInput>;
-  awayGames_every?: Maybe<GameWhereInput>;
-  awayGames_some?: Maybe<GameWhereInput>;
-  awayGames_none?: Maybe<GameWhereInput>;
-  AND?: Maybe<TeamWhereInput[] | TeamWhereInput>;
-  OR?: Maybe<TeamWhereInput[] | TeamWhereInput>;
-  NOT?: Maybe<TeamWhereInput[] | TeamWhereInput>;
-}
-
-export interface OddsTypeUpdateInput {
-  oddsType?: Maybe<String>;
-}
-
-export type UserWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-}>;
-
-export interface OddsTypeUpdateManyMutationInput {
-  oddsType?: Maybe<String>;
-}
-
-export interface TeamCreateOneInput {
-  create?: Maybe<TeamCreateInput>;
-  connect?: Maybe<TeamWhereUniqueInput>;
-}
-
-export interface OutcomeCreateInput {
-  id?: Maybe<ID_Input>;
-  outcome: String;
-  ledgers?: Maybe<LedgerCreateManyWithoutOutcomeInput>;
-}
-
-export interface OddsTypeCreateOneInput {
-  create?: Maybe<OddsTypeCreateInput>;
-  connect?: Maybe<OddsTypeWhereUniqueInput>;
-}
-
-export interface LedgerCreateManyWithoutOutcomeInput {
-  create?: Maybe<
-    LedgerCreateWithoutOutcomeInput[] | LedgerCreateWithoutOutcomeInput
-  >;
-  connect?: Maybe<LedgerWhereUniqueInput[] | LedgerWhereUniqueInput>;
-}
-
-export type WagerTypeWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-}>;
-
-export interface LedgerCreateWithoutOutcomeInput {
-  id?: Maybe<ID_Input>;
-  amountWagered: Float;
-  collected?: Maybe<Float>;
-  payout?: Maybe<Float>;
-  entryTime: Int;
-  user: UserCreateOneWithoutLedgerEntriesInput;
-  wagerType: WagerTypeCreateOneWithoutLedgersInput;
-}
-
-export interface LedgerUpdateWithWhereUniqueWithoutUserInput {
-  where: LedgerWhereUniqueInput;
-  data: LedgerUpdateWithoutUserDataInput;
-}
-
-export interface OutcomeUpdateInput {
-  outcome?: Maybe<String>;
-  ledgers?: Maybe<LedgerUpdateManyWithoutOutcomeInput>;
-}
-
-export interface TeamCreateWithoutHomeGamesInput {
-  id?: Maybe<ID_Input>;
-  teamName: String;
-  city: String;
-  awayGames?: Maybe<GameCreateManyWithoutAwayTeamInput>;
-}
-
-export interface LedgerUpdateManyWithoutOutcomeInput {
-  create?: Maybe<
-    LedgerCreateWithoutOutcomeInput[] | LedgerCreateWithoutOutcomeInput
-  >;
-  delete?: Maybe<LedgerWhereUniqueInput[] | LedgerWhereUniqueInput>;
-  connect?: Maybe<LedgerWhereUniqueInput[] | LedgerWhereUniqueInput>;
-  set?: Maybe<LedgerWhereUniqueInput[] | LedgerWhereUniqueInput>;
-  disconnect?: Maybe<LedgerWhereUniqueInput[] | LedgerWhereUniqueInput>;
-  update?: Maybe<
-    | LedgerUpdateWithWhereUniqueWithoutOutcomeInput[]
-    | LedgerUpdateWithWhereUniqueWithoutOutcomeInput
-  >;
-  upsert?: Maybe<
-    | LedgerUpsertWithWhereUniqueWithoutOutcomeInput[]
-    | LedgerUpsertWithWhereUniqueWithoutOutcomeInput
-  >;
-  deleteMany?: Maybe<LedgerScalarWhereInput[] | LedgerScalarWhereInput>;
-  updateMany?: Maybe<
-    | LedgerUpdateManyWithWhereNestedInput[]
-    | LedgerUpdateManyWithWhereNestedInput
-  >;
-}
-
-export interface SportCreateWithoutGameInput {
-  id?: Maybe<ID_Input>;
-  sportName: String;
-}
-
-export interface LedgerUpdateWithWhereUniqueWithoutOutcomeInput {
-  where: LedgerWhereUniqueInput;
-  data: LedgerUpdateWithoutOutcomeDataInput;
-}
-
-export interface TeamCreateWithoutAwayGamesInput {
-  id?: Maybe<ID_Input>;
-  teamName: String;
-  city: String;
-  homeGames?: Maybe<GameCreateManyWithoutHomeTeamInput>;
-}
-
-export interface LedgerUpdateWithoutOutcomeDataInput {
-  amountWagered?: Maybe<Float>;
-  collected?: Maybe<Float>;
-  payout?: Maybe<Float>;
-  entryTime?: Maybe<Int>;
-  user?: Maybe<UserUpdateOneRequiredWithoutLedgerEntriesInput>;
-  wagerType?: Maybe<WagerTypeUpdateOneRequiredWithoutLedgersInput>;
-}
-
-export interface TeamUpdateOneRequiredWithoutHomeGamesInput {
-  create?: Maybe<TeamCreateWithoutHomeGamesInput>;
-  update?: Maybe<TeamUpdateWithoutHomeGamesDataInput>;
-  upsert?: Maybe<TeamUpsertWithoutHomeGamesInput>;
-  connect?: Maybe<TeamWhereUniqueInput>;
-}
-
-export interface LedgerUpsertWithWhereUniqueWithoutOutcomeInput {
-  where: LedgerWhereUniqueInput;
-  update: LedgerUpdateWithoutOutcomeDataInput;
-  create: LedgerCreateWithoutOutcomeInput;
-}
-
-export type LedgerWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-}>;
-
-export interface LedgerScalarWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  amountWagered?: Maybe<Float>;
-  amountWagered_not?: Maybe<Float>;
-  amountWagered_in?: Maybe<Float[] | Float>;
-  amountWagered_not_in?: Maybe<Float[] | Float>;
-  amountWagered_lt?: Maybe<Float>;
-  amountWagered_lte?: Maybe<Float>;
-  amountWagered_gt?: Maybe<Float>;
-  amountWagered_gte?: Maybe<Float>;
-  collected?: Maybe<Float>;
-  collected_not?: Maybe<Float>;
-  collected_in?: Maybe<Float[] | Float>;
-  collected_not_in?: Maybe<Float[] | Float>;
-  collected_lt?: Maybe<Float>;
-  collected_lte?: Maybe<Float>;
-  collected_gt?: Maybe<Float>;
-  collected_gte?: Maybe<Float>;
-  payout?: Maybe<Float>;
-  payout_not?: Maybe<Float>;
-  payout_in?: Maybe<Float[] | Float>;
-  payout_not_in?: Maybe<Float[] | Float>;
-  payout_lt?: Maybe<Float>;
-  payout_lte?: Maybe<Float>;
-  payout_gt?: Maybe<Float>;
-  payout_gte?: Maybe<Float>;
-  entryTime?: Maybe<Int>;
-  entryTime_not?: Maybe<Int>;
-  entryTime_in?: Maybe<Int[] | Int>;
-  entryTime_not_in?: Maybe<Int[] | Int>;
-  entryTime_lt?: Maybe<Int>;
-  entryTime_lte?: Maybe<Int>;
-  entryTime_gt?: Maybe<Int>;
-  entryTime_gte?: Maybe<Int>;
-  AND?: Maybe<LedgerScalarWhereInput[] | LedgerScalarWhereInput>;
-  OR?: Maybe<LedgerScalarWhereInput[] | LedgerScalarWhereInput>;
-  NOT?: Maybe<LedgerScalarWhereInput[] | LedgerScalarWhereInput>;
-}
-
-export interface OddsTypeSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<OddsTypeWhereInput>;
-  AND?: Maybe<
-    OddsTypeSubscriptionWhereInput[] | OddsTypeSubscriptionWhereInput
-  >;
-  OR?: Maybe<OddsTypeSubscriptionWhereInput[] | OddsTypeSubscriptionWhereInput>;
-  NOT?: Maybe<
-    OddsTypeSubscriptionWhereInput[] | OddsTypeSubscriptionWhereInput
-  >;
-}
-
-export interface LedgerUpdateManyWithWhereNestedInput {
-  where: LedgerScalarWhereInput;
-  data: LedgerUpdateManyDataInput;
-}
-
-export interface LedgerUpdateWithWhereUniqueWithoutWagerTypeInput {
-  where: LedgerWhereUniqueInput;
-  data: LedgerUpdateWithoutWagerTypeDataInput;
-}
-
-export interface LedgerUpdateManyDataInput {
-  amountWagered?: Maybe<Float>;
-  collected?: Maybe<Float>;
-  payout?: Maybe<Float>;
-  entryTime?: Maybe<Int>;
-}
-
-export type OutcomeWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-}>;
-
-export interface OutcomeUpdateManyMutationInput {
-  outcome?: Maybe<String>;
-}
-
-export interface SportWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  sportName?: Maybe<String>;
-  sportName_not?: Maybe<String>;
-  sportName_in?: Maybe<String[] | String>;
-  sportName_not_in?: Maybe<String[] | String>;
-  sportName_lt?: Maybe<String>;
-  sportName_lte?: Maybe<String>;
-  sportName_gt?: Maybe<String>;
-  sportName_gte?: Maybe<String>;
-  sportName_contains?: Maybe<String>;
-  sportName_not_contains?: Maybe<String>;
-  sportName_starts_with?: Maybe<String>;
-  sportName_not_starts_with?: Maybe<String>;
-  sportName_ends_with?: Maybe<String>;
-  sportName_not_ends_with?: Maybe<String>;
-  game_every?: Maybe<GameWhereInput>;
-  game_some?: Maybe<GameWhereInput>;
-  game_none?: Maybe<GameWhereInput>;
-  AND?: Maybe<SportWhereInput[] | SportWhereInput>;
-  OR?: Maybe<SportWhereInput[] | SportWhereInput>;
-  NOT?: Maybe<SportWhereInput[] | SportWhereInput>;
-}
-
-export interface OverUnderCreateInput {
-  id?: Maybe<ID_Input>;
-  value: Boolean;
-  overUnder: String;
-}
-
-export interface OddUpdateDataInput {
-  game?: Maybe<GameUpdateOneRequiredWithoutOddsInput>;
-  moneyLine?: Maybe<Int>;
-  runLineOdds?: Maybe<Int>;
-  runLineRuns?: Maybe<Float>;
-  overUnderOdds?: Maybe<Int>;
-  overUnderRuns?: Maybe<Float>;
-  timeOfOdds?: Maybe<Int>;
-}
-
-export interface OverUnderUpdateInput {
-  value?: Maybe<Boolean>;
-  overUnder?: Maybe<String>;
-}
-
-export interface LedgerUpdateOneRequiredInput {
-  create?: Maybe<LedgerCreateInput>;
-  update?: Maybe<LedgerUpdateDataInput>;
-  upsert?: Maybe<LedgerUpsertNestedInput>;
-  connect?: Maybe<LedgerWhereUniqueInput>;
-}
-
-export interface OverUnderUpdateManyMutationInput {
-  value?: Maybe<Boolean>;
-  overUnder?: Maybe<String>;
-}
-
-export interface LedgerCreateOneInput {
-  create?: Maybe<LedgerCreateInput>;
-  connect?: Maybe<LedgerWhereUniqueInput>;
-}
-
-export interface SportCreateInput {
-  id?: Maybe<ID_Input>;
-  sportName: String;
-  game?: Maybe<GameCreateManyWithoutSportInput>;
-}
-
-export interface GameCreateInput {
-  id?: Maybe<ID_Input>;
-  homeTeam: TeamCreateOneWithoutHomeGamesInput;
-  awayTeam: TeamCreateOneWithoutAwayGamesInput;
-  gameTime: Int;
-  sport: SportCreateOneWithoutGameInput;
-  odds?: Maybe<OddCreateManyWithoutGameInput>;
-}
-
-export interface GameCreateManyWithoutSportInput {
-  create?: Maybe<GameCreateWithoutSportInput[] | GameCreateWithoutSportInput>;
-  connect?: Maybe<GameWhereUniqueInput[] | GameWhereUniqueInput>;
-}
-
-export interface OddCreateWithoutGameInput {
-  id?: Maybe<ID_Input>;
-  moneyLine?: Maybe<Int>;
-  runLineOdds?: Maybe<Int>;
-  runLineRuns?: Maybe<Float>;
-  overUnderOdds?: Maybe<Int>;
-  overUnderRuns?: Maybe<Float>;
-  timeOfOdds: Int;
-}
-
-export interface GameCreateWithoutSportInput {
-  id?: Maybe<ID_Input>;
-  homeTeam: TeamCreateOneWithoutHomeGamesInput;
-  awayTeam: TeamCreateOneWithoutAwayGamesInput;
-  gameTime: Int;
-  odds?: Maybe<OddCreateManyWithoutGameInput>;
-}
-
-export interface WagerTypeSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<WagerTypeWhereInput>;
-  AND?: Maybe<
-    WagerTypeSubscriptionWhereInput[] | WagerTypeSubscriptionWhereInput
-  >;
-  OR?: Maybe<
-    WagerTypeSubscriptionWhereInput[] | WagerTypeSubscriptionWhereInput
-  >;
-  NOT?: Maybe<
-    WagerTypeSubscriptionWhereInput[] | WagerTypeSubscriptionWhereInput
-  >;
-}
-
-export interface SportUpdateInput {
-  sportName?: Maybe<String>;
-  game?: Maybe<GameUpdateManyWithoutSportInput>;
-}
-
-export interface WagerTypeUpdateManyMutationInput {
-  wagerType?: Maybe<String>;
-}
-
-export interface GameUpdateManyWithoutSportInput {
-  create?: Maybe<GameCreateWithoutSportInput[] | GameCreateWithoutSportInput>;
-  delete?: Maybe<GameWhereUniqueInput[] | GameWhereUniqueInput>;
-  connect?: Maybe<GameWhereUniqueInput[] | GameWhereUniqueInput>;
-  set?: Maybe<GameWhereUniqueInput[] | GameWhereUniqueInput>;
-  disconnect?: Maybe<GameWhereUniqueInput[] | GameWhereUniqueInput>;
-  update?: Maybe<
-    | GameUpdateWithWhereUniqueWithoutSportInput[]
-    | GameUpdateWithWhereUniqueWithoutSportInput
-  >;
-  upsert?: Maybe<
-    | GameUpsertWithWhereUniqueWithoutSportInput[]
-    | GameUpsertWithWhereUniqueWithoutSportInput
-  >;
-  deleteMany?: Maybe<GameScalarWhereInput[] | GameScalarWhereInput>;
-  updateMany?: Maybe<
-    GameUpdateManyWithWhereNestedInput[] | GameUpdateManyWithWhereNestedInput
-  >;
-}
-
-export interface TeamUpdateOneInput {
-  create?: Maybe<TeamCreateInput>;
-  update?: Maybe<TeamUpdateDataInput>;
-  upsert?: Maybe<TeamUpsertNestedInput>;
-  delete?: Maybe<Boolean>;
-  disconnect?: Maybe<Boolean>;
-  connect?: Maybe<TeamWhereUniqueInput>;
-}
-
-export interface GameUpdateWithWhereUniqueWithoutSportInput {
-  where: GameWhereUniqueInput;
-  data: GameUpdateWithoutSportDataInput;
-}
-
-export interface LedgerUpsertNestedInput {
-  update: LedgerUpdateDataInput;
-  create: LedgerCreateInput;
-}
-
-export interface GameUpdateWithoutSportDataInput {
-  homeTeam?: Maybe<TeamUpdateOneRequiredWithoutHomeGamesInput>;
-  awayTeam?: Maybe<TeamUpdateOneRequiredWithoutAwayGamesInput>;
-  gameTime?: Maybe<Int>;
-  odds?: Maybe<OddUpdateManyWithoutGameInput>;
-}
-
-export interface LedgerUpsertWithWhereUniqueWithoutUserInput {
-  where: LedgerWhereUniqueInput;
-  update: LedgerUpdateWithoutUserDataInput;
-  create: LedgerCreateWithoutUserInput;
-}
-
-export interface GameUpsertWithWhereUniqueWithoutSportInput {
-  where: GameWhereUniqueInput;
-  update: GameUpdateWithoutSportDataInput;
-  create: GameCreateWithoutSportInput;
-}
-
-export interface GameCreateWithoutHomeTeamInput {
-  id?: Maybe<ID_Input>;
-  awayTeam: TeamCreateOneWithoutAwayGamesInput;
-  gameTime: Int;
-  sport: SportCreateOneWithoutGameInput;
-  odds?: Maybe<OddCreateManyWithoutGameInput>;
-}
-
-export interface TeamUpdateManyMutationInput {
-  teamName?: Maybe<String>;
-  city?: Maybe<String>;
-}
-
-export interface TeamUpdateInput {
-  teamName?: Maybe<String>;
-  city?: Maybe<String>;
-  homeGames?: Maybe<GameUpdateManyWithoutHomeTeamInput>;
-  awayGames?: Maybe<GameUpdateManyWithoutAwayTeamInput>;
-}
-
-export interface TeamCreateInput {
-  id?: Maybe<ID_Input>;
-  teamName: String;
-  city: String;
-  homeGames?: Maybe<GameCreateManyWithoutHomeTeamInput>;
-  awayGames?: Maybe<GameCreateManyWithoutAwayTeamInput>;
-}
-
-export interface SportUpdateManyMutationInput {
-  sportName?: Maybe<String>;
+export interface SportUpsertWithoutGameInput {
+  update: SportUpdateWithoutGameDataInput;
+  create: SportCreateWithoutGameInput;
 }
 
 export interface UserWhereInput {
@@ -2415,12 +823,530 @@ export interface UserWhereInput {
   NOT?: Maybe<UserWhereInput[] | UserWhereInput>;
 }
 
-export interface GameCreateWithoutAwayTeamInput {
+export interface OddUpdateManyWithoutGameInput {
+  create?: Maybe<OddCreateWithoutGameInput[] | OddCreateWithoutGameInput>;
+  delete?: Maybe<OddWhereUniqueInput[] | OddWhereUniqueInput>;
+  connect?: Maybe<OddWhereUniqueInput[] | OddWhereUniqueInput>;
+  set?: Maybe<OddWhereUniqueInput[] | OddWhereUniqueInput>;
+  disconnect?: Maybe<OddWhereUniqueInput[] | OddWhereUniqueInput>;
+  update?: Maybe<
+    | OddUpdateWithWhereUniqueWithoutGameInput[]
+    | OddUpdateWithWhereUniqueWithoutGameInput
+  >;
+  upsert?: Maybe<
+    | OddUpsertWithWhereUniqueWithoutGameInput[]
+    | OddUpsertWithWhereUniqueWithoutGameInput
+  >;
+  deleteMany?: Maybe<OddScalarWhereInput[] | OddScalarWhereInput>;
+  updateMany?: Maybe<
+    OddUpdateManyWithWhereNestedInput[] | OddUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface OutcomeWhereInput {
   id?: Maybe<ID_Input>;
-  homeTeam: TeamCreateOneWithoutHomeGamesInput;
-  gameTime: Int;
-  sport: SportCreateOneWithoutGameInput;
-  odds?: Maybe<OddCreateManyWithoutGameInput>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  outcome?: Maybe<String>;
+  outcome_not?: Maybe<String>;
+  outcome_in?: Maybe<String[] | String>;
+  outcome_not_in?: Maybe<String[] | String>;
+  outcome_lt?: Maybe<String>;
+  outcome_lte?: Maybe<String>;
+  outcome_gt?: Maybe<String>;
+  outcome_gte?: Maybe<String>;
+  outcome_contains?: Maybe<String>;
+  outcome_not_contains?: Maybe<String>;
+  outcome_starts_with?: Maybe<String>;
+  outcome_not_starts_with?: Maybe<String>;
+  outcome_ends_with?: Maybe<String>;
+  outcome_not_ends_with?: Maybe<String>;
+  ledgers_every?: Maybe<LedgerWhereInput>;
+  ledgers_some?: Maybe<LedgerWhereInput>;
+  ledgers_none?: Maybe<LedgerWhereInput>;
+  AND?: Maybe<OutcomeWhereInput[] | OutcomeWhereInput>;
+  OR?: Maybe<OutcomeWhereInput[] | OutcomeWhereInput>;
+  NOT?: Maybe<OutcomeWhereInput[] | OutcomeWhereInput>;
+}
+
+export interface OddUpdateWithWhereUniqueWithoutGameInput {
+  where: OddWhereUniqueInput;
+  data: OddUpdateWithoutGameDataInput;
+}
+
+export interface OddSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<OddWhereInput>;
+  AND?: Maybe<OddSubscriptionWhereInput[] | OddSubscriptionWhereInput>;
+  OR?: Maybe<OddSubscriptionWhereInput[] | OddSubscriptionWhereInput>;
+  NOT?: Maybe<OddSubscriptionWhereInput[] | OddSubscriptionWhereInput>;
+}
+
+export interface OddUpdateWithoutGameDataInput {
+  moneyLine?: Maybe<Int>;
+  runLineOdds?: Maybe<Int>;
+  runLineRuns?: Maybe<Float>;
+  overUnderOdds?: Maybe<Int>;
+  overUnderRuns?: Maybe<Float>;
+}
+
+export interface GameSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<GameWhereInput>;
+  AND?: Maybe<GameSubscriptionWhereInput[] | GameSubscriptionWhereInput>;
+  OR?: Maybe<GameSubscriptionWhereInput[] | GameSubscriptionWhereInput>;
+  NOT?: Maybe<GameSubscriptionWhereInput[] | GameSubscriptionWhereInput>;
+}
+
+export interface OddUpsertWithWhereUniqueWithoutGameInput {
+  where: OddWhereUniqueInput;
+  update: OddUpdateWithoutGameDataInput;
+  create: OddCreateWithoutGameInput;
+}
+
+export interface LedgerUpsertWithWhereUniqueWithoutWagerTypeInput {
+  where: LedgerWhereUniqueInput;
+  update: LedgerUpdateWithoutWagerTypeDataInput;
+  create: LedgerCreateWithoutWagerTypeInput;
+}
+
+export interface OddScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  moneyLine?: Maybe<Int>;
+  moneyLine_not?: Maybe<Int>;
+  moneyLine_in?: Maybe<Int[] | Int>;
+  moneyLine_not_in?: Maybe<Int[] | Int>;
+  moneyLine_lt?: Maybe<Int>;
+  moneyLine_lte?: Maybe<Int>;
+  moneyLine_gt?: Maybe<Int>;
+  moneyLine_gte?: Maybe<Int>;
+  runLineOdds?: Maybe<Int>;
+  runLineOdds_not?: Maybe<Int>;
+  runLineOdds_in?: Maybe<Int[] | Int>;
+  runLineOdds_not_in?: Maybe<Int[] | Int>;
+  runLineOdds_lt?: Maybe<Int>;
+  runLineOdds_lte?: Maybe<Int>;
+  runLineOdds_gt?: Maybe<Int>;
+  runLineOdds_gte?: Maybe<Int>;
+  runLineRuns?: Maybe<Float>;
+  runLineRuns_not?: Maybe<Float>;
+  runLineRuns_in?: Maybe<Float[] | Float>;
+  runLineRuns_not_in?: Maybe<Float[] | Float>;
+  runLineRuns_lt?: Maybe<Float>;
+  runLineRuns_lte?: Maybe<Float>;
+  runLineRuns_gt?: Maybe<Float>;
+  runLineRuns_gte?: Maybe<Float>;
+  overUnderOdds?: Maybe<Int>;
+  overUnderOdds_not?: Maybe<Int>;
+  overUnderOdds_in?: Maybe<Int[] | Int>;
+  overUnderOdds_not_in?: Maybe<Int[] | Int>;
+  overUnderOdds_lt?: Maybe<Int>;
+  overUnderOdds_lte?: Maybe<Int>;
+  overUnderOdds_gt?: Maybe<Int>;
+  overUnderOdds_gte?: Maybe<Int>;
+  overUnderRuns?: Maybe<Float>;
+  overUnderRuns_not?: Maybe<Float>;
+  overUnderRuns_in?: Maybe<Float[] | Float>;
+  overUnderRuns_not_in?: Maybe<Float[] | Float>;
+  overUnderRuns_lt?: Maybe<Float>;
+  overUnderRuns_lte?: Maybe<Float>;
+  overUnderRuns_gt?: Maybe<Float>;
+  overUnderRuns_gte?: Maybe<Float>;
+  timeOfOdds?: Maybe<DateTimeInput>;
+  timeOfOdds_not?: Maybe<DateTimeInput>;
+  timeOfOdds_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  timeOfOdds_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  timeOfOdds_lt?: Maybe<DateTimeInput>;
+  timeOfOdds_lte?: Maybe<DateTimeInput>;
+  timeOfOdds_gt?: Maybe<DateTimeInput>;
+  timeOfOdds_gte?: Maybe<DateTimeInput>;
+  AND?: Maybe<OddScalarWhereInput[] | OddScalarWhereInput>;
+  OR?: Maybe<OddScalarWhereInput[] | OddScalarWhereInput>;
+  NOT?: Maybe<OddScalarWhereInput[] | OddScalarWhereInput>;
+}
+
+export interface LedgerUpdateWithoutWagerTypeDataInput {
+  amountWagered?: Maybe<Float>;
+  collected?: Maybe<Float>;
+  payout?: Maybe<Float>;
+  user?: Maybe<UserUpdateOneRequiredWithoutLedgerEntriesInput>;
+  outcome?: Maybe<OutcomeUpdateOneRequiredWithoutLedgersInput>;
+}
+
+export interface OddUpdateManyWithWhereNestedInput {
+  where: OddScalarWhereInput;
+  data: OddUpdateManyDataInput;
+}
+
+export interface LedgerUpdateManyWithoutWagerTypeInput {
+  create?: Maybe<
+    LedgerCreateWithoutWagerTypeInput[] | LedgerCreateWithoutWagerTypeInput
+  >;
+  delete?: Maybe<LedgerWhereUniqueInput[] | LedgerWhereUniqueInput>;
+  connect?: Maybe<LedgerWhereUniqueInput[] | LedgerWhereUniqueInput>;
+  set?: Maybe<LedgerWhereUniqueInput[] | LedgerWhereUniqueInput>;
+  disconnect?: Maybe<LedgerWhereUniqueInput[] | LedgerWhereUniqueInput>;
+  update?: Maybe<
+    | LedgerUpdateWithWhereUniqueWithoutWagerTypeInput[]
+    | LedgerUpdateWithWhereUniqueWithoutWagerTypeInput
+  >;
+  upsert?: Maybe<
+    | LedgerUpsertWithWhereUniqueWithoutWagerTypeInput[]
+    | LedgerUpsertWithWhereUniqueWithoutWagerTypeInput
+  >;
+  deleteMany?: Maybe<LedgerScalarWhereInput[] | LedgerScalarWhereInput>;
+  updateMany?: Maybe<
+    | LedgerUpdateManyWithWhereNestedInput[]
+    | LedgerUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface OddUpdateManyDataInput {
+  moneyLine?: Maybe<Int>;
+  runLineOdds?: Maybe<Int>;
+  runLineRuns?: Maybe<Float>;
+  overUnderOdds?: Maybe<Int>;
+  overUnderRuns?: Maybe<Float>;
+}
+
+export interface WagerTypeUpdateInput {
+  wagerType?: Maybe<String>;
+  ledgers?: Maybe<LedgerUpdateManyWithoutWagerTypeInput>;
+}
+
+export interface GameUpsertWithWhereUniqueWithoutAwayTeamInput {
+  where: GameWhereUniqueInput;
+  update: GameUpdateWithoutAwayTeamDataInput;
+  create: GameCreateWithoutAwayTeamInput;
+}
+
+export interface LedgerCreateWithoutWagerTypeInput {
+  id?: Maybe<ID_Input>;
+  amountWagered: Float;
+  collected?: Maybe<Float>;
+  payout?: Maybe<Float>;
+  user: UserCreateOneWithoutLedgerEntriesInput;
+  outcome: OutcomeCreateOneWithoutLedgersInput;
+}
+
+export interface GameScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  gameTime?: Maybe<DateTimeInput>;
+  gameTime_not?: Maybe<DateTimeInput>;
+  gameTime_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  gameTime_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  gameTime_lt?: Maybe<DateTimeInput>;
+  gameTime_lte?: Maybe<DateTimeInput>;
+  gameTime_gt?: Maybe<DateTimeInput>;
+  gameTime_gte?: Maybe<DateTimeInput>;
+  AND?: Maybe<GameScalarWhereInput[] | GameScalarWhereInput>;
+  OR?: Maybe<GameScalarWhereInput[] | GameScalarWhereInput>;
+  NOT?: Maybe<GameScalarWhereInput[] | GameScalarWhereInput>;
+}
+
+export interface WagerTypeCreateInput {
+  id?: Maybe<ID_Input>;
+  wagerType: String;
+  ledgers?: Maybe<LedgerCreateManyWithoutWagerTypeInput>;
+}
+
+export interface GameUpdateManyWithWhereNestedInput {
+  where: GameScalarWhereInput;
+  data: GameUpdateManyDataInput;
+}
+
+export type OutcomeWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface GameUpdateManyDataInput {
+  gameTime?: Maybe<DateTimeInput>;
+}
+
+export interface TeamUpdateDataInput {
+  teamName?: Maybe<String>;
+  city?: Maybe<String>;
+  homeGames?: Maybe<GameUpdateManyWithoutHomeTeamInput>;
+  awayGames?: Maybe<GameUpdateManyWithoutAwayTeamInput>;
+}
+
+export interface TeamUpsertWithoutHomeGamesInput {
+  update: TeamUpdateWithoutHomeGamesDataInput;
+  create: TeamCreateWithoutHomeGamesInput;
+}
+
+export interface OverUnderUpsertNestedInput {
+  update: OverUnderUpdateDataInput;
+  create: OverUnderCreateInput;
+}
+
+export interface TeamUpdateOneRequiredWithoutAwayGamesInput {
+  create?: Maybe<TeamCreateWithoutAwayGamesInput>;
+  update?: Maybe<TeamUpdateWithoutAwayGamesDataInput>;
+  upsert?: Maybe<TeamUpsertWithoutAwayGamesInput>;
+  connect?: Maybe<TeamWhereUniqueInput>;
+}
+
+export interface OverUnderUpdateDataInput {
+  value?: Maybe<Boolean>;
+  overUnder?: Maybe<String>;
+}
+
+export interface TeamUpdateWithoutAwayGamesDataInput {
+  teamName?: Maybe<String>;
+  city?: Maybe<String>;
+  homeGames?: Maybe<GameUpdateManyWithoutHomeTeamInput>;
+}
+
+export interface SportWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  sportName?: Maybe<String>;
+  sportName_not?: Maybe<String>;
+  sportName_in?: Maybe<String[] | String>;
+  sportName_not_in?: Maybe<String[] | String>;
+  sportName_lt?: Maybe<String>;
+  sportName_lte?: Maybe<String>;
+  sportName_gt?: Maybe<String>;
+  sportName_gte?: Maybe<String>;
+  sportName_contains?: Maybe<String>;
+  sportName_not_contains?: Maybe<String>;
+  sportName_starts_with?: Maybe<String>;
+  sportName_not_starts_with?: Maybe<String>;
+  sportName_ends_with?: Maybe<String>;
+  sportName_not_ends_with?: Maybe<String>;
+  game_every?: Maybe<GameWhereInput>;
+  game_some?: Maybe<GameWhereInput>;
+  game_none?: Maybe<GameWhereInput>;
+  AND?: Maybe<SportWhereInput[] | SportWhereInput>;
+  OR?: Maybe<SportWhereInput[] | SportWhereInput>;
+  NOT?: Maybe<SportWhereInput[] | SportWhereInput>;
+}
+
+export interface GameUpdateManyWithoutHomeTeamInput {
+  create?: Maybe<
+    GameCreateWithoutHomeTeamInput[] | GameCreateWithoutHomeTeamInput
+  >;
+  delete?: Maybe<GameWhereUniqueInput[] | GameWhereUniqueInput>;
+  connect?: Maybe<GameWhereUniqueInput[] | GameWhereUniqueInput>;
+  set?: Maybe<GameWhereUniqueInput[] | GameWhereUniqueInput>;
+  disconnect?: Maybe<GameWhereUniqueInput[] | GameWhereUniqueInput>;
+  update?: Maybe<
+    | GameUpdateWithWhereUniqueWithoutHomeTeamInput[]
+    | GameUpdateWithWhereUniqueWithoutHomeTeamInput
+  >;
+  upsert?: Maybe<
+    | GameUpsertWithWhereUniqueWithoutHomeTeamInput[]
+    | GameUpsertWithWhereUniqueWithoutHomeTeamInput
+  >;
+  deleteMany?: Maybe<GameScalarWhereInput[] | GameScalarWhereInput>;
+  updateMany?: Maybe<
+    GameUpdateManyWithWhereNestedInput[] | GameUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface OddsTypeUpsertNestedInput {
+  update: OddsTypeUpdateDataInput;
+  create: OddsTypeCreateInput;
+}
+
+export interface GameUpdateWithWhereUniqueWithoutHomeTeamInput {
+  where: GameWhereUniqueInput;
+  data: GameUpdateWithoutHomeTeamDataInput;
+}
+
+export type SportWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface GameUpdateWithoutHomeTeamDataInput {
+  awayTeam?: Maybe<TeamUpdateOneRequiredWithoutAwayGamesInput>;
+  gameTime?: Maybe<DateTimeInput>;
+  sport?: Maybe<SportUpdateOneRequiredWithoutGameInput>;
+  odds?: Maybe<OddUpdateManyWithoutGameInput>;
+}
+
+export interface OddUpsertNestedInput {
+  update: OddUpdateDataInput;
+  create: OddCreateInput;
+}
+
+export interface GameUpsertWithWhereUniqueWithoutHomeTeamInput {
+  where: GameWhereUniqueInput;
+  update: GameUpdateWithoutHomeTeamDataInput;
+  create: GameCreateWithoutHomeTeamInput;
+}
+
+export interface OddUpdateOneRequiredInput {
+  create?: Maybe<OddCreateInput>;
+  update?: Maybe<OddUpdateDataInput>;
+  upsert?: Maybe<OddUpsertNestedInput>;
+  connect?: Maybe<OddWhereUniqueInput>;
+}
+
+export interface TeamUpsertWithoutAwayGamesInput {
+  update: TeamUpdateWithoutAwayGamesDataInput;
+  create: TeamCreateWithoutAwayGamesInput;
+}
+
+export interface TeamWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  teamName?: Maybe<String>;
+  teamName_not?: Maybe<String>;
+  teamName_in?: Maybe<String[] | String>;
+  teamName_not_in?: Maybe<String[] | String>;
+  teamName_lt?: Maybe<String>;
+  teamName_lte?: Maybe<String>;
+  teamName_gt?: Maybe<String>;
+  teamName_gte?: Maybe<String>;
+  teamName_contains?: Maybe<String>;
+  teamName_not_contains?: Maybe<String>;
+  teamName_starts_with?: Maybe<String>;
+  teamName_not_starts_with?: Maybe<String>;
+  teamName_ends_with?: Maybe<String>;
+  teamName_not_ends_with?: Maybe<String>;
+  city?: Maybe<String>;
+  city_not?: Maybe<String>;
+  city_in?: Maybe<String[] | String>;
+  city_not_in?: Maybe<String[] | String>;
+  city_lt?: Maybe<String>;
+  city_lte?: Maybe<String>;
+  city_gt?: Maybe<String>;
+  city_gte?: Maybe<String>;
+  city_contains?: Maybe<String>;
+  city_not_contains?: Maybe<String>;
+  city_starts_with?: Maybe<String>;
+  city_not_starts_with?: Maybe<String>;
+  city_ends_with?: Maybe<String>;
+  city_not_ends_with?: Maybe<String>;
+  homeGames_every?: Maybe<GameWhereInput>;
+  homeGames_some?: Maybe<GameWhereInput>;
+  homeGames_none?: Maybe<GameWhereInput>;
+  awayGames_every?: Maybe<GameWhereInput>;
+  awayGames_some?: Maybe<GameWhereInput>;
+  awayGames_none?: Maybe<GameWhereInput>;
+  AND?: Maybe<TeamWhereInput[] | TeamWhereInput>;
+  OR?: Maybe<TeamWhereInput[] | TeamWhereInput>;
+  NOT?: Maybe<TeamWhereInput[] | TeamWhereInput>;
+}
+
+export interface GameUpdateManyMutationInput {
+  gameTime?: Maybe<DateTimeInput>;
+}
+
+export interface LedgerUpdateDataInput {
+  amountWagered?: Maybe<Float>;
+  collected?: Maybe<Float>;
+  payout?: Maybe<Float>;
+  user?: Maybe<UserUpdateOneRequiredWithoutLedgerEntriesInput>;
+  wagerType?: Maybe<WagerTypeUpdateOneRequiredWithoutLedgersInput>;
+  outcome?: Maybe<OutcomeUpdateOneRequiredWithoutLedgersInput>;
+}
+
+export interface UserUpdateInput {
+  firstName?: Maybe<String>;
+  lastName?: Maybe<String>;
+  userName?: Maybe<String>;
+  password?: Maybe<String>;
+  email?: Maybe<String>;
+  phoneNumber?: Maybe<String>;
+  balance?: Maybe<Float>;
+  userVerified?: Maybe<Boolean>;
+  ledgerEntries?: Maybe<LedgerUpdateManyWithoutUserInput>;
+}
+
+export type UserWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface LedgerCreateWithoutUserInput {
+  id?: Maybe<ID_Input>;
+  amountWagered: Float;
+  collected?: Maybe<Float>;
+  payout?: Maybe<Float>;
+  wagerType: WagerTypeCreateOneWithoutLedgersInput;
+  outcome: OutcomeCreateOneWithoutLedgersInput;
+}
+
+export interface WagerUpdateInput {
+  ledger?: Maybe<LedgerUpdateOneRequiredInput>;
+  odds?: Maybe<OddUpdateOneRequiredInput>;
+  oddsType?: Maybe<OddsTypeUpdateOneRequiredInput>;
+  pickedOverUnder?: Maybe<OverUnderUpdateOneInput>;
+  pickedTeam?: Maybe<TeamUpdateOneInput>;
+}
+
+export interface LedgerCreateManyWithoutUserInput {
+  create?: Maybe<LedgerCreateWithoutUserInput[] | LedgerCreateWithoutUserInput>;
+  connect?: Maybe<LedgerWhereUniqueInput[] | LedgerWhereUniqueInput>;
 }
 
 export interface OverUnderCreateOneInput {
@@ -2428,13 +1354,1069 @@ export interface OverUnderCreateOneInput {
   connect?: Maybe<OverUnderWhereUniqueInput>;
 }
 
-export type SportWhereUniqueInput = AtLeastOne<{
+export interface UserCreateOneWithoutLedgerEntriesInput {
+  create?: Maybe<UserCreateWithoutLedgerEntriesInput>;
+  connect?: Maybe<UserWhereUniqueInput>;
+}
+
+export interface OddsTypeCreateOneInput {
+  create?: Maybe<OddsTypeCreateInput>;
+  connect?: Maybe<OddsTypeWhereUniqueInput>;
+}
+
+export interface UserCreateWithoutLedgerEntriesInput {
+  id?: Maybe<ID_Input>;
+  firstName: String;
+  lastName: String;
+  userName: String;
+  password: String;
+  email: String;
+  phoneNumber?: Maybe<String>;
+  balance: Float;
+  userVerified: Boolean;
+}
+
+export interface OddCreateOneInput {
+  create?: Maybe<OddCreateInput>;
+  connect?: Maybe<OddWhereUniqueInput>;
+}
+
+export interface WagerTypeCreateOneWithoutLedgersInput {
+  create?: Maybe<WagerTypeCreateWithoutLedgersInput>;
+  connect?: Maybe<WagerTypeWhereUniqueInput>;
+}
+
+export interface WagerCreateInput {
+  id?: Maybe<ID_Input>;
+  ledger: LedgerCreateOneInput;
+  odds: OddCreateOneInput;
+  oddsType: OddsTypeCreateOneInput;
+  pickedOverUnder?: Maybe<OverUnderCreateOneInput>;
+  pickedTeam?: Maybe<TeamCreateOneInput>;
+}
+
+export interface WagerTypeCreateWithoutLedgersInput {
+  id?: Maybe<ID_Input>;
+  wagerType: String;
+}
+
+export type WagerTypeWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
 }>;
 
-export interface WagerTypeUpdateInput {
+export interface OutcomeCreateOneWithoutLedgersInput {
+  create?: Maybe<OutcomeCreateWithoutLedgersInput>;
+  connect?: Maybe<OutcomeWhereUniqueInput>;
+}
+
+export interface LedgerUpdateWithoutUserDataInput {
+  amountWagered?: Maybe<Float>;
+  collected?: Maybe<Float>;
+  payout?: Maybe<Float>;
+  wagerType?: Maybe<WagerTypeUpdateOneRequiredWithoutLedgersInput>;
+  outcome?: Maybe<OutcomeUpdateOneRequiredWithoutLedgersInput>;
+}
+
+export interface OutcomeCreateWithoutLedgersInput {
+  id?: Maybe<ID_Input>;
+  outcome: String;
+}
+
+export interface LedgerUpdateManyWithoutUserInput {
+  create?: Maybe<LedgerCreateWithoutUserInput[] | LedgerCreateWithoutUserInput>;
+  delete?: Maybe<LedgerWhereUniqueInput[] | LedgerWhereUniqueInput>;
+  connect?: Maybe<LedgerWhereUniqueInput[] | LedgerWhereUniqueInput>;
+  set?: Maybe<LedgerWhereUniqueInput[] | LedgerWhereUniqueInput>;
+  disconnect?: Maybe<LedgerWhereUniqueInput[] | LedgerWhereUniqueInput>;
+  update?: Maybe<
+    | LedgerUpdateWithWhereUniqueWithoutUserInput[]
+    | LedgerUpdateWithWhereUniqueWithoutUserInput
+  >;
+  upsert?: Maybe<
+    | LedgerUpsertWithWhereUniqueWithoutUserInput[]
+    | LedgerUpsertWithWhereUniqueWithoutUserInput
+  >;
+  deleteMany?: Maybe<LedgerScalarWhereInput[] | LedgerScalarWhereInput>;
+  updateMany?: Maybe<
+    | LedgerUpdateManyWithWhereNestedInput[]
+    | LedgerUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface UserCreateInput {
+  id?: Maybe<ID_Input>;
+  firstName: String;
+  lastName: String;
+  userName: String;
+  password: String;
+  email: String;
+  phoneNumber?: Maybe<String>;
+  balance: Float;
+  userVerified: Boolean;
+  ledgerEntries?: Maybe<LedgerCreateManyWithoutUserInput>;
+}
+
+export interface GameCreateInput {
+  id?: Maybe<ID_Input>;
+  homeTeam: TeamCreateOneWithoutHomeGamesInput;
+  awayTeam: TeamCreateOneWithoutAwayGamesInput;
+  gameTime: DateTimeInput;
+  sport: SportCreateOneWithoutGameInput;
+  odds?: Maybe<OddCreateManyWithoutGameInput>;
+}
+
+export interface UserUpdateOneRequiredWithoutLedgerEntriesInput {
+  create?: Maybe<UserCreateWithoutLedgerEntriesInput>;
+  update?: Maybe<UserUpdateWithoutLedgerEntriesDataInput>;
+  upsert?: Maybe<UserUpsertWithoutLedgerEntriesInput>;
+  connect?: Maybe<UserWhereUniqueInput>;
+}
+
+export interface TeamCreateWithoutHomeGamesInput {
+  id?: Maybe<ID_Input>;
+  teamName: String;
+  city: String;
+  awayGames?: Maybe<GameCreateManyWithoutAwayTeamInput>;
+}
+
+export interface UserUpdateWithoutLedgerEntriesDataInput {
+  firstName?: Maybe<String>;
+  lastName?: Maybe<String>;
+  userName?: Maybe<String>;
+  password?: Maybe<String>;
+  email?: Maybe<String>;
+  phoneNumber?: Maybe<String>;
+  balance?: Maybe<Float>;
+  userVerified?: Maybe<Boolean>;
+}
+
+export interface GameCreateWithoutAwayTeamInput {
+  id?: Maybe<ID_Input>;
+  homeTeam: TeamCreateOneWithoutHomeGamesInput;
+  gameTime: DateTimeInput;
+  sport: SportCreateOneWithoutGameInput;
+  odds?: Maybe<OddCreateManyWithoutGameInput>;
+}
+
+export interface UserUpsertWithoutLedgerEntriesInput {
+  update: UserUpdateWithoutLedgerEntriesDataInput;
+  create: UserCreateWithoutLedgerEntriesInput;
+}
+
+export interface SportCreateWithoutGameInput {
+  id?: Maybe<ID_Input>;
+  sportName: String;
+}
+
+export interface WagerTypeUpdateOneRequiredWithoutLedgersInput {
+  create?: Maybe<WagerTypeCreateWithoutLedgersInput>;
+  update?: Maybe<WagerTypeUpdateWithoutLedgersDataInput>;
+  upsert?: Maybe<WagerTypeUpsertWithoutLedgersInput>;
+  connect?: Maybe<WagerTypeWhereUniqueInput>;
+}
+
+export interface OddCreateWithoutGameInput {
+  id?: Maybe<ID_Input>;
+  moneyLine?: Maybe<Int>;
+  runLineOdds?: Maybe<Int>;
+  runLineRuns?: Maybe<Float>;
+  overUnderOdds?: Maybe<Int>;
+  overUnderRuns?: Maybe<Float>;
+}
+
+export interface WagerTypeUpdateWithoutLedgersDataInput {
   wagerType?: Maybe<String>;
-  ledgers?: Maybe<LedgerUpdateManyWithoutWagerTypeInput>;
+}
+
+export interface TeamCreateWithoutAwayGamesInput {
+  id?: Maybe<ID_Input>;
+  teamName: String;
+  city: String;
+  homeGames?: Maybe<GameCreateManyWithoutHomeTeamInput>;
+}
+
+export interface WagerTypeUpsertWithoutLedgersInput {
+  update: WagerTypeUpdateWithoutLedgersDataInput;
+  create: WagerTypeCreateWithoutLedgersInput;
+}
+
+export interface GameCreateWithoutHomeTeamInput {
+  id?: Maybe<ID_Input>;
+  awayTeam: TeamCreateOneWithoutAwayGamesInput;
+  gameTime: DateTimeInput;
+  sport: SportCreateOneWithoutGameInput;
+  odds?: Maybe<OddCreateManyWithoutGameInput>;
+}
+
+export interface OutcomeUpdateOneRequiredWithoutLedgersInput {
+  create?: Maybe<OutcomeCreateWithoutLedgersInput>;
+  update?: Maybe<OutcomeUpdateWithoutLedgersDataInput>;
+  upsert?: Maybe<OutcomeUpsertWithoutLedgersInput>;
+  connect?: Maybe<OutcomeWhereUniqueInput>;
+}
+
+export interface TeamUpdateOneRequiredWithoutHomeGamesInput {
+  create?: Maybe<TeamCreateWithoutHomeGamesInput>;
+  update?: Maybe<TeamUpdateWithoutHomeGamesDataInput>;
+  upsert?: Maybe<TeamUpsertWithoutHomeGamesInput>;
+  connect?: Maybe<TeamWhereUniqueInput>;
+}
+
+export interface OutcomeUpdateWithoutLedgersDataInput {
+  outcome?: Maybe<String>;
+}
+
+export interface UserSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<UserWhereInput>;
+  AND?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
+  OR?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
+  NOT?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
+}
+
+export interface OutcomeUpsertWithoutLedgersInput {
+  update: OutcomeUpdateWithoutLedgersDataInput;
+  create: OutcomeCreateWithoutLedgersInput;
+}
+
+export interface OverUnderSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<OverUnderWhereInput>;
+  AND?: Maybe<
+    OverUnderSubscriptionWhereInput[] | OverUnderSubscriptionWhereInput
+  >;
+  OR?: Maybe<
+    OverUnderSubscriptionWhereInput[] | OverUnderSubscriptionWhereInput
+  >;
+  NOT?: Maybe<
+    OverUnderSubscriptionWhereInput[] | OverUnderSubscriptionWhereInput
+  >;
+}
+
+export interface LedgerUpdateManyMutationInput {
+  amountWagered?: Maybe<Float>;
+  collected?: Maybe<Float>;
+  payout?: Maybe<Float>;
+}
+
+export interface WagerTypeWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  wagerType?: Maybe<String>;
+  wagerType_not?: Maybe<String>;
+  wagerType_in?: Maybe<String[] | String>;
+  wagerType_not_in?: Maybe<String[] | String>;
+  wagerType_lt?: Maybe<String>;
+  wagerType_lte?: Maybe<String>;
+  wagerType_gt?: Maybe<String>;
+  wagerType_gte?: Maybe<String>;
+  wagerType_contains?: Maybe<String>;
+  wagerType_not_contains?: Maybe<String>;
+  wagerType_starts_with?: Maybe<String>;
+  wagerType_not_starts_with?: Maybe<String>;
+  wagerType_ends_with?: Maybe<String>;
+  wagerType_not_ends_with?: Maybe<String>;
+  ledgers_every?: Maybe<LedgerWhereInput>;
+  ledgers_some?: Maybe<LedgerWhereInput>;
+  ledgers_none?: Maybe<LedgerWhereInput>;
+  AND?: Maybe<WagerTypeWhereInput[] | WagerTypeWhereInput>;
+  OR?: Maybe<WagerTypeWhereInput[] | WagerTypeWhereInput>;
+  NOT?: Maybe<WagerTypeWhereInput[] | WagerTypeWhereInput>;
+}
+
+export interface OddCreateInput {
+  id?: Maybe<ID_Input>;
+  game: GameCreateOneWithoutOddsInput;
+  moneyLine?: Maybe<Int>;
+  runLineOdds?: Maybe<Int>;
+  runLineRuns?: Maybe<Float>;
+  overUnderOdds?: Maybe<Int>;
+  overUnderRuns?: Maybe<Float>;
+}
+
+export interface LedgerSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<LedgerWhereInput>;
+  AND?: Maybe<LedgerSubscriptionWhereInput[] | LedgerSubscriptionWhereInput>;
+  OR?: Maybe<LedgerSubscriptionWhereInput[] | LedgerSubscriptionWhereInput>;
+  NOT?: Maybe<LedgerSubscriptionWhereInput[] | LedgerSubscriptionWhereInput>;
+}
+
+export interface GameCreateOneWithoutOddsInput {
+  create?: Maybe<GameCreateWithoutOddsInput>;
+  connect?: Maybe<GameWhereUniqueInput>;
+}
+
+export type OddWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface GameCreateWithoutOddsInput {
+  id?: Maybe<ID_Input>;
+  homeTeam: TeamCreateOneWithoutHomeGamesInput;
+  awayTeam: TeamCreateOneWithoutAwayGamesInput;
+  gameTime: DateTimeInput;
+  sport: SportCreateOneWithoutGameInput;
+}
+
+export type OddsTypeWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface OddUpdateInput {
+  game?: Maybe<GameUpdateOneRequiredWithoutOddsInput>;
+  moneyLine?: Maybe<Int>;
+  runLineOdds?: Maybe<Int>;
+  runLineRuns?: Maybe<Float>;
+  overUnderOdds?: Maybe<Int>;
+  overUnderRuns?: Maybe<Float>;
+}
+
+export interface LedgerCreateManyWithoutWagerTypeInput {
+  create?: Maybe<
+    LedgerCreateWithoutWagerTypeInput[] | LedgerCreateWithoutWagerTypeInput
+  >;
+  connect?: Maybe<LedgerWhereUniqueInput[] | LedgerWhereUniqueInput>;
+}
+
+export interface GameUpdateOneRequiredWithoutOddsInput {
+  create?: Maybe<GameCreateWithoutOddsInput>;
+  update?: Maybe<GameUpdateWithoutOddsDataInput>;
+  upsert?: Maybe<GameUpsertWithoutOddsInput>;
+  connect?: Maybe<GameWhereUniqueInput>;
+}
+
+export interface OddWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  game?: Maybe<GameWhereInput>;
+  moneyLine?: Maybe<Int>;
+  moneyLine_not?: Maybe<Int>;
+  moneyLine_in?: Maybe<Int[] | Int>;
+  moneyLine_not_in?: Maybe<Int[] | Int>;
+  moneyLine_lt?: Maybe<Int>;
+  moneyLine_lte?: Maybe<Int>;
+  moneyLine_gt?: Maybe<Int>;
+  moneyLine_gte?: Maybe<Int>;
+  runLineOdds?: Maybe<Int>;
+  runLineOdds_not?: Maybe<Int>;
+  runLineOdds_in?: Maybe<Int[] | Int>;
+  runLineOdds_not_in?: Maybe<Int[] | Int>;
+  runLineOdds_lt?: Maybe<Int>;
+  runLineOdds_lte?: Maybe<Int>;
+  runLineOdds_gt?: Maybe<Int>;
+  runLineOdds_gte?: Maybe<Int>;
+  runLineRuns?: Maybe<Float>;
+  runLineRuns_not?: Maybe<Float>;
+  runLineRuns_in?: Maybe<Float[] | Float>;
+  runLineRuns_not_in?: Maybe<Float[] | Float>;
+  runLineRuns_lt?: Maybe<Float>;
+  runLineRuns_lte?: Maybe<Float>;
+  runLineRuns_gt?: Maybe<Float>;
+  runLineRuns_gte?: Maybe<Float>;
+  overUnderOdds?: Maybe<Int>;
+  overUnderOdds_not?: Maybe<Int>;
+  overUnderOdds_in?: Maybe<Int[] | Int>;
+  overUnderOdds_not_in?: Maybe<Int[] | Int>;
+  overUnderOdds_lt?: Maybe<Int>;
+  overUnderOdds_lte?: Maybe<Int>;
+  overUnderOdds_gt?: Maybe<Int>;
+  overUnderOdds_gte?: Maybe<Int>;
+  overUnderRuns?: Maybe<Float>;
+  overUnderRuns_not?: Maybe<Float>;
+  overUnderRuns_in?: Maybe<Float[] | Float>;
+  overUnderRuns_not_in?: Maybe<Float[] | Float>;
+  overUnderRuns_lt?: Maybe<Float>;
+  overUnderRuns_lte?: Maybe<Float>;
+  overUnderRuns_gt?: Maybe<Float>;
+  overUnderRuns_gte?: Maybe<Float>;
+  timeOfOdds?: Maybe<DateTimeInput>;
+  timeOfOdds_not?: Maybe<DateTimeInput>;
+  timeOfOdds_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  timeOfOdds_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  timeOfOdds_lt?: Maybe<DateTimeInput>;
+  timeOfOdds_lte?: Maybe<DateTimeInput>;
+  timeOfOdds_gt?: Maybe<DateTimeInput>;
+  timeOfOdds_gte?: Maybe<DateTimeInput>;
+  AND?: Maybe<OddWhereInput[] | OddWhereInput>;
+  OR?: Maybe<OddWhereInput[] | OddWhereInput>;
+  NOT?: Maybe<OddWhereInput[] | OddWhereInput>;
+}
+
+export interface GameUpdateWithoutOddsDataInput {
+  homeTeam?: Maybe<TeamUpdateOneRequiredWithoutHomeGamesInput>;
+  awayTeam?: Maybe<TeamUpdateOneRequiredWithoutAwayGamesInput>;
+  gameTime?: Maybe<DateTimeInput>;
+  sport?: Maybe<SportUpdateOneRequiredWithoutGameInput>;
+}
+
+export type OverUnderWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface GameUpsertWithoutOddsInput {
+  update: GameUpdateWithoutOddsDataInput;
+  create: GameCreateWithoutOddsInput;
+}
+
+export interface OverUnderUpdateOneInput {
+  create?: Maybe<OverUnderCreateInput>;
+  update?: Maybe<OverUnderUpdateDataInput>;
+  upsert?: Maybe<OverUnderUpsertNestedInput>;
+  delete?: Maybe<Boolean>;
+  disconnect?: Maybe<Boolean>;
+  connect?: Maybe<OverUnderWhereUniqueInput>;
+}
+
+export interface OddUpdateManyMutationInput {
+  moneyLine?: Maybe<Int>;
+  runLineOdds?: Maybe<Int>;
+  runLineRuns?: Maybe<Float>;
+  overUnderOdds?: Maybe<Int>;
+  overUnderRuns?: Maybe<Float>;
+}
+
+export interface OddsTypeUpdateOneRequiredInput {
+  create?: Maybe<OddsTypeCreateInput>;
+  update?: Maybe<OddsTypeUpdateDataInput>;
+  upsert?: Maybe<OddsTypeUpsertNestedInput>;
+  connect?: Maybe<OddsTypeWhereUniqueInput>;
+}
+
+export interface OddsTypeCreateInput {
+  id?: Maybe<ID_Input>;
+  oddsType: String;
+}
+
+export type TeamWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface OddsTypeUpdateInput {
+  oddsType?: Maybe<String>;
+}
+
+export interface LedgerUpdateOneRequiredInput {
+  create?: Maybe<LedgerCreateInput>;
+  update?: Maybe<LedgerUpdateDataInput>;
+  upsert?: Maybe<LedgerUpsertNestedInput>;
+  connect?: Maybe<LedgerWhereUniqueInput>;
+}
+
+export interface OddsTypeUpdateManyMutationInput {
+  oddsType?: Maybe<String>;
+}
+
+export interface TeamCreateOneInput {
+  create?: Maybe<TeamCreateInput>;
+  connect?: Maybe<TeamWhereUniqueInput>;
+}
+
+export interface OutcomeCreateInput {
+  id?: Maybe<ID_Input>;
+  outcome: String;
+  ledgers?: Maybe<LedgerCreateManyWithoutOutcomeInput>;
+}
+
+export interface WagerWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  ledger?: Maybe<LedgerWhereInput>;
+  odds?: Maybe<OddWhereInput>;
+  oddsType?: Maybe<OddsTypeWhereInput>;
+  pickedOverUnder?: Maybe<OverUnderWhereInput>;
+  pickedTeam?: Maybe<TeamWhereInput>;
+  AND?: Maybe<WagerWhereInput[] | WagerWhereInput>;
+  OR?: Maybe<WagerWhereInput[] | WagerWhereInput>;
+  NOT?: Maybe<WagerWhereInput[] | WagerWhereInput>;
+}
+
+export interface LedgerCreateManyWithoutOutcomeInput {
+  create?: Maybe<
+    LedgerCreateWithoutOutcomeInput[] | LedgerCreateWithoutOutcomeInput
+  >;
+  connect?: Maybe<LedgerWhereUniqueInput[] | LedgerWhereUniqueInput>;
+}
+
+export interface UserUpdateManyMutationInput {
+  firstName?: Maybe<String>;
+  lastName?: Maybe<String>;
+  userName?: Maybe<String>;
+  password?: Maybe<String>;
+  email?: Maybe<String>;
+  phoneNumber?: Maybe<String>;
+  balance?: Maybe<Float>;
+  userVerified?: Maybe<Boolean>;
+}
+
+export interface LedgerCreateWithoutOutcomeInput {
+  id?: Maybe<ID_Input>;
+  amountWagered: Float;
+  collected?: Maybe<Float>;
+  payout?: Maybe<Float>;
+  user: UserCreateOneWithoutLedgerEntriesInput;
+  wagerType: WagerTypeCreateOneWithoutLedgersInput;
+}
+
+export interface LedgerUpdateWithWhereUniqueWithoutUserInput {
+  where: LedgerWhereUniqueInput;
+  data: LedgerUpdateWithoutUserDataInput;
+}
+
+export interface OutcomeUpdateInput {
+  outcome?: Maybe<String>;
+  ledgers?: Maybe<LedgerUpdateManyWithoutOutcomeInput>;
+}
+
+export interface TeamCreateOneWithoutHomeGamesInput {
+  create?: Maybe<TeamCreateWithoutHomeGamesInput>;
+  connect?: Maybe<TeamWhereUniqueInput>;
+}
+
+export interface LedgerUpdateManyWithoutOutcomeInput {
+  create?: Maybe<
+    LedgerCreateWithoutOutcomeInput[] | LedgerCreateWithoutOutcomeInput
+  >;
+  delete?: Maybe<LedgerWhereUniqueInput[] | LedgerWhereUniqueInput>;
+  connect?: Maybe<LedgerWhereUniqueInput[] | LedgerWhereUniqueInput>;
+  set?: Maybe<LedgerWhereUniqueInput[] | LedgerWhereUniqueInput>;
+  disconnect?: Maybe<LedgerWhereUniqueInput[] | LedgerWhereUniqueInput>;
+  update?: Maybe<
+    | LedgerUpdateWithWhereUniqueWithoutOutcomeInput[]
+    | LedgerUpdateWithWhereUniqueWithoutOutcomeInput
+  >;
+  upsert?: Maybe<
+    | LedgerUpsertWithWhereUniqueWithoutOutcomeInput[]
+    | LedgerUpsertWithWhereUniqueWithoutOutcomeInput
+  >;
+  deleteMany?: Maybe<LedgerScalarWhereInput[] | LedgerScalarWhereInput>;
+  updateMany?: Maybe<
+    | LedgerUpdateManyWithWhereNestedInput[]
+    | LedgerUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface SportCreateOneWithoutGameInput {
+  create?: Maybe<SportCreateWithoutGameInput>;
+  connect?: Maybe<SportWhereUniqueInput>;
+}
+
+export interface LedgerUpdateWithWhereUniqueWithoutOutcomeInput {
+  where: LedgerWhereUniqueInput;
+  data: LedgerUpdateWithoutOutcomeDataInput;
+}
+
+export interface TeamCreateOneWithoutAwayGamesInput {
+  create?: Maybe<TeamCreateWithoutAwayGamesInput>;
+  connect?: Maybe<TeamWhereUniqueInput>;
+}
+
+export interface LedgerUpdateWithoutOutcomeDataInput {
+  amountWagered?: Maybe<Float>;
+  collected?: Maybe<Float>;
+  payout?: Maybe<Float>;
+  user?: Maybe<UserUpdateOneRequiredWithoutLedgerEntriesInput>;
+  wagerType?: Maybe<WagerTypeUpdateOneRequiredWithoutLedgersInput>;
+}
+
+export interface GameUpdateInput {
+  homeTeam?: Maybe<TeamUpdateOneRequiredWithoutHomeGamesInput>;
+  awayTeam?: Maybe<TeamUpdateOneRequiredWithoutAwayGamesInput>;
+  gameTime?: Maybe<DateTimeInput>;
+  sport?: Maybe<SportUpdateOneRequiredWithoutGameInput>;
+  odds?: Maybe<OddUpdateManyWithoutGameInput>;
+}
+
+export interface LedgerUpsertWithWhereUniqueWithoutOutcomeInput {
+  where: LedgerWhereUniqueInput;
+  update: LedgerUpdateWithoutOutcomeDataInput;
+  create: LedgerCreateWithoutOutcomeInput;
+}
+
+export interface SportSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<SportWhereInput>;
+  AND?: Maybe<SportSubscriptionWhereInput[] | SportSubscriptionWhereInput>;
+  OR?: Maybe<SportSubscriptionWhereInput[] | SportSubscriptionWhereInput>;
+  NOT?: Maybe<SportSubscriptionWhereInput[] | SportSubscriptionWhereInput>;
+}
+
+export interface LedgerScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  amountWagered?: Maybe<Float>;
+  amountWagered_not?: Maybe<Float>;
+  amountWagered_in?: Maybe<Float[] | Float>;
+  amountWagered_not_in?: Maybe<Float[] | Float>;
+  amountWagered_lt?: Maybe<Float>;
+  amountWagered_lte?: Maybe<Float>;
+  amountWagered_gt?: Maybe<Float>;
+  amountWagered_gte?: Maybe<Float>;
+  collected?: Maybe<Float>;
+  collected_not?: Maybe<Float>;
+  collected_in?: Maybe<Float[] | Float>;
+  collected_not_in?: Maybe<Float[] | Float>;
+  collected_lt?: Maybe<Float>;
+  collected_lte?: Maybe<Float>;
+  collected_gt?: Maybe<Float>;
+  collected_gte?: Maybe<Float>;
+  payout?: Maybe<Float>;
+  payout_not?: Maybe<Float>;
+  payout_in?: Maybe<Float[] | Float>;
+  payout_not_in?: Maybe<Float[] | Float>;
+  payout_lt?: Maybe<Float>;
+  payout_lte?: Maybe<Float>;
+  payout_gt?: Maybe<Float>;
+  payout_gte?: Maybe<Float>;
+  entryTime?: Maybe<DateTimeInput>;
+  entryTime_not?: Maybe<DateTimeInput>;
+  entryTime_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  entryTime_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  entryTime_lt?: Maybe<DateTimeInput>;
+  entryTime_lte?: Maybe<DateTimeInput>;
+  entryTime_gt?: Maybe<DateTimeInput>;
+  entryTime_gte?: Maybe<DateTimeInput>;
+  AND?: Maybe<LedgerScalarWhereInput[] | LedgerScalarWhereInput>;
+  OR?: Maybe<LedgerScalarWhereInput[] | LedgerScalarWhereInput>;
+  NOT?: Maybe<LedgerScalarWhereInput[] | LedgerScalarWhereInput>;
+}
+
+export interface OddsTypeSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<OddsTypeWhereInput>;
+  AND?: Maybe<
+    OddsTypeSubscriptionWhereInput[] | OddsTypeSubscriptionWhereInput
+  >;
+  OR?: Maybe<OddsTypeSubscriptionWhereInput[] | OddsTypeSubscriptionWhereInput>;
+  NOT?: Maybe<
+    OddsTypeSubscriptionWhereInput[] | OddsTypeSubscriptionWhereInput
+  >;
+}
+
+export interface LedgerUpdateManyWithWhereNestedInput {
+  where: LedgerScalarWhereInput;
+  data: LedgerUpdateManyDataInput;
+}
+
+export interface LedgerUpdateWithWhereUniqueWithoutWagerTypeInput {
+  where: LedgerWhereUniqueInput;
+  data: LedgerUpdateWithoutWagerTypeDataInput;
+}
+
+export interface LedgerUpdateManyDataInput {
+  amountWagered?: Maybe<Float>;
+  collected?: Maybe<Float>;
+  payout?: Maybe<Float>;
+}
+
+export interface TeamUpsertNestedInput {
+  update: TeamUpdateDataInput;
+  create: TeamCreateInput;
+}
+
+export interface OutcomeUpdateManyMutationInput {
+  outcome?: Maybe<String>;
+}
+
+export interface OverUnderWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  value?: Maybe<Boolean>;
+  value_not?: Maybe<Boolean>;
+  overUnder?: Maybe<String>;
+  overUnder_not?: Maybe<String>;
+  overUnder_in?: Maybe<String[] | String>;
+  overUnder_not_in?: Maybe<String[] | String>;
+  overUnder_lt?: Maybe<String>;
+  overUnder_lte?: Maybe<String>;
+  overUnder_gt?: Maybe<String>;
+  overUnder_gte?: Maybe<String>;
+  overUnder_contains?: Maybe<String>;
+  overUnder_not_contains?: Maybe<String>;
+  overUnder_starts_with?: Maybe<String>;
+  overUnder_not_starts_with?: Maybe<String>;
+  overUnder_ends_with?: Maybe<String>;
+  overUnder_not_ends_with?: Maybe<String>;
+  AND?: Maybe<OverUnderWhereInput[] | OverUnderWhereInput>;
+  OR?: Maybe<OverUnderWhereInput[] | OverUnderWhereInput>;
+  NOT?: Maybe<OverUnderWhereInput[] | OverUnderWhereInput>;
+}
+
+export interface OverUnderCreateInput {
+  id?: Maybe<ID_Input>;
+  value: Boolean;
+  overUnder: String;
+}
+
+export interface OddUpdateDataInput {
+  game?: Maybe<GameUpdateOneRequiredWithoutOddsInput>;
+  moneyLine?: Maybe<Int>;
+  runLineOdds?: Maybe<Int>;
+  runLineRuns?: Maybe<Float>;
+  overUnderOdds?: Maybe<Int>;
+  overUnderRuns?: Maybe<Float>;
+}
+
+export interface OverUnderUpdateInput {
+  value?: Maybe<Boolean>;
+  overUnder?: Maybe<String>;
+}
+
+export interface GameWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  homeTeam?: Maybe<TeamWhereInput>;
+  awayTeam?: Maybe<TeamWhereInput>;
+  gameTime?: Maybe<DateTimeInput>;
+  gameTime_not?: Maybe<DateTimeInput>;
+  gameTime_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  gameTime_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  gameTime_lt?: Maybe<DateTimeInput>;
+  gameTime_lte?: Maybe<DateTimeInput>;
+  gameTime_gt?: Maybe<DateTimeInput>;
+  gameTime_gte?: Maybe<DateTimeInput>;
+  sport?: Maybe<SportWhereInput>;
+  odds_every?: Maybe<OddWhereInput>;
+  odds_some?: Maybe<OddWhereInput>;
+  odds_none?: Maybe<OddWhereInput>;
+  AND?: Maybe<GameWhereInput[] | GameWhereInput>;
+  OR?: Maybe<GameWhereInput[] | GameWhereInput>;
+  NOT?: Maybe<GameWhereInput[] | GameWhereInput>;
+}
+
+export interface OverUnderUpdateManyMutationInput {
+  value?: Maybe<Boolean>;
+  overUnder?: Maybe<String>;
+}
+
+export interface LedgerCreateOneInput {
+  create?: Maybe<LedgerCreateInput>;
+  connect?: Maybe<LedgerWhereUniqueInput>;
+}
+
+export interface SportCreateInput {
+  id?: Maybe<ID_Input>;
+  sportName: String;
+  game?: Maybe<GameCreateManyWithoutSportInput>;
+}
+
+export interface OddCreateManyWithoutGameInput {
+  create?: Maybe<OddCreateWithoutGameInput[] | OddCreateWithoutGameInput>;
+  connect?: Maybe<OddWhereUniqueInput[] | OddWhereUniqueInput>;
+}
+
+export interface GameCreateManyWithoutSportInput {
+  create?: Maybe<GameCreateWithoutSportInput[] | GameCreateWithoutSportInput>;
+  connect?: Maybe<GameWhereUniqueInput[] | GameWhereUniqueInput>;
+}
+
+export interface WagerTypeSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<WagerTypeWhereInput>;
+  AND?: Maybe<
+    WagerTypeSubscriptionWhereInput[] | WagerTypeSubscriptionWhereInput
+  >;
+  OR?: Maybe<
+    WagerTypeSubscriptionWhereInput[] | WagerTypeSubscriptionWhereInput
+  >;
+  NOT?: Maybe<
+    WagerTypeSubscriptionWhereInput[] | WagerTypeSubscriptionWhereInput
+  >;
+}
+
+export interface GameCreateWithoutSportInput {
+  id?: Maybe<ID_Input>;
+  homeTeam: TeamCreateOneWithoutHomeGamesInput;
+  awayTeam: TeamCreateOneWithoutAwayGamesInput;
+  gameTime: DateTimeInput;
+  odds?: Maybe<OddCreateManyWithoutGameInput>;
+}
+
+export interface WagerTypeUpdateManyMutationInput {
+  wagerType?: Maybe<String>;
+}
+
+export interface SportUpdateInput {
+  sportName?: Maybe<String>;
+  game?: Maybe<GameUpdateManyWithoutSportInput>;
+}
+
+export interface TeamUpdateOneInput {
+  create?: Maybe<TeamCreateInput>;
+  update?: Maybe<TeamUpdateDataInput>;
+  upsert?: Maybe<TeamUpsertNestedInput>;
+  delete?: Maybe<Boolean>;
+  disconnect?: Maybe<Boolean>;
+  connect?: Maybe<TeamWhereUniqueInput>;
+}
+
+export interface GameUpdateManyWithoutSportInput {
+  create?: Maybe<GameCreateWithoutSportInput[] | GameCreateWithoutSportInput>;
+  delete?: Maybe<GameWhereUniqueInput[] | GameWhereUniqueInput>;
+  connect?: Maybe<GameWhereUniqueInput[] | GameWhereUniqueInput>;
+  set?: Maybe<GameWhereUniqueInput[] | GameWhereUniqueInput>;
+  disconnect?: Maybe<GameWhereUniqueInput[] | GameWhereUniqueInput>;
+  update?: Maybe<
+    | GameUpdateWithWhereUniqueWithoutSportInput[]
+    | GameUpdateWithWhereUniqueWithoutSportInput
+  >;
+  upsert?: Maybe<
+    | GameUpsertWithWhereUniqueWithoutSportInput[]
+    | GameUpsertWithWhereUniqueWithoutSportInput
+  >;
+  deleteMany?: Maybe<GameScalarWhereInput[] | GameScalarWhereInput>;
+  updateMany?: Maybe<
+    GameUpdateManyWithWhereNestedInput[] | GameUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface LedgerUpsertNestedInput {
+  update: LedgerUpdateDataInput;
+  create: LedgerCreateInput;
+}
+
+export interface GameUpdateWithWhereUniqueWithoutSportInput {
+  where: GameWhereUniqueInput;
+  data: GameUpdateWithoutSportDataInput;
+}
+
+export interface LedgerUpsertWithWhereUniqueWithoutUserInput {
+  where: LedgerWhereUniqueInput;
+  update: LedgerUpdateWithoutUserDataInput;
+  create: LedgerCreateWithoutUserInput;
+}
+
+export interface GameUpdateWithoutSportDataInput {
+  homeTeam?: Maybe<TeamUpdateOneRequiredWithoutHomeGamesInput>;
+  awayTeam?: Maybe<TeamUpdateOneRequiredWithoutAwayGamesInput>;
+  gameTime?: Maybe<DateTimeInput>;
+  odds?: Maybe<OddUpdateManyWithoutGameInput>;
+}
+
+export interface GameCreateManyWithoutHomeTeamInput {
+  create?: Maybe<
+    GameCreateWithoutHomeTeamInput[] | GameCreateWithoutHomeTeamInput
+  >;
+  connect?: Maybe<GameWhereUniqueInput[] | GameWhereUniqueInput>;
+}
+
+export interface TeamUpdateInput {
+  teamName?: Maybe<String>;
+  city?: Maybe<String>;
+  homeGames?: Maybe<GameUpdateManyWithoutHomeTeamInput>;
+  awayGames?: Maybe<GameUpdateManyWithoutAwayTeamInput>;
+}
+
+export interface TeamCreateInput {
+  id?: Maybe<ID_Input>;
+  teamName: String;
+  city: String;
+  homeGames?: Maybe<GameCreateManyWithoutHomeTeamInput>;
+  awayGames?: Maybe<GameCreateManyWithoutAwayTeamInput>;
+}
+
+export interface SportUpdateManyMutationInput {
+  sportName?: Maybe<String>;
+}
+
+export interface GameUpsertWithWhereUniqueWithoutSportInput {
+  where: GameWhereUniqueInput;
+  update: GameUpdateWithoutSportDataInput;
+  create: GameCreateWithoutSportInput;
+}
+
+export interface LedgerWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  amountWagered?: Maybe<Float>;
+  amountWagered_not?: Maybe<Float>;
+  amountWagered_in?: Maybe<Float[] | Float>;
+  amountWagered_not_in?: Maybe<Float[] | Float>;
+  amountWagered_lt?: Maybe<Float>;
+  amountWagered_lte?: Maybe<Float>;
+  amountWagered_gt?: Maybe<Float>;
+  amountWagered_gte?: Maybe<Float>;
+  collected?: Maybe<Float>;
+  collected_not?: Maybe<Float>;
+  collected_in?: Maybe<Float[] | Float>;
+  collected_not_in?: Maybe<Float[] | Float>;
+  collected_lt?: Maybe<Float>;
+  collected_lte?: Maybe<Float>;
+  collected_gt?: Maybe<Float>;
+  collected_gte?: Maybe<Float>;
+  payout?: Maybe<Float>;
+  payout_not?: Maybe<Float>;
+  payout_in?: Maybe<Float[] | Float>;
+  payout_not_in?: Maybe<Float[] | Float>;
+  payout_lt?: Maybe<Float>;
+  payout_lte?: Maybe<Float>;
+  payout_gt?: Maybe<Float>;
+  payout_gte?: Maybe<Float>;
+  entryTime?: Maybe<DateTimeInput>;
+  entryTime_not?: Maybe<DateTimeInput>;
+  entryTime_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  entryTime_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  entryTime_lt?: Maybe<DateTimeInput>;
+  entryTime_lte?: Maybe<DateTimeInput>;
+  entryTime_gt?: Maybe<DateTimeInput>;
+  entryTime_gte?: Maybe<DateTimeInput>;
+  user?: Maybe<UserWhereInput>;
+  wagerType?: Maybe<WagerTypeWhereInput>;
+  outcome?: Maybe<OutcomeWhereInput>;
+  AND?: Maybe<LedgerWhereInput[] | LedgerWhereInput>;
+  OR?: Maybe<LedgerWhereInput[] | LedgerWhereInput>;
+  NOT?: Maybe<LedgerWhereInput[] | LedgerWhereInput>;
+}
+
+export interface GameCreateManyWithoutAwayTeamInput {
+  create?: Maybe<
+    GameCreateWithoutAwayTeamInput[] | GameCreateWithoutAwayTeamInput
+  >;
+  connect?: Maybe<GameWhereUniqueInput[] | GameWhereUniqueInput>;
+}
+
+export type WagerWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface OddsTypeUpdateDataInput {
+  oddsType?: Maybe<String>;
+}
+
+export interface OddsTypeWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  oddsType?: Maybe<String>;
+  oddsType_not?: Maybe<String>;
+  oddsType_in?: Maybe<String[] | String>;
+  oddsType_not_in?: Maybe<String[] | String>;
+  oddsType_lt?: Maybe<String>;
+  oddsType_lte?: Maybe<String>;
+  oddsType_gt?: Maybe<String>;
+  oddsType_gte?: Maybe<String>;
+  oddsType_contains?: Maybe<String>;
+  oddsType_not_contains?: Maybe<String>;
+  oddsType_starts_with?: Maybe<String>;
+  oddsType_not_starts_with?: Maybe<String>;
+  oddsType_ends_with?: Maybe<String>;
+  oddsType_not_ends_with?: Maybe<String>;
+  AND?: Maybe<OddsTypeWhereInput[] | OddsTypeWhereInput>;
+  OR?: Maybe<OddsTypeWhereInput[] | OddsTypeWhereInput>;
+  NOT?: Maybe<OddsTypeWhereInput[] | OddsTypeWhereInput>;
 }
 
 export interface NodeNode {
@@ -2460,68 +2442,6 @@ export interface WagerTypePreviousValuesSubscription
   wagerType: () => Promise<AsyncIterator<String>>;
 }
 
-export interface OddEdge {
-  node: Odd;
-  cursor: String;
-}
-
-export interface OddEdgePromise extends Promise<OddEdge>, Fragmentable {
-  node: <T = OddPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface OddEdgeSubscription
-  extends Promise<AsyncIterator<OddEdge>>,
-    Fragmentable {
-  node: <T = OddSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface Odd {
-  id: ID_Output;
-  moneyLine?: Int;
-  runLineOdds?: Int;
-  runLineRuns?: Float;
-  overUnderOdds?: Int;
-  overUnderRuns?: Float;
-  timeOfOdds: Int;
-}
-
-export interface OddPromise extends Promise<Odd>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  game: <T = GamePromise>() => T;
-  moneyLine: () => Promise<Int>;
-  runLineOdds: () => Promise<Int>;
-  runLineRuns: () => Promise<Float>;
-  overUnderOdds: () => Promise<Int>;
-  overUnderRuns: () => Promise<Float>;
-  timeOfOdds: () => Promise<Int>;
-}
-
-export interface OddSubscription
-  extends Promise<AsyncIterator<Odd>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  game: <T = GameSubscription>() => T;
-  moneyLine: () => Promise<AsyncIterator<Int>>;
-  runLineOdds: () => Promise<AsyncIterator<Int>>;
-  runLineRuns: () => Promise<AsyncIterator<Float>>;
-  overUnderOdds: () => Promise<AsyncIterator<Int>>;
-  overUnderRuns: () => Promise<AsyncIterator<Float>>;
-  timeOfOdds: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface OddNullablePromise extends Promise<Odd | null>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  game: <T = GamePromise>() => T;
-  moneyLine: () => Promise<Int>;
-  runLineOdds: () => Promise<Int>;
-  runLineRuns: () => Promise<Float>;
-  overUnderOdds: () => Promise<Int>;
-  overUnderRuns: () => Promise<Float>;
-  timeOfOdds: () => Promise<Int>;
-}
-
 export interface OddConnection {
   pageInfo: PageInfo;
   edges: OddEdge[];
@@ -2543,25 +2463,55 @@ export interface OddConnectionSubscription
   aggregate: <T = AggregateOddSubscription>() => T;
 }
 
-export interface GameConnection {
-  pageInfo: PageInfo;
-  edges: GameEdge[];
+export interface Sport {
+  id: ID_Output;
+  sportName: String;
 }
 
-export interface GameConnectionPromise
-  extends Promise<GameConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<GameEdge>>() => T;
-  aggregate: <T = AggregateGamePromise>() => T;
+export interface SportPromise extends Promise<Sport>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  sportName: () => Promise<String>;
+  game: <T = FragmentableArray<Game>>(args?: {
+    where?: GameWhereInput;
+    orderBy?: GameOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
 }
 
-export interface GameConnectionSubscription
-  extends Promise<AsyncIterator<GameConnection>>,
+export interface SportSubscription
+  extends Promise<AsyncIterator<Sport>>,
     Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<GameEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateGameSubscription>() => T;
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  sportName: () => Promise<AsyncIterator<String>>;
+  game: <T = Promise<AsyncIterator<GameSubscription>>>(args?: {
+    where?: GameWhereInput;
+    orderBy?: GameOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+}
+
+export interface SportNullablePromise
+  extends Promise<Sport | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  sportName: () => Promise<String>;
+  game: <T = FragmentableArray<Game>>(args?: {
+    where?: GameWhereInput;
+    orderBy?: GameOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
 }
 
 export interface AggregateLedger {
@@ -2580,20 +2530,49 @@ export interface AggregateLedgerSubscription
   count: () => Promise<AsyncIterator<Int>>;
 }
 
-export interface AggregateWagerType {
-  count: Int;
+export interface Odd {
+  id: ID_Output;
+  moneyLine?: Int;
+  runLineOdds?: Int;
+  runLineRuns?: Float;
+  overUnderOdds?: Int;
+  overUnderRuns?: Float;
+  timeOfOdds: DateTimeOutput;
 }
 
-export interface AggregateWagerTypePromise
-  extends Promise<AggregateWagerType>,
-    Fragmentable {
-  count: () => Promise<Int>;
+export interface OddPromise extends Promise<Odd>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  game: <T = GamePromise>() => T;
+  moneyLine: () => Promise<Int>;
+  runLineOdds: () => Promise<Int>;
+  runLineRuns: () => Promise<Float>;
+  overUnderOdds: () => Promise<Int>;
+  overUnderRuns: () => Promise<Float>;
+  timeOfOdds: () => Promise<DateTimeOutput>;
 }
 
-export interface AggregateWagerTypeSubscription
-  extends Promise<AsyncIterator<AggregateWagerType>>,
+export interface OddSubscription
+  extends Promise<AsyncIterator<Odd>>,
     Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  game: <T = GameSubscription>() => T;
+  moneyLine: () => Promise<AsyncIterator<Int>>;
+  runLineOdds: () => Promise<AsyncIterator<Int>>;
+  runLineRuns: () => Promise<AsyncIterator<Float>>;
+  overUnderOdds: () => Promise<AsyncIterator<Int>>;
+  overUnderRuns: () => Promise<AsyncIterator<Float>>;
+  timeOfOdds: () => Promise<AsyncIterator<DateTimeOutput>>;
+}
+
+export interface OddNullablePromise extends Promise<Odd | null>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  game: <T = GamePromise>() => T;
+  moneyLine: () => Promise<Int>;
+  runLineOdds: () => Promise<Int>;
+  runLineRuns: () => Promise<Float>;
+  overUnderOdds: () => Promise<Int>;
+  overUnderRuns: () => Promise<Float>;
+  timeOfOdds: () => Promise<DateTimeOutput>;
 }
 
 export interface LedgerEdge {
@@ -2611,6 +2590,43 @@ export interface LedgerEdgeSubscription
     Fragmentable {
   node: <T = LedgerSubscription>() => T;
   cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregateWagerType {
+  count: Int;
+}
+
+export interface AggregateWagerTypePromise
+  extends Promise<AggregateWagerType>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateWagerTypeSubscription
+  extends Promise<AsyncIterator<AggregateWagerType>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface LedgerConnection {
+  pageInfo: PageInfo;
+  edges: LedgerEdge[];
+}
+
+export interface LedgerConnectionPromise
+  extends Promise<LedgerConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<LedgerEdge>>() => T;
+  aggregate: <T = AggregateLedgerPromise>() => T;
+}
+
+export interface LedgerConnectionSubscription
+  extends Promise<AsyncIterator<LedgerConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<LedgerEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateLedgerSubscription>() => T;
 }
 
 export interface WagerTypeConnection {
@@ -2636,14 +2652,14 @@ export interface WagerTypeConnectionSubscription
 
 export interface Game {
   id: ID_Output;
-  gameTime: Int;
+  gameTime: DateTimeOutput;
 }
 
 export interface GamePromise extends Promise<Game>, Fragmentable {
   id: () => Promise<ID_Output>;
   homeTeam: <T = TeamPromise>() => T;
   awayTeam: <T = TeamPromise>() => T;
-  gameTime: () => Promise<Int>;
+  gameTime: () => Promise<DateTimeOutput>;
   sport: <T = SportPromise>() => T;
   odds: <T = FragmentableArray<Odd>>(args?: {
     where?: OddWhereInput;
@@ -2662,7 +2678,7 @@ export interface GameSubscription
   id: () => Promise<AsyncIterator<ID_Output>>;
   homeTeam: <T = TeamSubscription>() => T;
   awayTeam: <T = TeamSubscription>() => T;
-  gameTime: () => Promise<AsyncIterator<Int>>;
+  gameTime: () => Promise<AsyncIterator<DateTimeOutput>>;
   sport: <T = SportSubscription>() => T;
   odds: <T = Promise<AsyncIterator<OddSubscription>>>(args?: {
     where?: OddWhereInput;
@@ -2681,7 +2697,7 @@ export interface GameNullablePromise
   id: () => Promise<ID_Output>;
   homeTeam: <T = TeamPromise>() => T;
   awayTeam: <T = TeamPromise>() => T;
-  gameTime: () => Promise<Int>;
+  gameTime: () => Promise<DateTimeOutput>;
   sport: <T = SportPromise>() => T;
   odds: <T = FragmentableArray<Odd>>(args?: {
     where?: OddWhereInput;
@@ -2758,21 +2774,21 @@ export interface WagerConnectionSubscription
 
 export interface GamePreviousValues {
   id: ID_Output;
-  gameTime: Int;
+  gameTime: DateTimeOutput;
 }
 
 export interface GamePreviousValuesPromise
   extends Promise<GamePreviousValues>,
     Fragmentable {
   id: () => Promise<ID_Output>;
-  gameTime: () => Promise<Int>;
+  gameTime: () => Promise<DateTimeOutput>;
 }
 
 export interface GamePreviousValuesSubscription
   extends Promise<AsyncIterator<GamePreviousValues>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
-  gameTime: () => Promise<AsyncIterator<Int>>;
+  gameTime: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface Wager {
@@ -2810,25 +2826,55 @@ export interface WagerNullablePromise
   pickedTeam: <T = TeamPromise>() => T;
 }
 
-export interface LedgerConnection {
-  pageInfo: PageInfo;
-  edges: LedgerEdge[];
+export interface Outcome {
+  id: ID_Output;
+  outcome: String;
 }
 
-export interface LedgerConnectionPromise
-  extends Promise<LedgerConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<LedgerEdge>>() => T;
-  aggregate: <T = AggregateLedgerPromise>() => T;
+export interface OutcomePromise extends Promise<Outcome>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  outcome: () => Promise<String>;
+  ledgers: <T = FragmentableArray<Ledger>>(args?: {
+    where?: LedgerWhereInput;
+    orderBy?: LedgerOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
 }
 
-export interface LedgerConnectionSubscription
-  extends Promise<AsyncIterator<LedgerConnection>>,
+export interface OutcomeSubscription
+  extends Promise<AsyncIterator<Outcome>>,
     Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<LedgerEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateLedgerSubscription>() => T;
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  outcome: () => Promise<AsyncIterator<String>>;
+  ledgers: <T = Promise<AsyncIterator<LedgerSubscription>>>(args?: {
+    where?: LedgerWhereInput;
+    orderBy?: LedgerOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+}
+
+export interface OutcomeNullablePromise
+  extends Promise<Outcome | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  outcome: () => Promise<String>;
+  ledgers: <T = FragmentableArray<Ledger>>(args?: {
+    where?: LedgerWhereInput;
+    orderBy?: LedgerOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
 }
 
 export interface UserEdge {
@@ -2894,7 +2940,7 @@ export interface LedgerPreviousValues {
   amountWagered: Float;
   collected?: Float;
   payout?: Float;
-  entryTime: Int;
+  entryTime: DateTimeOutput;
 }
 
 export interface LedgerPreviousValuesPromise
@@ -2904,7 +2950,7 @@ export interface LedgerPreviousValuesPromise
   amountWagered: () => Promise<Float>;
   collected: () => Promise<Float>;
   payout: () => Promise<Float>;
-  entryTime: () => Promise<Int>;
+  entryTime: () => Promise<DateTimeOutput>;
 }
 
 export interface LedgerPreviousValuesSubscription
@@ -2914,7 +2960,7 @@ export interface LedgerPreviousValuesSubscription
   amountWagered: () => Promise<AsyncIterator<Float>>;
   collected: () => Promise<AsyncIterator<Float>>;
   payout: () => Promise<AsyncIterator<Float>>;
-  entryTime: () => Promise<AsyncIterator<Int>>;
+  entryTime: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface TeamConnection {
@@ -2936,248 +2982,6 @@ export interface TeamConnectionSubscription
   pageInfo: <T = PageInfoSubscription>() => T;
   edges: <T = Promise<AsyncIterator<TeamEdgeSubscription>>>() => T;
   aggregate: <T = AggregateTeamSubscription>() => T;
-}
-
-export interface Outcome {
-  id: ID_Output;
-  outcome: String;
-}
-
-export interface OutcomePromise extends Promise<Outcome>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  outcome: () => Promise<String>;
-  ledgers: <T = FragmentableArray<Ledger>>(args?: {
-    where?: LedgerWhereInput;
-    orderBy?: LedgerOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-}
-
-export interface OutcomeSubscription
-  extends Promise<AsyncIterator<Outcome>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  outcome: () => Promise<AsyncIterator<String>>;
-  ledgers: <T = Promise<AsyncIterator<LedgerSubscription>>>(args?: {
-    where?: LedgerWhereInput;
-    orderBy?: LedgerOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-}
-
-export interface OutcomeNullablePromise
-  extends Promise<Outcome | null>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  outcome: () => Promise<String>;
-  ledgers: <T = FragmentableArray<Ledger>>(args?: {
-    where?: LedgerWhereInput;
-    orderBy?: LedgerOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-}
-
-export interface SportEdge {
-  node: Sport;
-  cursor: String;
-}
-
-export interface SportEdgePromise extends Promise<SportEdge>, Fragmentable {
-  node: <T = SportPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface SportEdgeSubscription
-  extends Promise<AsyncIterator<SportEdge>>,
-    Fragmentable {
-  node: <T = SportSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface AggregateSport {
-  count: Int;
-}
-
-export interface AggregateSportPromise
-  extends Promise<AggregateSport>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateSportSubscription
-  extends Promise<AsyncIterator<AggregateSport>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface WagerSubscriptionPayload {
-  mutation: MutationType;
-  node: Wager;
-  updatedFields: String[];
-  previousValues: WagerPreviousValues;
-}
-
-export interface WagerSubscriptionPayloadPromise
-  extends Promise<WagerSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = WagerPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = WagerPreviousValuesPromise>() => T;
-}
-
-export interface WagerSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<WagerSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = WagerSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = WagerPreviousValuesSubscription>() => T;
-}
-
-export interface SportConnection {
-  pageInfo: PageInfo;
-  edges: SportEdge[];
-}
-
-export interface SportConnectionPromise
-  extends Promise<SportConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<SportEdge>>() => T;
-  aggregate: <T = AggregateSportPromise>() => T;
-}
-
-export interface SportConnectionSubscription
-  extends Promise<AsyncIterator<SportConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<SportEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateSportSubscription>() => T;
-}
-
-export interface OddSubscriptionPayload {
-  mutation: MutationType;
-  node: Odd;
-  updatedFields: String[];
-  previousValues: OddPreviousValues;
-}
-
-export interface OddSubscriptionPayloadPromise
-  extends Promise<OddSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = OddPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = OddPreviousValuesPromise>() => T;
-}
-
-export interface OddSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<OddSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = OddSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = OddPreviousValuesSubscription>() => T;
-}
-
-export interface AggregateOverUnder {
-  count: Int;
-}
-
-export interface AggregateOverUnderPromise
-  extends Promise<AggregateOverUnder>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateOverUnderSubscription
-  extends Promise<AsyncIterator<AggregateOverUnder>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface OverUnderConnection {
-  pageInfo: PageInfo;
-  edges: OverUnderEdge[];
-}
-
-export interface OverUnderConnectionPromise
-  extends Promise<OverUnderConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<OverUnderEdge>>() => T;
-  aggregate: <T = AggregateOverUnderPromise>() => T;
-}
-
-export interface OverUnderConnectionSubscription
-  extends Promise<AsyncIterator<OverUnderConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<OverUnderEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateOverUnderSubscription>() => T;
-}
-
-export interface OddPreviousValues {
-  id: ID_Output;
-  moneyLine?: Int;
-  runLineOdds?: Int;
-  runLineRuns?: Float;
-  overUnderOdds?: Int;
-  overUnderRuns?: Float;
-  timeOfOdds: Int;
-}
-
-export interface OddPreviousValuesPromise
-  extends Promise<OddPreviousValues>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  moneyLine: () => Promise<Int>;
-  runLineOdds: () => Promise<Int>;
-  runLineRuns: () => Promise<Float>;
-  overUnderOdds: () => Promise<Int>;
-  overUnderRuns: () => Promise<Float>;
-  timeOfOdds: () => Promise<Int>;
-}
-
-export interface OddPreviousValuesSubscription
-  extends Promise<AsyncIterator<OddPreviousValues>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  moneyLine: () => Promise<AsyncIterator<Int>>;
-  runLineOdds: () => Promise<AsyncIterator<Int>>;
-  runLineRuns: () => Promise<AsyncIterator<Float>>;
-  overUnderOdds: () => Promise<AsyncIterator<Int>>;
-  overUnderRuns: () => Promise<AsyncIterator<Float>>;
-  timeOfOdds: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface AggregateOutcome {
-  count: Int;
-}
-
-export interface AggregateOutcomePromise
-  extends Promise<AggregateOutcome>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateOutcomeSubscription
-  extends Promise<AsyncIterator<AggregateOutcome>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
 }
 
 export interface WagerType {
@@ -3231,6 +3035,229 @@ export interface WagerTypeNullablePromise
   }) => T;
 }
 
+export interface SportEdge {
+  node: Sport;
+  cursor: String;
+}
+
+export interface SportEdgePromise extends Promise<SportEdge>, Fragmentable {
+  node: <T = SportPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface SportEdgeSubscription
+  extends Promise<AsyncIterator<SportEdge>>,
+    Fragmentable {
+  node: <T = SportSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface TeamEdge {
+  node: Team;
+  cursor: String;
+}
+
+export interface TeamEdgePromise extends Promise<TeamEdge>, Fragmentable {
+  node: <T = TeamPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface TeamEdgeSubscription
+  extends Promise<AsyncIterator<TeamEdge>>,
+    Fragmentable {
+  node: <T = TeamSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface UserPreviousValues {
+  id: ID_Output;
+  firstName: String;
+  lastName: String;
+  userName: String;
+  password: String;
+  email: String;
+  phoneNumber?: String;
+  balance: Float;
+  userVerified: Boolean;
+}
+
+export interface UserPreviousValuesPromise
+  extends Promise<UserPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  firstName: () => Promise<String>;
+  lastName: () => Promise<String>;
+  userName: () => Promise<String>;
+  password: () => Promise<String>;
+  email: () => Promise<String>;
+  phoneNumber: () => Promise<String>;
+  balance: () => Promise<Float>;
+  userVerified: () => Promise<Boolean>;
+}
+
+export interface UserPreviousValuesSubscription
+  extends Promise<AsyncIterator<UserPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  firstName: () => Promise<AsyncIterator<String>>;
+  lastName: () => Promise<AsyncIterator<String>>;
+  userName: () => Promise<AsyncIterator<String>>;
+  password: () => Promise<AsyncIterator<String>>;
+  email: () => Promise<AsyncIterator<String>>;
+  phoneNumber: () => Promise<AsyncIterator<String>>;
+  balance: () => Promise<AsyncIterator<Float>>;
+  userVerified: () => Promise<AsyncIterator<Boolean>>;
+}
+
+export interface AggregateSport {
+  count: Int;
+}
+
+export interface AggregateSportPromise
+  extends Promise<AggregateSport>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateSportSubscription
+  extends Promise<AsyncIterator<AggregateSport>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface OddSubscriptionPayload {
+  mutation: MutationType;
+  node: Odd;
+  updatedFields: String[];
+  previousValues: OddPreviousValues;
+}
+
+export interface OddSubscriptionPayloadPromise
+  extends Promise<OddSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = OddPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = OddPreviousValuesPromise>() => T;
+}
+
+export interface OddSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<OddSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = OddSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = OddPreviousValuesSubscription>() => T;
+}
+
+export interface SportConnection {
+  pageInfo: PageInfo;
+  edges: SportEdge[];
+}
+
+export interface SportConnectionPromise
+  extends Promise<SportConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<SportEdge>>() => T;
+  aggregate: <T = AggregateSportPromise>() => T;
+}
+
+export interface SportConnectionSubscription
+  extends Promise<AsyncIterator<SportConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<SportEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateSportSubscription>() => T;
+}
+
+export interface OverUnderConnection {
+  pageInfo: PageInfo;
+  edges: OverUnderEdge[];
+}
+
+export interface OverUnderConnectionPromise
+  extends Promise<OverUnderConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<OverUnderEdge>>() => T;
+  aggregate: <T = AggregateOverUnderPromise>() => T;
+}
+
+export interface OverUnderConnectionSubscription
+  extends Promise<AsyncIterator<OverUnderConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<OverUnderEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateOverUnderSubscription>() => T;
+}
+
+export interface AggregateOverUnder {
+  count: Int;
+}
+
+export interface AggregateOverUnderPromise
+  extends Promise<AggregateOverUnder>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateOverUnderSubscription
+  extends Promise<AsyncIterator<AggregateOverUnder>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface AggregateOutcome {
+  count: Int;
+}
+
+export interface AggregateOutcomePromise
+  extends Promise<AggregateOutcome>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateOutcomeSubscription
+  extends Promise<AsyncIterator<AggregateOutcome>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface OddPreviousValues {
+  id: ID_Output;
+  moneyLine?: Int;
+  runLineOdds?: Int;
+  runLineRuns?: Float;
+  overUnderOdds?: Int;
+  overUnderRuns?: Float;
+  timeOfOdds: DateTimeOutput;
+}
+
+export interface OddPreviousValuesPromise
+  extends Promise<OddPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  moneyLine: () => Promise<Int>;
+  runLineOdds: () => Promise<Int>;
+  runLineRuns: () => Promise<Float>;
+  overUnderOdds: () => Promise<Int>;
+  overUnderRuns: () => Promise<Float>;
+  timeOfOdds: () => Promise<DateTimeOutput>;
+}
+
+export interface OddPreviousValuesSubscription
+  extends Promise<AsyncIterator<OddPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  moneyLine: () => Promise<AsyncIterator<Int>>;
+  runLineOdds: () => Promise<AsyncIterator<Int>>;
+  runLineRuns: () => Promise<AsyncIterator<Float>>;
+  overUnderOdds: () => Promise<AsyncIterator<Int>>;
+  overUnderRuns: () => Promise<AsyncIterator<Float>>;
+  timeOfOdds: () => Promise<AsyncIterator<DateTimeOutput>>;
+}
+
 export interface OutcomeConnection {
   pageInfo: PageInfo;
   edges: OutcomeEdge[];
@@ -3250,6 +3277,50 @@ export interface OutcomeConnectionSubscription
   pageInfo: <T = PageInfoSubscription>() => T;
   edges: <T = Promise<AsyncIterator<OutcomeEdgeSubscription>>>() => T;
   aggregate: <T = AggregateOutcomeSubscription>() => T;
+}
+
+export interface WagerSubscriptionPayload {
+  mutation: MutationType;
+  node: Wager;
+  updatedFields: String[];
+  previousValues: WagerPreviousValues;
+}
+
+export interface WagerSubscriptionPayloadPromise
+  extends Promise<WagerSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = WagerPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = WagerPreviousValuesPromise>() => T;
+}
+
+export interface WagerSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<WagerSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = WagerSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = WagerPreviousValuesSubscription>() => T;
+}
+
+export interface OddsTypeEdge {
+  node: OddsType;
+  cursor: String;
+}
+
+export interface OddsTypeEdgePromise
+  extends Promise<OddsTypeEdge>,
+    Fragmentable {
+  node: <T = OddsTypePromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface OddsTypeEdgeSubscription
+  extends Promise<AsyncIterator<OddsTypeEdge>>,
+    Fragmentable {
+  node: <T = OddsTypeSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
 }
 
 export interface OddsTypeSubscriptionPayload {
@@ -3277,44 +3348,6 @@ export interface OddsTypeSubscriptionPayloadSubscription
   previousValues: <T = OddsTypePreviousValuesSubscription>() => T;
 }
 
-export interface OddsTypeEdge {
-  node: OddsType;
-  cursor: String;
-}
-
-export interface OddsTypeEdgePromise
-  extends Promise<OddsTypeEdge>,
-    Fragmentable {
-  node: <T = OddsTypePromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface OddsTypeEdgeSubscription
-  extends Promise<AsyncIterator<OddsTypeEdge>>,
-    Fragmentable {
-  node: <T = OddsTypeSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface OddsTypePreviousValues {
-  id: ID_Output;
-  oddsType: String;
-}
-
-export interface OddsTypePreviousValuesPromise
-  extends Promise<OddsTypePreviousValues>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  oddsType: () => Promise<String>;
-}
-
-export interface OddsTypePreviousValuesSubscription
-  extends Promise<AsyncIterator<OddsTypePreviousValues>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  oddsType: () => Promise<AsyncIterator<String>>;
-}
-
 export interface WagerTypeSubscriptionPayload {
   mutation: MutationType;
   node: WagerType;
@@ -3340,55 +3373,23 @@ export interface WagerTypeSubscriptionPayloadSubscription
   previousValues: <T = WagerTypePreviousValuesSubscription>() => T;
 }
 
-export interface Sport {
+export interface OddsTypePreviousValues {
   id: ID_Output;
-  sportName: String;
+  oddsType: String;
 }
 
-export interface SportPromise extends Promise<Sport>, Fragmentable {
+export interface OddsTypePreviousValuesPromise
+  extends Promise<OddsTypePreviousValues>,
+    Fragmentable {
   id: () => Promise<ID_Output>;
-  sportName: () => Promise<String>;
-  game: <T = FragmentableArray<Game>>(args?: {
-    where?: GameWhereInput;
-    orderBy?: GameOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
+  oddsType: () => Promise<String>;
 }
 
-export interface SportSubscription
-  extends Promise<AsyncIterator<Sport>>,
+export interface OddsTypePreviousValuesSubscription
+  extends Promise<AsyncIterator<OddsTypePreviousValues>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
-  sportName: () => Promise<AsyncIterator<String>>;
-  game: <T = Promise<AsyncIterator<GameSubscription>>>(args?: {
-    where?: GameWhereInput;
-    orderBy?: GameOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-}
-
-export interface SportNullablePromise
-  extends Promise<Sport | null>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  sportName: () => Promise<String>;
-  game: <T = FragmentableArray<Game>>(args?: {
-    where?: GameWhereInput;
-    orderBy?: GameOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
+  oddsType: () => Promise<AsyncIterator<String>>;
 }
 
 export interface AggregateOdd {
@@ -3405,6 +3406,106 @@ export interface AggregateOddSubscription
   extends Promise<AsyncIterator<AggregateOdd>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface User {
+  id: ID_Output;
+  firstName: String;
+  lastName: String;
+  userName: String;
+  password: String;
+  email: String;
+  phoneNumber?: String;
+  balance: Float;
+  userVerified: Boolean;
+}
+
+export interface UserPromise extends Promise<User>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  firstName: () => Promise<String>;
+  lastName: () => Promise<String>;
+  userName: () => Promise<String>;
+  password: () => Promise<String>;
+  email: () => Promise<String>;
+  phoneNumber: () => Promise<String>;
+  balance: () => Promise<Float>;
+  userVerified: () => Promise<Boolean>;
+  ledgerEntries: <T = FragmentableArray<Ledger>>(args?: {
+    where?: LedgerWhereInput;
+    orderBy?: LedgerOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+}
+
+export interface UserSubscription
+  extends Promise<AsyncIterator<User>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  firstName: () => Promise<AsyncIterator<String>>;
+  lastName: () => Promise<AsyncIterator<String>>;
+  userName: () => Promise<AsyncIterator<String>>;
+  password: () => Promise<AsyncIterator<String>>;
+  email: () => Promise<AsyncIterator<String>>;
+  phoneNumber: () => Promise<AsyncIterator<String>>;
+  balance: () => Promise<AsyncIterator<Float>>;
+  userVerified: () => Promise<AsyncIterator<Boolean>>;
+  ledgerEntries: <T = Promise<AsyncIterator<LedgerSubscription>>>(args?: {
+    where?: LedgerWhereInput;
+    orderBy?: LedgerOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+}
+
+export interface UserNullablePromise
+  extends Promise<User | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  firstName: () => Promise<String>;
+  lastName: () => Promise<String>;
+  userName: () => Promise<String>;
+  password: () => Promise<String>;
+  email: () => Promise<String>;
+  phoneNumber: () => Promise<String>;
+  balance: () => Promise<Float>;
+  userVerified: () => Promise<Boolean>;
+  ledgerEntries: <T = FragmentableArray<Ledger>>(args?: {
+    where?: LedgerWhereInput;
+    orderBy?: LedgerOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+}
+
+export interface GameConnection {
+  pageInfo: PageInfo;
+  edges: GameEdge[];
+}
+
+export interface GameConnectionPromise
+  extends Promise<GameConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<GameEdge>>() => T;
+  aggregate: <T = AggregateGamePromise>() => T;
+}
+
+export interface GameConnectionSubscription
+  extends Promise<AsyncIterator<GameConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<GameEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateGameSubscription>() => T;
 }
 
 export interface OutcomeSubscriptionPayload {
@@ -3432,20 +3533,23 @@ export interface OutcomeSubscriptionPayloadSubscription
   previousValues: <T = OutcomePreviousValuesSubscription>() => T;
 }
 
-export interface BatchPayload {
-  count: Long;
+export interface WagerTypeEdge {
+  node: WagerType;
+  cursor: String;
 }
 
-export interface BatchPayloadPromise
-  extends Promise<BatchPayload>,
+export interface WagerTypeEdgePromise
+  extends Promise<WagerTypeEdge>,
     Fragmentable {
-  count: () => Promise<Long>;
+  node: <T = WagerTypePromise>() => T;
+  cursor: () => Promise<String>;
 }
 
-export interface BatchPayloadSubscription
-  extends Promise<AsyncIterator<BatchPayload>>,
+export interface WagerTypeEdgeSubscription
+  extends Promise<AsyncIterator<WagerTypeEdge>>,
     Fragmentable {
-  count: () => Promise<AsyncIterator<Long>>;
+  node: <T = WagerTypeSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
 }
 
 export interface OutcomePreviousValues {
@@ -3465,6 +3569,265 @@ export interface OutcomePreviousValuesSubscription
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   outcome: () => Promise<AsyncIterator<String>>;
+}
+
+export interface WagerEdge {
+  node: Wager;
+  cursor: String;
+}
+
+export interface WagerEdgePromise extends Promise<WagerEdge>, Fragmentable {
+  node: <T = WagerPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface WagerEdgeSubscription
+  extends Promise<AsyncIterator<WagerEdge>>,
+    Fragmentable {
+  node: <T = WagerSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface Ledger {
+  id: ID_Output;
+  amountWagered: Float;
+  collected?: Float;
+  payout?: Float;
+  entryTime: DateTimeOutput;
+}
+
+export interface LedgerPromise extends Promise<Ledger>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  amountWagered: () => Promise<Float>;
+  collected: () => Promise<Float>;
+  payout: () => Promise<Float>;
+  entryTime: () => Promise<DateTimeOutput>;
+  user: <T = UserPromise>() => T;
+  wagerType: <T = WagerTypePromise>() => T;
+  outcome: <T = OutcomePromise>() => T;
+}
+
+export interface LedgerSubscription
+  extends Promise<AsyncIterator<Ledger>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  amountWagered: () => Promise<AsyncIterator<Float>>;
+  collected: () => Promise<AsyncIterator<Float>>;
+  payout: () => Promise<AsyncIterator<Float>>;
+  entryTime: () => Promise<AsyncIterator<DateTimeOutput>>;
+  user: <T = UserSubscription>() => T;
+  wagerType: <T = WagerTypeSubscription>() => T;
+  outcome: <T = OutcomeSubscription>() => T;
+}
+
+export interface LedgerNullablePromise
+  extends Promise<Ledger | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  amountWagered: () => Promise<Float>;
+  collected: () => Promise<Float>;
+  payout: () => Promise<Float>;
+  entryTime: () => Promise<DateTimeOutput>;
+  user: <T = UserPromise>() => T;
+  wagerType: <T = WagerTypePromise>() => T;
+  outcome: <T = OutcomePromise>() => T;
+}
+
+export interface AggregateUser {
+  count: Int;
+}
+
+export interface AggregateUserPromise
+  extends Promise<AggregateUser>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateUserSubscription
+  extends Promise<AsyncIterator<AggregateUser>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface OverUnderSubscriptionPayload {
+  mutation: MutationType;
+  node: OverUnder;
+  updatedFields: String[];
+  previousValues: OverUnderPreviousValues;
+}
+
+export interface OverUnderSubscriptionPayloadPromise
+  extends Promise<OverUnderSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = OverUnderPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = OverUnderPreviousValuesPromise>() => T;
+}
+
+export interface OverUnderSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<OverUnderSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = OverUnderSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = OverUnderPreviousValuesSubscription>() => T;
+}
+
+export interface OverUnderEdge {
+  node: OverUnder;
+  cursor: String;
+}
+
+export interface OverUnderEdgePromise
+  extends Promise<OverUnderEdge>,
+    Fragmentable {
+  node: <T = OverUnderPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface OverUnderEdgeSubscription
+  extends Promise<AsyncIterator<OverUnderEdge>>,
+    Fragmentable {
+  node: <T = OverUnderSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface OverUnderPreviousValues {
+  id: ID_Output;
+  value: Boolean;
+  overUnder: String;
+}
+
+export interface OverUnderPreviousValuesPromise
+  extends Promise<OverUnderPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  value: () => Promise<Boolean>;
+  overUnder: () => Promise<String>;
+}
+
+export interface OverUnderPreviousValuesSubscription
+  extends Promise<AsyncIterator<OverUnderPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  value: () => Promise<AsyncIterator<Boolean>>;
+  overUnder: () => Promise<AsyncIterator<String>>;
+}
+
+export interface OutcomeEdge {
+  node: Outcome;
+  cursor: String;
+}
+
+export interface OutcomeEdgePromise extends Promise<OutcomeEdge>, Fragmentable {
+  node: <T = OutcomePromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface OutcomeEdgeSubscription
+  extends Promise<AsyncIterator<OutcomeEdge>>,
+    Fragmentable {
+  node: <T = OutcomeSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregateGame {
+  count: Int;
+}
+
+export interface AggregateGamePromise
+  extends Promise<AggregateGame>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateGameSubscription
+  extends Promise<AsyncIterator<AggregateGame>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface OddsTypeConnection {
+  pageInfo: PageInfo;
+  edges: OddsTypeEdge[];
+}
+
+export interface OddsTypeConnectionPromise
+  extends Promise<OddsTypeConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<OddsTypeEdge>>() => T;
+  aggregate: <T = AggregateOddsTypePromise>() => T;
+}
+
+export interface OddsTypeConnectionSubscription
+  extends Promise<AsyncIterator<OddsTypeConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<OddsTypeEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateOddsTypeSubscription>() => T;
+}
+
+export interface SportSubscriptionPayload {
+  mutation: MutationType;
+  node: Sport;
+  updatedFields: String[];
+  previousValues: SportPreviousValues;
+}
+
+export interface SportSubscriptionPayloadPromise
+  extends Promise<SportSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = SportPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = SportPreviousValuesPromise>() => T;
+}
+
+export interface SportSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<SportSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = SportSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = SportPreviousValuesSubscription>() => T;
+}
+
+export interface OddEdge {
+  node: Odd;
+  cursor: String;
+}
+
+export interface OddEdgePromise extends Promise<OddEdge>, Fragmentable {
+  node: <T = OddPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface OddEdgeSubscription
+  extends Promise<AsyncIterator<OddEdge>>,
+    Fragmentable {
+  node: <T = OddSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface SportPreviousValues {
+  id: ID_Output;
+  sportName: String;
+}
+
+export interface SportPreviousValuesPromise
+  extends Promise<SportPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  sportName: () => Promise<String>;
+}
+
+export interface SportPreviousValuesSubscription
+  extends Promise<AsyncIterator<SportPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  sportName: () => Promise<AsyncIterator<String>>;
 }
 
 export interface Team {
@@ -3549,124 +3912,21 @@ export interface TeamNullablePromise
   }) => T;
 }
 
-export interface User {
-  id: ID_Output;
-  firstName: String;
-  lastName: String;
-  userName: String;
-  password: String;
-  email: String;
-  phoneNumber?: String;
-  balance: Float;
-  userVerified: Boolean;
+export interface GameEdge {
+  node: Game;
+  cursor: String;
 }
 
-export interface UserPromise extends Promise<User>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  firstName: () => Promise<String>;
-  lastName: () => Promise<String>;
-  userName: () => Promise<String>;
-  password: () => Promise<String>;
-  email: () => Promise<String>;
-  phoneNumber: () => Promise<String>;
-  balance: () => Promise<Float>;
-  userVerified: () => Promise<Boolean>;
-  ledgerEntries: <T = FragmentableArray<Ledger>>(args?: {
-    where?: LedgerWhereInput;
-    orderBy?: LedgerOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
+export interface GameEdgePromise extends Promise<GameEdge>, Fragmentable {
+  node: <T = GamePromise>() => T;
+  cursor: () => Promise<String>;
 }
 
-export interface UserSubscription
-  extends Promise<AsyncIterator<User>>,
+export interface GameEdgeSubscription
+  extends Promise<AsyncIterator<GameEdge>>,
     Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  firstName: () => Promise<AsyncIterator<String>>;
-  lastName: () => Promise<AsyncIterator<String>>;
-  userName: () => Promise<AsyncIterator<String>>;
-  password: () => Promise<AsyncIterator<String>>;
-  email: () => Promise<AsyncIterator<String>>;
-  phoneNumber: () => Promise<AsyncIterator<String>>;
-  balance: () => Promise<AsyncIterator<Float>>;
-  userVerified: () => Promise<AsyncIterator<Boolean>>;
-  ledgerEntries: <T = Promise<AsyncIterator<LedgerSubscription>>>(args?: {
-    where?: LedgerWhereInput;
-    orderBy?: LedgerOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-}
-
-export interface UserNullablePromise
-  extends Promise<User | null>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  firstName: () => Promise<String>;
-  lastName: () => Promise<String>;
-  userName: () => Promise<String>;
-  password: () => Promise<String>;
-  email: () => Promise<String>;
-  phoneNumber: () => Promise<String>;
-  balance: () => Promise<Float>;
-  userVerified: () => Promise<Boolean>;
-  ledgerEntries: <T = FragmentableArray<Ledger>>(args?: {
-    where?: LedgerWhereInput;
-    orderBy?: LedgerOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-}
-
-export interface WagerPreviousValues {
-  id: ID_Output;
-}
-
-export interface WagerPreviousValuesPromise
-  extends Promise<WagerPreviousValues>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-}
-
-export interface WagerPreviousValuesSubscription
-  extends Promise<AsyncIterator<WagerPreviousValues>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-}
-
-export interface OverUnderSubscriptionPayload {
-  mutation: MutationType;
-  node: OverUnder;
-  updatedFields: String[];
-  previousValues: OverUnderPreviousValues;
-}
-
-export interface OverUnderSubscriptionPayloadPromise
-  extends Promise<OverUnderSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = OverUnderPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = OverUnderPreviousValuesPromise>() => T;
-}
-
-export interface OverUnderSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<OverUnderSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = OverUnderSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = OverUnderPreviousValuesSubscription>() => T;
+  node: <T = GameSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
 }
 
 export interface UserConnection {
@@ -3690,272 +3950,6 @@ export interface UserConnectionSubscription
   aggregate: <T = AggregateUserSubscription>() => T;
 }
 
-export interface OverUnderPreviousValues {
-  id: ID_Output;
-  value: Boolean;
-  overUnder: String;
-}
-
-export interface OverUnderPreviousValuesPromise
-  extends Promise<OverUnderPreviousValues>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  value: () => Promise<Boolean>;
-  overUnder: () => Promise<String>;
-}
-
-export interface OverUnderPreviousValuesSubscription
-  extends Promise<AsyncIterator<OverUnderPreviousValues>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  value: () => Promise<AsyncIterator<Boolean>>;
-  overUnder: () => Promise<AsyncIterator<String>>;
-}
-
-export interface OverUnderEdge {
-  node: OverUnder;
-  cursor: String;
-}
-
-export interface OverUnderEdgePromise
-  extends Promise<OverUnderEdge>,
-    Fragmentable {
-  node: <T = OverUnderPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface OverUnderEdgeSubscription
-  extends Promise<AsyncIterator<OverUnderEdge>>,
-    Fragmentable {
-  node: <T = OverUnderSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface Ledger {
-  id: ID_Output;
-  amountWagered: Float;
-  collected?: Float;
-  payout?: Float;
-  entryTime: Int;
-}
-
-export interface LedgerPromise extends Promise<Ledger>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  amountWagered: () => Promise<Float>;
-  collected: () => Promise<Float>;
-  payout: () => Promise<Float>;
-  entryTime: () => Promise<Int>;
-  user: <T = UserPromise>() => T;
-  wagerType: <T = WagerTypePromise>() => T;
-  outcome: <T = OutcomePromise>() => T;
-}
-
-export interface LedgerSubscription
-  extends Promise<AsyncIterator<Ledger>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  amountWagered: () => Promise<AsyncIterator<Float>>;
-  collected: () => Promise<AsyncIterator<Float>>;
-  payout: () => Promise<AsyncIterator<Float>>;
-  entryTime: () => Promise<AsyncIterator<Int>>;
-  user: <T = UserSubscription>() => T;
-  wagerType: <T = WagerTypeSubscription>() => T;
-  outcome: <T = OutcomeSubscription>() => T;
-}
-
-export interface LedgerNullablePromise
-  extends Promise<Ledger | null>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  amountWagered: () => Promise<Float>;
-  collected: () => Promise<Float>;
-  payout: () => Promise<Float>;
-  entryTime: () => Promise<Int>;
-  user: <T = UserPromise>() => T;
-  wagerType: <T = WagerTypePromise>() => T;
-  outcome: <T = OutcomePromise>() => T;
-}
-
-export interface OutcomeEdge {
-  node: Outcome;
-  cursor: String;
-}
-
-export interface OutcomeEdgePromise extends Promise<OutcomeEdge>, Fragmentable {
-  node: <T = OutcomePromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface OutcomeEdgeSubscription
-  extends Promise<AsyncIterator<OutcomeEdge>>,
-    Fragmentable {
-  node: <T = OutcomeSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface SportSubscriptionPayload {
-  mutation: MutationType;
-  node: Sport;
-  updatedFields: String[];
-  previousValues: SportPreviousValues;
-}
-
-export interface SportSubscriptionPayloadPromise
-  extends Promise<SportSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = SportPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = SportPreviousValuesPromise>() => T;
-}
-
-export interface SportSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<SportSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = SportSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = SportPreviousValuesSubscription>() => T;
-}
-
-export interface OddsTypeConnection {
-  pageInfo: PageInfo;
-  edges: OddsTypeEdge[];
-}
-
-export interface OddsTypeConnectionPromise
-  extends Promise<OddsTypeConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<OddsTypeEdge>>() => T;
-  aggregate: <T = AggregateOddsTypePromise>() => T;
-}
-
-export interface OddsTypeConnectionSubscription
-  extends Promise<AsyncIterator<OddsTypeConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<OddsTypeEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateOddsTypeSubscription>() => T;
-}
-
-export interface SportPreviousValues {
-  id: ID_Output;
-  sportName: String;
-}
-
-export interface SportPreviousValuesPromise
-  extends Promise<SportPreviousValues>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  sportName: () => Promise<String>;
-}
-
-export interface SportPreviousValuesSubscription
-  extends Promise<AsyncIterator<SportPreviousValues>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  sportName: () => Promise<AsyncIterator<String>>;
-}
-
-export interface PageInfo {
-  hasNextPage: Boolean;
-  hasPreviousPage: Boolean;
-  startCursor?: String;
-  endCursor?: String;
-}
-
-export interface PageInfoPromise extends Promise<PageInfo>, Fragmentable {
-  hasNextPage: () => Promise<Boolean>;
-  hasPreviousPage: () => Promise<Boolean>;
-  startCursor: () => Promise<String>;
-  endCursor: () => Promise<String>;
-}
-
-export interface PageInfoSubscription
-  extends Promise<AsyncIterator<PageInfo>>,
-    Fragmentable {
-  hasNextPage: () => Promise<AsyncIterator<Boolean>>;
-  hasPreviousPage: () => Promise<AsyncIterator<Boolean>>;
-  startCursor: () => Promise<AsyncIterator<String>>;
-  endCursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface AggregateGame {
-  count: Int;
-}
-
-export interface AggregateGamePromise
-  extends Promise<AggregateGame>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateGameSubscription
-  extends Promise<AsyncIterator<AggregateGame>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface WagerEdge {
-  node: Wager;
-  cursor: String;
-}
-
-export interface WagerEdgePromise extends Promise<WagerEdge>, Fragmentable {
-  node: <T = WagerPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface WagerEdgeSubscription
-  extends Promise<AsyncIterator<WagerEdge>>,
-    Fragmentable {
-  node: <T = WagerSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface TeamSubscriptionPayload {
-  mutation: MutationType;
-  node: Team;
-  updatedFields: String[];
-  previousValues: TeamPreviousValues;
-}
-
-export interface TeamSubscriptionPayloadPromise
-  extends Promise<TeamSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = TeamPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = TeamPreviousValuesPromise>() => T;
-}
-
-export interface TeamSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<TeamSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = TeamSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = TeamPreviousValuesSubscription>() => T;
-}
-
-export interface TeamEdge {
-  node: Team;
-  cursor: String;
-}
-
-export interface TeamEdgePromise extends Promise<TeamEdge>, Fragmentable {
-  node: <T = TeamPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface TeamEdgeSubscription
-  extends Promise<AsyncIterator<TeamEdge>>,
-    Fragmentable {
-  node: <T = TeamSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
 export interface AggregateOddsType {
   count: Int;
 }
@@ -3970,46 +3964,6 @@ export interface AggregateOddsTypeSubscription
   extends Promise<AsyncIterator<AggregateOddsType>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface UserPreviousValues {
-  id: ID_Output;
-  firstName: String;
-  lastName: String;
-  userName: String;
-  password: String;
-  email: String;
-  phoneNumber?: String;
-  balance: Float;
-  userVerified: Boolean;
-}
-
-export interface UserPreviousValuesPromise
-  extends Promise<UserPreviousValues>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  firstName: () => Promise<String>;
-  lastName: () => Promise<String>;
-  userName: () => Promise<String>;
-  password: () => Promise<String>;
-  email: () => Promise<String>;
-  phoneNumber: () => Promise<String>;
-  balance: () => Promise<Float>;
-  userVerified: () => Promise<Boolean>;
-}
-
-export interface UserPreviousValuesSubscription
-  extends Promise<AsyncIterator<UserPreviousValues>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  firstName: () => Promise<AsyncIterator<String>>;
-  lastName: () => Promise<AsyncIterator<String>>;
-  userName: () => Promise<AsyncIterator<String>>;
-  password: () => Promise<AsyncIterator<String>>;
-  email: () => Promise<AsyncIterator<String>>;
-  phoneNumber: () => Promise<AsyncIterator<String>>;
-  balance: () => Promise<AsyncIterator<Float>>;
-  userVerified: () => Promise<AsyncIterator<Boolean>>;
 }
 
 export interface UserSubscriptionPayload {
@@ -4037,21 +3991,27 @@ export interface UserSubscriptionPayloadSubscription
   previousValues: <T = UserPreviousValuesSubscription>() => T;
 }
 
-export interface GameEdge {
-  node: Game;
-  cursor: String;
+export interface PageInfo {
+  hasNextPage: Boolean;
+  hasPreviousPage: Boolean;
+  startCursor?: String;
+  endCursor?: String;
 }
 
-export interface GameEdgePromise extends Promise<GameEdge>, Fragmentable {
-  node: <T = GamePromise>() => T;
-  cursor: () => Promise<String>;
+export interface PageInfoPromise extends Promise<PageInfo>, Fragmentable {
+  hasNextPage: () => Promise<Boolean>;
+  hasPreviousPage: () => Promise<Boolean>;
+  startCursor: () => Promise<String>;
+  endCursor: () => Promise<String>;
 }
 
-export interface GameEdgeSubscription
-  extends Promise<AsyncIterator<GameEdge>>,
+export interface PageInfoSubscription
+  extends Promise<AsyncIterator<PageInfo>>,
     Fragmentable {
-  node: <T = GameSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
+  hasNextPage: () => Promise<AsyncIterator<Boolean>>;
+  hasPreviousPage: () => Promise<AsyncIterator<Boolean>>;
+  startCursor: () => Promise<AsyncIterator<String>>;
+  endCursor: () => Promise<AsyncIterator<String>>;
 }
 
 export interface TeamPreviousValues {
@@ -4074,6 +4034,31 @@ export interface TeamPreviousValuesSubscription
   id: () => Promise<AsyncIterator<ID_Output>>;
   teamName: () => Promise<AsyncIterator<String>>;
   city: () => Promise<AsyncIterator<String>>;
+}
+
+export interface TeamSubscriptionPayload {
+  mutation: MutationType;
+  node: Team;
+  updatedFields: String[];
+  previousValues: TeamPreviousValues;
+}
+
+export interface TeamSubscriptionPayloadPromise
+  extends Promise<TeamSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = TeamPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = TeamPreviousValuesPromise>() => T;
+}
+
+export interface TeamSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<TeamSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = TeamSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = TeamPreviousValuesSubscription>() => T;
 }
 
 export interface OddsType {
@@ -4128,52 +4113,54 @@ export interface OverUnderNullablePromise
   overUnder: () => Promise<String>;
 }
 
-export interface AggregateUser {
-  count: Int;
+export interface WagerPreviousValues {
+  id: ID_Output;
 }
 
-export interface AggregateUserPromise
-  extends Promise<AggregateUser>,
+export interface WagerPreviousValuesPromise
+  extends Promise<WagerPreviousValues>,
     Fragmentable {
-  count: () => Promise<Int>;
+  id: () => Promise<ID_Output>;
 }
 
-export interface AggregateUserSubscription
-  extends Promise<AsyncIterator<AggregateUser>>,
+export interface WagerPreviousValuesSubscription
+  extends Promise<AsyncIterator<WagerPreviousValues>>,
     Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
+  id: () => Promise<AsyncIterator<ID_Output>>;
 }
 
-export interface WagerTypeEdge {
-  node: WagerType;
-  cursor: String;
+export interface BatchPayload {
+  count: Long;
 }
 
-export interface WagerTypeEdgePromise
-  extends Promise<WagerTypeEdge>,
+export interface BatchPayloadPromise
+  extends Promise<BatchPayload>,
     Fragmentable {
-  node: <T = WagerTypePromise>() => T;
-  cursor: () => Promise<String>;
+  count: () => Promise<Long>;
 }
 
-export interface WagerTypeEdgeSubscription
-  extends Promise<AsyncIterator<WagerTypeEdge>>,
+export interface BatchPayloadSubscription
+  extends Promise<AsyncIterator<BatchPayload>>,
     Fragmentable {
-  node: <T = WagerTypeSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
+  count: () => Promise<AsyncIterator<Long>>;
 }
 
 export type Long = string;
 
 /*
+DateTime scalar input type, allowing Date
+*/
+export type DateTimeInput = Date | string;
+
+/*
+DateTime scalar output type, which is always a string
+*/
+export type DateTimeOutput = string;
+
+/*
 The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. 
 */
 export type Int = number;
-
-/*
-The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](https://en.wikipedia.org/wiki/IEEE_floating_point). 
-*/
-export type Float = number;
 
 /*
 The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID.
@@ -4185,6 +4172,11 @@ export type ID_Output = string;
 The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
 */
 export type String = string;
+
+/*
+The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](https://en.wikipedia.org/wiki/IEEE_floating_point). 
+*/
+export type Float = number;
 
 /*
 The `Boolean` scalar type represents `true` or `false`.

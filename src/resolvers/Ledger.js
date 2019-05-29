@@ -10,7 +10,7 @@ function wagerType(root, args, context){
 
 function outcome(root, args, context){
     console.log("outcome");
-    return context.prisma.ledger({id: root.id}).wagerType();
+    return context.prisma.ledger({id: root.id}).outcome();
 }
 
 

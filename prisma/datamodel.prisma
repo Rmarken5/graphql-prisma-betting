@@ -16,7 +16,7 @@ type Ledger {
     amountWagered: Float!
     collected: Float
     payout: Float
-    entryTime: Int!
+    entryTime: DateTime! @createdAt
     user: User!
     wagerType: WagerType!
     outcome: Outcome!
@@ -26,7 +26,7 @@ type Game {
     id: ID! @id
     homeTeam: Team! @relation(name: "HomeGame")
     awayTeam: Team! @relation(name: "AwayGame")
-    gameTime: Int!
+    gameTime: DateTime!
     sport: Sport!
     odds:[Odd]!
 }
@@ -39,7 +39,7 @@ type Odd {
     runLineRuns: Float
     overUnderOdds: Int
     overUnderRuns: Float
-    timeOfOdds: Int!
+    timeOfOdds: DateTime! @createdAt
 }
 
 type Wager {
@@ -54,7 +54,7 @@ type Wager {
 type Outcome {
     id: ID! @id
     outcome: String!
-    ledgers: [Ledger]!
+    ledgers: [Ledger]
 }
 
 type OddsType{

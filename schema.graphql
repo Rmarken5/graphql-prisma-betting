@@ -2,9 +2,9 @@ type Query{
     users: [User!]!
     user(id: ID!): User
     ledgers:[Ledger]!
-    ledgersAfterTime(timeInMilliSecs: Int!): [Ledger]
-    ledgersBeforeTime(timeInMilliSecs: Int!): [Ledger]
-    ledgersBetweenTimes(beginTime: Int!, endTime: Int! ): [Ledger]
+    ledgersAfterDateTime(dateTime: String!): [Ledger]
+    ledgersBeforeDateTime(dateTime: String!): [Ledger]
+    ledgersBetweenDateTime(beginTime: String!, endTime: String! ): [Ledger]
 }
 
 type Mutation {
@@ -41,7 +41,6 @@ type Ledger {
     amountWagered: Float!
     collected: Float
     payout: Float
-    entryTime: Int!
     user: User!
     wagerType: WagerType!
     outcome: Outcome!
@@ -51,7 +50,7 @@ type Game {
     id: ID!
     homeTeam: Team!
     awayTeam: Team!
-    gameTime: Int!
+    gameTime: String!
     sport: Sport!
     odds: [Odd]!
 }
@@ -64,7 +63,6 @@ type Odd {
     runLineRuns: Float
     overUnderOdds: Int
     overUnderRuns: Float
-    timeOfOdds: Int!
     
 }
 
@@ -80,6 +78,7 @@ type Wager {
 type Outcome {
     id: ID!
     outcome: String!
+    ledgers: [Ledger]!
 }
 
 type OddsType{

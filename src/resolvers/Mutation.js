@@ -57,12 +57,12 @@ function createOutcome(root, args, context) {
     });
 }
 
-function createGame(root, args, context) {
+async function createGame(root, args, context) {
 
-    Promise.all([getTeamId(args.homeTeamName, context), getTeamId(args.awayTeamName, context), getSportIdByValue(args.sportName, context)]).then(values => {
+    let [homeTeam, awayTeam, sport]  = await Promise.all([getTeamId(args.homeTeamName, context), getTeamId(args.awayTeamName, context), getSportIdByValue(args.sportName, context)]);
 
-        let [homeTeam, awayTeam, sport] = values;
-
+        console.log(homeTeam);
+        console.log(awayTeam);
         console.log(sport[0].id);
         return context.prisma.createGame({
             homeTeam: {
@@ -75,7 +75,7 @@ function createGame(root, args, context) {
                     id: awayTeam[0].id
                 }
             },
-            gameTime: 15590883,
+            gameTime: new Date(args.gameTime).toISOString(),
             sport: {
                 connect: {
                     id: sport[0].id
@@ -83,9 +83,6 @@ function createGame(root, args, context) {
             },
 
         });
-
-    });
-
 
 }
 
@@ -104,7 +101,7 @@ async function createOdd(root, args, context) {
             runLineRuns: args.runLineRuns,
             overUnderOdds: args.overUnderOdds,
             overUnderRuns: args.overUnderRuns,
-            timeOfOdds: 15590883,
+           
         })
     } catch (Err) {
         console.log('err: ', Err);
@@ -132,12 +129,12 @@ async function getGameId(homeTeamName, awayTeamName, gameTime, context) {
     return context.prisma.games({ //Refactor this to use query.
         where: {
             homeTeam: {
-                id: "cjw5sddkqgh7y0b61ygjetbuz"
+                id: homeTeam[0].id
             },
             awayTeam: {
-                id: "cjw5sf555ravg0b05vjq5kt6p"
+                id: awayTeam[0].id
             },
-            gameTime: 15590883
+            gameTime: new Date(gameTime).toISOString()
         }
     });
 
@@ -168,7 +165,6 @@ async function createLedger(root, args, context) {
 
     return context.prisma.createLedger({
         amountWagered: args.amountWagered,
-        entryTime: 15590883,
         wagerType: { connect: { id: await getWagerTypeIdByValue(args.wagerType, context) }} ,
         user: { connect: { id: await getUserIdByUserName(args.userId, context)}},
         outcome: {connect : { id : await getOutcomeIdByOutcome('pending', context)}},

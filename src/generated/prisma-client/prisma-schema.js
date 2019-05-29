@@ -51,11 +51,13 @@ type BatchPayload {
   count: Long!
 }
 
+scalar DateTime
+
 type Game {
   id: ID!
   homeTeam: Team!
   awayTeam: Team!
-  gameTime: Int!
+  gameTime: DateTime!
   sport: Sport!
   odds(where: OddWhereInput, orderBy: OddOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Odd!]
 }
@@ -70,7 +72,7 @@ input GameCreateInput {
   id: ID
   homeTeam: TeamCreateOneWithoutHomeGamesInput!
   awayTeam: TeamCreateOneWithoutAwayGamesInput!
-  gameTime: Int!
+  gameTime: DateTime!
   sport: SportCreateOneWithoutGameInput!
   odds: OddCreateManyWithoutGameInput
 }
@@ -98,7 +100,7 @@ input GameCreateOneWithoutOddsInput {
 input GameCreateWithoutAwayTeamInput {
   id: ID
   homeTeam: TeamCreateOneWithoutHomeGamesInput!
-  gameTime: Int!
+  gameTime: DateTime!
   sport: SportCreateOneWithoutGameInput!
   odds: OddCreateManyWithoutGameInput
 }
@@ -106,7 +108,7 @@ input GameCreateWithoutAwayTeamInput {
 input GameCreateWithoutHomeTeamInput {
   id: ID
   awayTeam: TeamCreateOneWithoutAwayGamesInput!
-  gameTime: Int!
+  gameTime: DateTime!
   sport: SportCreateOneWithoutGameInput!
   odds: OddCreateManyWithoutGameInput
 }
@@ -115,7 +117,7 @@ input GameCreateWithoutOddsInput {
   id: ID
   homeTeam: TeamCreateOneWithoutHomeGamesInput!
   awayTeam: TeamCreateOneWithoutAwayGamesInput!
-  gameTime: Int!
+  gameTime: DateTime!
   sport: SportCreateOneWithoutGameInput!
 }
 
@@ -123,7 +125,7 @@ input GameCreateWithoutSportInput {
   id: ID
   homeTeam: TeamCreateOneWithoutHomeGamesInput!
   awayTeam: TeamCreateOneWithoutAwayGamesInput!
-  gameTime: Int!
+  gameTime: DateTime!
   odds: OddCreateManyWithoutGameInput
 }
 
@@ -141,7 +143,7 @@ enum GameOrderByInput {
 
 type GamePreviousValues {
   id: ID!
-  gameTime: Int!
+  gameTime: DateTime!
 }
 
 input GameScalarWhereInput {
@@ -159,14 +161,14 @@ input GameScalarWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
-  gameTime: Int
-  gameTime_not: Int
-  gameTime_in: [Int!]
-  gameTime_not_in: [Int!]
-  gameTime_lt: Int
-  gameTime_lte: Int
-  gameTime_gt: Int
-  gameTime_gte: Int
+  gameTime: DateTime
+  gameTime_not: DateTime
+  gameTime_in: [DateTime!]
+  gameTime_not_in: [DateTime!]
+  gameTime_lt: DateTime
+  gameTime_lte: DateTime
+  gameTime_gt: DateTime
+  gameTime_gte: DateTime
   AND: [GameScalarWhereInput!]
   OR: [GameScalarWhereInput!]
   NOT: [GameScalarWhereInput!]
@@ -193,17 +195,17 @@ input GameSubscriptionWhereInput {
 input GameUpdateInput {
   homeTeam: TeamUpdateOneRequiredWithoutHomeGamesInput
   awayTeam: TeamUpdateOneRequiredWithoutAwayGamesInput
-  gameTime: Int
+  gameTime: DateTime
   sport: SportUpdateOneRequiredWithoutGameInput
   odds: OddUpdateManyWithoutGameInput
 }
 
 input GameUpdateManyDataInput {
-  gameTime: Int
+  gameTime: DateTime
 }
 
 input GameUpdateManyMutationInput {
-  gameTime: Int
+  gameTime: DateTime
 }
 
 input GameUpdateManyWithoutAwayTeamInput {
@@ -256,14 +258,14 @@ input GameUpdateOneRequiredWithoutOddsInput {
 
 input GameUpdateWithoutAwayTeamDataInput {
   homeTeam: TeamUpdateOneRequiredWithoutHomeGamesInput
-  gameTime: Int
+  gameTime: DateTime
   sport: SportUpdateOneRequiredWithoutGameInput
   odds: OddUpdateManyWithoutGameInput
 }
 
 input GameUpdateWithoutHomeTeamDataInput {
   awayTeam: TeamUpdateOneRequiredWithoutAwayGamesInput
-  gameTime: Int
+  gameTime: DateTime
   sport: SportUpdateOneRequiredWithoutGameInput
   odds: OddUpdateManyWithoutGameInput
 }
@@ -271,14 +273,14 @@ input GameUpdateWithoutHomeTeamDataInput {
 input GameUpdateWithoutOddsDataInput {
   homeTeam: TeamUpdateOneRequiredWithoutHomeGamesInput
   awayTeam: TeamUpdateOneRequiredWithoutAwayGamesInput
-  gameTime: Int
+  gameTime: DateTime
   sport: SportUpdateOneRequiredWithoutGameInput
 }
 
 input GameUpdateWithoutSportDataInput {
   homeTeam: TeamUpdateOneRequiredWithoutHomeGamesInput
   awayTeam: TeamUpdateOneRequiredWithoutAwayGamesInput
-  gameTime: Int
+  gameTime: DateTime
   odds: OddUpdateManyWithoutGameInput
 }
 
@@ -337,14 +339,14 @@ input GameWhereInput {
   id_not_ends_with: ID
   homeTeam: TeamWhereInput
   awayTeam: TeamWhereInput
-  gameTime: Int
-  gameTime_not: Int
-  gameTime_in: [Int!]
-  gameTime_not_in: [Int!]
-  gameTime_lt: Int
-  gameTime_lte: Int
-  gameTime_gt: Int
-  gameTime_gte: Int
+  gameTime: DateTime
+  gameTime_not: DateTime
+  gameTime_in: [DateTime!]
+  gameTime_not_in: [DateTime!]
+  gameTime_lt: DateTime
+  gameTime_lte: DateTime
+  gameTime_gt: DateTime
+  gameTime_gte: DateTime
   sport: SportWhereInput
   odds_every: OddWhereInput
   odds_some: OddWhereInput
@@ -363,7 +365,7 @@ type Ledger {
   amountWagered: Float!
   collected: Float
   payout: Float
-  entryTime: Int!
+  entryTime: DateTime!
   user: User!
   wagerType: WagerType!
   outcome: Outcome!
@@ -380,7 +382,6 @@ input LedgerCreateInput {
   amountWagered: Float!
   collected: Float
   payout: Float
-  entryTime: Int!
   user: UserCreateOneWithoutLedgerEntriesInput!
   wagerType: WagerTypeCreateOneWithoutLedgersInput!
   outcome: OutcomeCreateOneWithoutLedgersInput!
@@ -411,7 +412,6 @@ input LedgerCreateWithoutOutcomeInput {
   amountWagered: Float!
   collected: Float
   payout: Float
-  entryTime: Int!
   user: UserCreateOneWithoutLedgerEntriesInput!
   wagerType: WagerTypeCreateOneWithoutLedgersInput!
 }
@@ -421,7 +421,6 @@ input LedgerCreateWithoutUserInput {
   amountWagered: Float!
   collected: Float
   payout: Float
-  entryTime: Int!
   wagerType: WagerTypeCreateOneWithoutLedgersInput!
   outcome: OutcomeCreateOneWithoutLedgersInput!
 }
@@ -431,7 +430,6 @@ input LedgerCreateWithoutWagerTypeInput {
   amountWagered: Float!
   collected: Float
   payout: Float
-  entryTime: Int!
   user: UserCreateOneWithoutLedgerEntriesInput!
   outcome: OutcomeCreateOneWithoutLedgersInput!
 }
@@ -459,7 +457,7 @@ type LedgerPreviousValues {
   amountWagered: Float!
   collected: Float
   payout: Float
-  entryTime: Int!
+  entryTime: DateTime!
 }
 
 input LedgerScalarWhereInput {
@@ -501,14 +499,14 @@ input LedgerScalarWhereInput {
   payout_lte: Float
   payout_gt: Float
   payout_gte: Float
-  entryTime: Int
-  entryTime_not: Int
-  entryTime_in: [Int!]
-  entryTime_not_in: [Int!]
-  entryTime_lt: Int
-  entryTime_lte: Int
-  entryTime_gt: Int
-  entryTime_gte: Int
+  entryTime: DateTime
+  entryTime_not: DateTime
+  entryTime_in: [DateTime!]
+  entryTime_not_in: [DateTime!]
+  entryTime_lt: DateTime
+  entryTime_lte: DateTime
+  entryTime_gt: DateTime
+  entryTime_gte: DateTime
   AND: [LedgerScalarWhereInput!]
   OR: [LedgerScalarWhereInput!]
   NOT: [LedgerScalarWhereInput!]
@@ -536,7 +534,6 @@ input LedgerUpdateDataInput {
   amountWagered: Float
   collected: Float
   payout: Float
-  entryTime: Int
   user: UserUpdateOneRequiredWithoutLedgerEntriesInput
   wagerType: WagerTypeUpdateOneRequiredWithoutLedgersInput
   outcome: OutcomeUpdateOneRequiredWithoutLedgersInput
@@ -546,7 +543,6 @@ input LedgerUpdateInput {
   amountWagered: Float
   collected: Float
   payout: Float
-  entryTime: Int
   user: UserUpdateOneRequiredWithoutLedgerEntriesInput
   wagerType: WagerTypeUpdateOneRequiredWithoutLedgersInput
   outcome: OutcomeUpdateOneRequiredWithoutLedgersInput
@@ -556,14 +552,12 @@ input LedgerUpdateManyDataInput {
   amountWagered: Float
   collected: Float
   payout: Float
-  entryTime: Int
 }
 
 input LedgerUpdateManyMutationInput {
   amountWagered: Float
   collected: Float
   payout: Float
-  entryTime: Int
 }
 
 input LedgerUpdateManyWithoutOutcomeInput {
@@ -618,7 +612,6 @@ input LedgerUpdateWithoutOutcomeDataInput {
   amountWagered: Float
   collected: Float
   payout: Float
-  entryTime: Int
   user: UserUpdateOneRequiredWithoutLedgerEntriesInput
   wagerType: WagerTypeUpdateOneRequiredWithoutLedgersInput
 }
@@ -627,7 +620,6 @@ input LedgerUpdateWithoutUserDataInput {
   amountWagered: Float
   collected: Float
   payout: Float
-  entryTime: Int
   wagerType: WagerTypeUpdateOneRequiredWithoutLedgersInput
   outcome: OutcomeUpdateOneRequiredWithoutLedgersInput
 }
@@ -636,7 +628,6 @@ input LedgerUpdateWithoutWagerTypeDataInput {
   amountWagered: Float
   collected: Float
   payout: Float
-  entryTime: Int
   user: UserUpdateOneRequiredWithoutLedgerEntriesInput
   outcome: OutcomeUpdateOneRequiredWithoutLedgersInput
 }
@@ -718,14 +709,14 @@ input LedgerWhereInput {
   payout_lte: Float
   payout_gt: Float
   payout_gte: Float
-  entryTime: Int
-  entryTime_not: Int
-  entryTime_in: [Int!]
-  entryTime_not_in: [Int!]
-  entryTime_lt: Int
-  entryTime_lte: Int
-  entryTime_gt: Int
-  entryTime_gte: Int
+  entryTime: DateTime
+  entryTime_not: DateTime
+  entryTime_in: [DateTime!]
+  entryTime_not_in: [DateTime!]
+  entryTime_lt: DateTime
+  entryTime_lte: DateTime
+  entryTime_gt: DateTime
+  entryTime_gte: DateTime
   user: UserWhereInput
   wagerType: WagerTypeWhereInput
   outcome: OutcomeWhereInput
@@ -826,7 +817,7 @@ type Odd {
   runLineRuns: Float
   overUnderOdds: Int
   overUnderRuns: Float
-  timeOfOdds: Int!
+  timeOfOdds: DateTime!
 }
 
 type OddConnection {
@@ -843,7 +834,6 @@ input OddCreateInput {
   runLineRuns: Float
   overUnderOdds: Int
   overUnderRuns: Float
-  timeOfOdds: Int!
 }
 
 input OddCreateManyWithoutGameInput {
@@ -863,7 +853,6 @@ input OddCreateWithoutGameInput {
   runLineRuns: Float
   overUnderOdds: Int
   overUnderRuns: Float
-  timeOfOdds: Int!
 }
 
 type OddEdge {
@@ -895,7 +884,7 @@ type OddPreviousValues {
   runLineRuns: Float
   overUnderOdds: Int
   overUnderRuns: Float
-  timeOfOdds: Int!
+  timeOfOdds: DateTime!
 }
 
 input OddScalarWhereInput {
@@ -953,14 +942,14 @@ input OddScalarWhereInput {
   overUnderRuns_lte: Float
   overUnderRuns_gt: Float
   overUnderRuns_gte: Float
-  timeOfOdds: Int
-  timeOfOdds_not: Int
-  timeOfOdds_in: [Int!]
-  timeOfOdds_not_in: [Int!]
-  timeOfOdds_lt: Int
-  timeOfOdds_lte: Int
-  timeOfOdds_gt: Int
-  timeOfOdds_gte: Int
+  timeOfOdds: DateTime
+  timeOfOdds_not: DateTime
+  timeOfOdds_in: [DateTime!]
+  timeOfOdds_not_in: [DateTime!]
+  timeOfOdds_lt: DateTime
+  timeOfOdds_lte: DateTime
+  timeOfOdds_gt: DateTime
+  timeOfOdds_gte: DateTime
   AND: [OddScalarWhereInput!]
   OR: [OddScalarWhereInput!]
   NOT: [OddScalarWhereInput!]
@@ -1109,7 +1098,6 @@ input OddUpdateDataInput {
   runLineRuns: Float
   overUnderOdds: Int
   overUnderRuns: Float
-  timeOfOdds: Int
 }
 
 input OddUpdateInput {
@@ -1119,7 +1107,6 @@ input OddUpdateInput {
   runLineRuns: Float
   overUnderOdds: Int
   overUnderRuns: Float
-  timeOfOdds: Int
 }
 
 input OddUpdateManyDataInput {
@@ -1128,7 +1115,6 @@ input OddUpdateManyDataInput {
   runLineRuns: Float
   overUnderOdds: Int
   overUnderRuns: Float
-  timeOfOdds: Int
 }
 
 input OddUpdateManyMutationInput {
@@ -1137,7 +1123,6 @@ input OddUpdateManyMutationInput {
   runLineRuns: Float
   overUnderOdds: Int
   overUnderRuns: Float
-  timeOfOdds: Int
 }
 
 input OddUpdateManyWithoutGameInput {
@@ -1170,7 +1155,6 @@ input OddUpdateWithoutGameDataInput {
   runLineRuns: Float
   overUnderOdds: Int
   overUnderRuns: Float
-  timeOfOdds: Int
 }
 
 input OddUpdateWithWhereUniqueWithoutGameInput {
@@ -1245,14 +1229,14 @@ input OddWhereInput {
   overUnderRuns_lte: Float
   overUnderRuns_gt: Float
   overUnderRuns_gte: Float
-  timeOfOdds: Int
-  timeOfOdds_not: Int
-  timeOfOdds_in: [Int!]
-  timeOfOdds_not_in: [Int!]
-  timeOfOdds_lt: Int
-  timeOfOdds_lte: Int
-  timeOfOdds_gt: Int
-  timeOfOdds_gte: Int
+  timeOfOdds: DateTime
+  timeOfOdds_not: DateTime
+  timeOfOdds_in: [DateTime!]
+  timeOfOdds_not_in: [DateTime!]
+  timeOfOdds_lt: DateTime
+  timeOfOdds_lte: DateTime
+  timeOfOdds_gt: DateTime
+  timeOfOdds_gte: DateTime
   AND: [OddWhereInput!]
   OR: [OddWhereInput!]
   NOT: [OddWhereInput!]
