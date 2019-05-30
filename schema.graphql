@@ -1,5 +1,5 @@
 type Query{
-    users: [User!]!
+    allUsers: [User!]!
     user(id: ID!): User
     ledgers:[Ledger]!
     ledgersAfterDateTime(dateTime: String!): [Ledger]
@@ -20,7 +20,10 @@ type Mutation {
     createWager(ledgerId: ID!, oddsId: ID!, oddsType: String!, pickedOverUnder: String!, pickedTeam: String!): Wager!
     createLedger(amountWagered: Float!, wagerType: String!, userName: String!): Ledger!
     updateLedger(id: ID! collected: Float, payout:Float, outcome: String! ):[Ledger]!
+}
 
+type Subscription {
+    usersFeed:UserFeed!
 }
 
 type User {
@@ -111,4 +114,9 @@ type OverUnder{
     id: ID!
     value: Boolean!
     overUnder: String!
+}
+
+type UserFeed {
+    users: [User]!
+    count: Int!
 }
