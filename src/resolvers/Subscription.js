@@ -1,13 +1,8 @@
-async function newUserFeed(root,args, context){
+async function newUserFeed(root, args, context) {
 
-   const sub = await context.prisma.$subscribe.user({mutation_in: ['CREATED']}).node();
-
-   const count = await context.prisma.usersConnection().aggregate().count();
-
-   return {
-       sub,
-       count,
-   }
+    return context.prisma.$subscribe.user({
+        mutation_in: ['CREATED']
+    }).node();
 
 
 }
