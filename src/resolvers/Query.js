@@ -1,6 +1,4 @@
-function allUsers(root, args, context) {
-    return context.prisma.users();
-}
+
 
 function ledgers(root, args, context) {
     return context.prisma.ledgers();
