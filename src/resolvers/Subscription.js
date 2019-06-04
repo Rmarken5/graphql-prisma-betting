@@ -1,4 +1,4 @@
-async function newUserFeed(root, args, context) {
+function newUserFeed(root, args, context) {
 
     return context.prisma.$subscribe.user({
         mutation_in: ['CREATED']
