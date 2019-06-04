@@ -1,3 +1,7 @@
+function allUsers(root, args, context) {
+    return context.prisma.users();
+}
+
 function ledgers(root, args, context) {
     return context.prisma.ledgers();
 }
@@ -32,12 +36,18 @@ function ledgersBetweenDateTime(root, args, context) {
     });
 }
 
+function allUsers(root, args, context) {
+
+    return context.prisma.users();
+}
+
 module.exports = {
 
     ledgers,
     ledgersAfterDateTime,
     ledgersBeforeDateTime,
     ledgersBetweenDateTime,
+    allUsers,
 
 
 }
